@@ -29,3 +29,35 @@ footer {
         padding: 15px 0;
     }
 }
+
+/* Company Name */
+h1 .tanner {
+    color : #FFFCE5;
+    font-weight: 100;
+    font-size : .75em;
+    letter-spacing : 1.5px;
+}
+
+h1 .dev {
+    color : #0477BD;
+    font-size : 0.75em;
+    font-weight : 200;
+}
+
+.navbar .navbar-brand {
+    padding : 0;
+}
+
+.navbar-brand h1 {
+    margin-top : 16px;
+    border-right : 1px solid #8FCBD9;
+    padding-right : 10px;
+}
+
+@media(max-width:768px) {
+    .navbar-brand h1 {
+        margin-top : 0px;
+        padding-left : 5px;
+        border : none;
+    }
+}

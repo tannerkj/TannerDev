@@ -65,3 +65,8 @@ h1 .dev {
 #tagline {
     font-size: 20px;
 }
+
+/* Tech Stack Page */
+.tech-header {
+    margin-top : 0;
+}

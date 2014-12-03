@@ -70,3 +70,17 @@ h1 .dev {
 .tech-header {
     margin-top : 0;
 }
+
+/** Form **/
+#contact-form input, #contact-form textarea, #contact-form button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.jumbotron {
+    padding: 1px 0;
+}
+
+
+
+

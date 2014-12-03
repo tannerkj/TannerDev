@@ -97,6 +97,7 @@
 
                     <div role="tabpanel" class="tab-pane fade in active" id="map">
                         <h3 class="tech-header">Mapping Technologies</h3>
+                        <div id="mapping-items"></div>
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="client">
@@ -143,6 +144,21 @@
 
     </div>
     <!-- /.container -->
+    <script id="tech-template" type="text/x-handelbars-template">
+        <ul class="media-list">
+        {{#each items}}
+            <li class="media">
+              <a class="media-left" href="#">
+                <img src="../images/stack/default.svg" alt="{{img-src}}">
+              </a>
+              <div class="media-body">
+                <h4 class="media-heading">{{name}}</h4>
+                 {{description}}
+              </div>
+            </li>
+        {{/each}}
+        </ul>
+    </script>
 
     <!-- jQuery -->
     <script src="../js/jquery.js"></script>
@@ -152,6 +168,25 @@
 
     <!-- Handlebars -->
     <script src="../js/handlebars.min.js"></script>
+
+    <!-- Handle Templates -->
+    <script>
+        $(function () {
+            var source = $("#tech-template").html();
+            var template = Handlebars.compile(source);
+            $.ajax({
+                url : "../datastore/mapping.json",
+                type : "json",
+                method : "get",
+                success : function(data) {
+                    //Render Mapping Technologies Template
+                    console.log(data);
+                    var html = template(data);
+                    $("#mapping-items").html(html);
+                }
+            })
+        });
+    </script>
 
 </body>
 

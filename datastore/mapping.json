@@ -1,0 +1,34 @@
+{
+	"items" : [
+		{
+			"name" : "ESRI JavaScript API",
+			"img-src" : "",
+			"description" : "ESRI's ArcGIS API for JavaScript is a lightweight library for working with ArcGIS Online or ArcGIS Server services."
+		},
+		{
+			"name" : "Leaflet",
+			"img-src" : "",
+			"description" : "Leaflet, at only 33kb of JavaScript, provides a lightweight and mobile friendly mapping API.  It is open source and  can be extended with third party libraries."
+		},
+		{
+			"name" : "Google Maps API",
+			"img-src" : "",
+			"description" : "Google Maps API provides a familiar interface and mapping experience, while supporting great basemaps and imagery."
+		},
+		{
+			"name" : "OpenLayers 3",
+			"img-src" : "",
+			"description" : "OpenLayers supports a host of layer types, and has many out of the box features others are lacking."
+		},
+		{
+			"name" : "Mapbox",
+			"img-src" : "",
+			"description" : "Mapbox allows beautiful map creation and customization."
+		},
+		{
+			"name" : "CartoDB",
+			"img-src" : "",
+			"description" : "CartoDB allows you to create 'amazing' maps in the cloud, with a PostGIS Backend"
+		}
+	]
+}

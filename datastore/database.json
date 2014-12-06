@@ -1,0 +1,29 @@
+{
+	"items" : [
+		{
+			"name" : "PostgreSQL",
+			"img-src" : "",
+			"description" : "PostgreSQL is a powerful and full features open source relational database.  Add PostGIS for extremely efficinet spatial queries and operations."
+		},
+		{
+			"name" : "MySQL",
+			"img-src" : "",
+			"description" : "MySQL is the most popular open-source database, especially for web development."
+		},
+		{
+			"name" : "SQL Server",
+			"img-src" : "",
+			"description" : "SQL Server is a relational database management system developed by Microsoft."
+		},
+		{
+			"name" : "MongoDB",
+			"img-src" : "",
+			"description" : "MondgoDB is the leading NoSQL, document database, written in C++.  It even supports spatial indexing and queries."
+		},
+		{
+			"name" : "Redis",
+			"img-src" : "",
+			"description" : "Redis is an open-source key-value cache and store, often called a data structure server."
+		}
+	]
+}

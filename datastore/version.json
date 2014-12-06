@@ -1,0 +1,14 @@
+{
+	"items" : [
+		{
+			"name" : "Git",
+			"img-src" : "",
+			"description" : "Git is an extremely fast and efficient distributed revision control system.  It can connect to remote GitHub repositories for cloud based hosting."
+		},
+		{
+			"name" : "GeoGig",
+			"img-src" : "",
+			"description" : "GeoGig is an open source tool that draws inspiration from Git, with the ability to handle spatial data."
+		}
+	]
+}

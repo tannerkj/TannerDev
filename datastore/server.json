@@ -1,0 +1,19 @@
+{
+	"items" : [
+		{
+			"name" : "PHP - Laravel",
+			"img-src" : "",
+			"description" : "PHP is a powerful and widely used server-side scripting lanuage for web development.  Laravel is a powerful PHP framework for quickly building server-side and RESTful applications."
+		},
+		{
+			"name" : "Ruby - Ruby on Rails",
+			"img-src" : "",
+			"description" : "Ruby on Rails is an open source web framework for building efficient and sustainable server-side applications."
+		},
+		{
+			"name" : "Python - Django",
+			"img-src" : "",
+			"description" : "Django is a high-level python web framework for rapid development and clean code design"
+		}
+	]
+}

@@ -1,0 +1,19 @@
+{
+	"items" : [
+		{
+			"name" : "Amazon Web Services",
+			"img-src" : "",
+			"description" : "Amazon provides plenty of hosting options through their Amazon Web Services."
+		},
+		{
+			"name" : "Digital Ocean",
+			"img-src" : "",
+			"description" : "Digital Ocean provides simple 'one-click' methods to deploy servers with popular stacks."
+		},
+		{
+			"name" : "GitHub Pages",
+			"img-src" : "",
+			"description" : "For open source client-side projects or examples, GitHub pages provides a simple hosting option."
+		}
+	]
+}

@@ -1,0 +1,24 @@
+{
+	"items" : [
+		{
+			"name" : "AngularJS",
+			"img-src" : "",
+			"description" : "AngularJS is a great client side web application framework maintained by Google."
+		},
+		{
+			"name" : "BackboneJS",
+			"img-src" : "",
+			"description" : "Backbone is a powerful, yet simplistic MV* framework for organizing client side code."
+		},
+		{
+			"name" : "jQuery",
+			"img-src" : "",
+			"description" : "jQuery provides a intuitive interface for selecting and manipulating the DOM, performing AJAX requests, and a host of other helpful methods."
+		},
+		{
+			"name" : "Underscore",
+			"img-src" : "",
+			"description" : "Underscore is packed with a host of utilities to help build javascript applications."
+		}
+	]
+}

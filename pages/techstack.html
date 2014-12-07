@@ -102,30 +102,37 @@
 
                     <div role="tabpanel" class="tab-pane fade" id="client">
                         <h3 class="tech-header">Client-Side Technologies</h3>
+                        <div id="client-items"></div>
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="server">
                         <h3 class="tech-header">Server-Side Technologies</h3>
+                        <div id="server-items"></div>
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="design">
                         <h3 class="tech-header">Design</h3>
+                        <div id="design-items"></div>
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="testing">
                         <h3 class="tech-header">Testing Code</h3>
+                        <div id="testing-items"></div>
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="database">
                         <h3 class="tech-header">Database Technologies</h3>
+                        <div id="database-items"></div>
                     </div>
 
                     <div role="tabpanel" class="tab-pane fade" id="version">
                         <h3 class="tech-header">Version Control</h3>
+                        <div id="version-items"></div>
                     </div>
                     
                     <div role="tabpanel" class="tab-pane fade" id="hosting">
                         <h3 class="tech-header">Hosting</h3>
+                        <div id="hosting-items"></div>
                     </div>
                 </div>
                 <!-- /.tab-content -->
@@ -174,16 +181,18 @@
         $(function () {
             var source = $("#tech-template").html();
             var template = Handlebars.compile(source);
-            $.ajax({
-                url : "../datastore/mapping.json",
-                type : "json",
-                method : "get",
-                success : function(data) {
-                    //Render Mapping Technologies Template
-                    console.log(data);
-                    var html = template(data);
-                    $("#mapping-items").html(html);
-                }
+            var stores = ['mapping', 'client', 'server', 'design', 'hosting', 'testing', 'version', 'database'];
+            stores.forEach(function (t) {
+                $.ajax({
+                    url : "../datastore/" + t + ".json",
+                    type : "json",
+                    method : "get",
+                    success : function(data) {
+                        //Render Mapping Technologies Template
+                        var html = template(data);
+                        $("#" + t + "-items").html(html);
+                    }
+                })
             })
         });
     </script>

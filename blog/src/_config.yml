@@ -1,17 +1,17 @@
  #Build With jekyll build -d ../site --watch
 # Site settings
 title: tanner geo Blog
-email: your-email@domain.com
+email: support@tannergeo.com
 description: > # this means to ignore newlines until "baseurl:"
   tannergeo is passionate about computer science, web development
-  and maps!  We are super greatful for all of the great tutorials and blog
+  and everything geospatial!  We are super greatful for all of the great tutorials and blog
   posts other have created.  We want to help give back by posting our 
   experiences and tutorials on new technologies.
 baseurl: "/blog/site/" # the subpath of your site, e.g. /blog/
 siteurl: "/~joshuatanner/tannergeo/"
 url: "" # the base hostname & protocol for your site
 twitter_username: tannergeo
-github_username:  tannergeo
+#github_username:  tannergeo
 
 # Build settings
 markdown: kramdown

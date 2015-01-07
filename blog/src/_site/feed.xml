@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tanner geo Blog</title>
-    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+    <description>tannergeo is passionate about computer science, web development and everything geospatial!  We are super greatful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
 </description>
-    <link>./blog/site//</link>
-    <atom:link href="./blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 06 Dec 2014 18:51:04 -0800</pubDate>
-    <lastBuildDate>Sat, 06 Dec 2014 18:51:04 -0800</lastBuildDate>
+    <link>http://tannergeo.com/~joshuatanner/tannergeo//</link>
+    <atom:link href="http://tannergeo.com/~joshuatanner/tannergeo//feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Tue, 06 Jan 2015 21:09:20 -0800</pubDate>
+    <lastBuildDate>Tue, 06 Jan 2015 21:09:20 -0800</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -28,8 +28,8 @@
 
 </description>
         <pubDate>Wed, 03 Dec 2014 10:44:02 -0800</pubDate>
-        <link>./blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">./blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
+        <link>http://tannergeo.com/~joshuatanner/tannergeo//jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/~joshuatanner/tannergeo//jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
         
         
         <category>jekyll</category>

@@ -13,7 +13,7 @@ layout: default
         <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
         <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+          <a class="post-link" href="{{ piost.url | prepend: site.baseurl }}">{{ post.title }}</a>
         </h2>
       </li>
     {% endfor %}
@@ -58,6 +58,13 @@ layout: default
     <!-- Blog Sidebar Widgets Column -->
     <div class="col-md-4">
 
+        <!-- Side Widget Well -->
+        <div class="well">
+            <h4>About Our Blog</h4>
+            <p>We like to write about new things we are building and offer insight into
+              the latest and helpful technologies.</p>
+        </div>
+
         <!-- Blog Categories Well -->
         <div class="well">
             <h4>Blog Categories</h4>
@@ -75,13 +82,6 @@ layout: default
                 </div>
             </div>
             <!-- /.row -->
-        </div>
-
-        <!-- Side Widget Well -->
-        <div class="well">
-            <h4>About Our Blog</h4>
-            <p>We like to write about new things we are building and offer insight into
-              the latest and helpful technologies.</p>
         </div>
 
     </div>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tanner Development Blog</title>
-    <description>TannerDevelopment is passionate about computer science, web development and maps!  We are super greatful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
+    <title>tanner geo Blog</title>
+    <description>tannergeo is passionate about computer science, web development and maps!  We are super greatful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
 </description>
     <link>/blog/site//</link>
     <atom:link href="/blog/site//feed.xml" rel="self" type="application/rss+xml" />

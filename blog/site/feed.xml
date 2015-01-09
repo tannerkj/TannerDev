@@ -4,10 +4,10 @@
     <title>tanner geo Blog</title>
     <description>tannergeo is passionate about computer science, web development and everything geospatial!  We are super greatful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
 </description>
-    <link>http://tannergeo.com/</link>
-    <atom:link href="http://tannergeo.com/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 08 Jan 2015 20:38:08 -0800</pubDate>
-    <lastBuildDate>Thu, 08 Jan 2015 20:38:08 -0800</lastBuildDate>
+    <link>http://tannergeo.com/blog/site//</link>
+    <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Thu, 08 Jan 2015 21:13:03 -0800</pubDate>
+    <lastBuildDate>Thu, 08 Jan 2015 21:13:03 -0800</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -28,8 +28,8 @@
 
 </description>
         <pubDate>Wed, 03 Dec 2014 10:44:02 -0800</pubDate>
-        <link>http://tannergeo.com/jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">http://tannergeo.com/jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
+        <link>http://tannergeo.com/blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
         
         
         <category>jekyll</category>

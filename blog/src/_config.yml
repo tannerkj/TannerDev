@@ -1,3 +1,4 @@
+# For any blog mods, use src files
 #For Production
 #  jekyll build --destination ../site --watch
 #For Local

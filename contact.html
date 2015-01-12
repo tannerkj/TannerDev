@@ -157,7 +157,6 @@
         $(function () {
             $("#contact-form").on('submit', function (e) {
                 e.preventDefault();
-                var name, email, subject, message;
                 $.ajax({
                     url : "http://192.241.200.140/email/contact.php",
                     method : "POST",

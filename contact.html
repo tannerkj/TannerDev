@@ -151,5 +151,29 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+    
+    <!-- Email Function -->
+    <script>
+        $(function () {
+            $("#contact-form").on('submit', function (e) {
+                e.preventDefault();
+                var name, email, subject, message;
+                $.ajax({
+                    url : "http://192.241.200.140/email/contact.php",
+                    method : "POST",
+                    data : {
+                        name : $("#InputName").val(),
+                        email : $("#InputEmail").val(),
+                        subject : $("#InputSubject").val(),
+                        message : $("#InputMessage").val()
+                    },
+                    success : function (m) {
+                        alert('success!');
+                    }
+                })
+            })
+        })
+    </script>
+
 </body>
 </html>

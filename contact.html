@@ -146,10 +146,6 @@
     <!-- /.container -->
     </div>
 
-    <div class="alert alert-success alert-dismissible" role="alert" id="contactsuccess">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Success!</strong> Thanks for contacting us.  We'll be in touch.
-</div>
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
 
@@ -171,8 +167,7 @@
                         message : $("#InputMessage").val()
                     },
                     success : function (m) {
-                        //alert('success!');
-                        #contactsuccess.alert(show);
+                        alert('success!');
                     }
                 })
             })

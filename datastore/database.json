@@ -23,7 +23,7 @@
 		{
 			"name" : "Redis",
 			"img-src" : "",
-			"description" : "Redis is an open-source key-value cache and store, often called a data structure server."
+			"description" : "Redis is an open source key-value cache and store, often called a data structure server."
 		}
 	]
 }

@@ -28,7 +28,7 @@
 		{
 			"name" : "CartoDB",
 			"img-src" : "",
-			"description" : "CartoDB allows you to create 'amazing' maps in the cloud, with a PostGIS Backend."
+			"description" : "CartoDB allows you to create 'amazing' maps in the cloud, with a PostGIS backend."
 		}
 	]
 }

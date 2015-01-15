@@ -3,7 +3,7 @@
 		{
 			"name" : "PostgreSQL",
 			"img-src" : "",
-			"description" : "PostgreSQL is a powerful and full features open source relational database.  Add PostGIS for extremely efficinet spatial queries and operations."
+			"description" : "PostgreSQL is a powerful and full-featured open source relational database.  Add PostGIS for extremely efficient spatial queries and operations."
 		},
 		{
 			"name" : "MySQL",

@@ -3,7 +3,7 @@
 		{
 			"name" : "Mocha",
 			"img-src" : "",
-			"description" : "Mocha is a JavaScript testing framework running on node.js"
+			"description" : "Mocha is a JavaScript testing framework running on node.js."
 		}
 	]
 }

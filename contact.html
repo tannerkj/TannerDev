@@ -17,6 +17,21 @@
 
     <!-- Custom CSS -->
     <link href="css/tanner-styles.css" rel="stylesheet">
+    <style>
+        #spinner {
+            display : none;
+        }
+        #success-message {
+            width : 100%;
+            background-color : #0477BD;
+            color : #ffffff;
+            font : 14px Helvetica;
+            padding : 15px;
+            margin-bottom : 5px;
+            text-align : center;
+            display : none;
+        }
+    </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -78,6 +93,10 @@
 
         <div class="row">
             <section class="col-lg-6">
+
+                <div id="success-message">
+                        Thank you for contacting us, we'll be in touch soon.
+                </div>
                 
                 <form id="contact-form" action="mailto:support@tannergeo.com?subject=" method="post">
                     
@@ -115,7 +134,7 @@
 
                     <div class="control-group">
                         <div class="controls">
-                            <button type="submit" class="btn btn-success">Send Message</button>
+                            <button type="submit" class="btn btn-success" id="send-button"><span id="spinner" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> <span id="submit-text">Send Message</span></button>
                         </div>
                     </div>
 
@@ -157,6 +176,8 @@
         $(function () {
             $("#contact-form").on('submit', function (e) {
                 e.preventDefault();
+                $("#spinner").show();
+                $("#submit-text").text('Sending')
                 $.ajax({
                     url : "http://192.241.200.140/email/contact.php",
                     method : "POST",
@@ -167,7 +188,15 @@
                         message : $("#InputMessage").val()
                     },
                     success : function (m) {
-                        alert('success!');
+                        // reset form and add success message
+                        $("#contact-form")[0].reset();
+                        $("#spinner").hide();
+                        $("#submit-text").text(' Send Message');
+                        $("#success-message").show('slow')
+                                             .delay(5000).hide('slow');
+                    }, 
+                    error : function (e) {
+                        alert('Problem sending email.  Please email us at support@tannergeo.com');
                     }
                 })
             })

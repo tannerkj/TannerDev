@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
+<<<<<<< HEAD
     <title>tanner geo Blog</title>
     <description>tannergeo is passionate about computer science, web development and everything geospatial!  We are super greatful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
 </description>
@@ -9,6 +10,16 @@
     <pubDate>Thu, 08 Jan 2015 20:26:44 -0800</pubDate>
     <lastBuildDate>Thu, 08 Jan 2015 20:26:44 -0800</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+=======
+    <title>TannerGeo Blog</title>
+    <description>TannerGeo is passionate about computer science, web development and everything geospatial!  We are super grateful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
+</description>
+    <link>http://tannergeo.com/blog/site//</link>
+    <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sun, 11 Jan 2015 18:47:48 -0800</pubDate>
+    <lastBuildDate>Sun, 11 Jan 2015 18:47:48 -0800</lastBuildDate>
+    <generator>Jekyll v2.5.2</generator>
+>>>>>>> gh-pages
     
       <item>
         <title>Welcome to Jekyll!!</title>
@@ -28,8 +39,13 @@
 
 </description>
         <pubDate>Wed, 03 Dec 2014 10:44:02 -0800</pubDate>
+<<<<<<< HEAD
         <link>http://tannergeo.com/~joshuatanner/tannergeo//jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
         <guid isPermaLink="true">http://tannergeo.com/~joshuatanner/tannergeo//jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
+=======
+        <link>http://tannergeo.com/blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
+>>>>>>> gh-pages
         
         
         <category>jekyll</category>

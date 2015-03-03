@@ -3,12 +3,12 @@
 		{
 			"name" : "AngularJS",
 			"img-src" : "",
-			"description" : "AngularJS is a great client side web application framework maintained by Google."
+			"description" : "AngularJS is a great client-side web application framework maintained by Google."
 		},
 		{
 			"name" : "BackboneJS",
 			"img-src" : "",
-			"description" : "Backbone is a powerful, yet simplistic MV* framework for organizing client side code."
+			"description" : "Backbone is a powerful, yet simplistic MV* framework for organizing client-side code."
 		},
 		{
 			"name" : "jQuery",

@@ -17,6 +17,21 @@
 
     <!-- Custom CSS -->
     <link href="css/tanner-styles.css" rel="stylesheet">
+    <style>
+        #spinner {
+            display : none;
+        }
+        #success-message {
+            width : 100%;
+            background-color : #0477BD;
+            color : #ffffff;
+            font : 14px Helvetica;
+            padding : 15px;
+            margin-bottom : 5px;
+            text-align : center;
+            display : none;
+        }
+    </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -72,19 +87,23 @@
         <div class="row">
             <div class="jumbotron">
                 <h1>Let's Keep In Touch!</h1>
-                <p class="tagline">Thank you for visiting our site.  Feel free to contact us.  Just fill out the form below.</p>
+                <p class="tagline">Thank you for visiting our site.  Feel free to contact us.  Just fill out the form below or email us directly at <a href="mailto:support@tannergeo.com">support@tannergeo.com</a>.</p>
             </div>
         </div>
 
         <div class="row">
             <section class="col-lg-6">
+
+                <div id="success-message">
+                        Thank you for contacting us, we'll be in touch soon.
+                </div>
                 
                 <form id="contact-form" action="mailto:support@tannergeo.com?subject=" method="post">
                     
                     <div class="control-group">
-                        <label class="control-label" for="InputEmail"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Full Name</label>
+                        <label class="control-label" for="InputName"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Full Name</label>
                         <div class="controls controls-row">
-                            <input type="text" class="input-xxlarge" id="InputEmail" placeholder="Your Name" required>
+                            <input type="text" class="input-xxlarge" id="InputName" placeholder="Your Name" required>
                         </div>
                     </div>
 
@@ -98,7 +117,7 @@
 
 
                     <div class="control-group">
-                        <label class="control-label" for="InputEmail"><span class="glyphicon glyphicon-question-sign"></span> Subject</label>
+                        <label class="control-label" for="InputSubject"><span class="glyphicon glyphicon-question-sign"></span> Subject</label>
                         <div class="controls">
                             <input type="text" class="input-xxlarge" id="InputSubject" placeholder="What's Up?" required>
                         </div>
@@ -106,16 +125,16 @@
 
 
                     <div class="control-group">
-                        <label class="control-label" for="InputEmail"><span class="glyphicon glyphicon-pencil"></span> Message</label>
+                        <label class="control-label" for="InputMessage"><span class="glyphicon glyphicon-pencil"></span> Message</label>
                         <div class="controls">
-                            <textarea rows="6" class="input-xxlarge" id="InputEmail" placeholder="What's on your mind?"></textarea>
+                            <textarea rows="6" class="input-xxlarge" id="InputMessage" placeholder="What's on your mind?"></textarea>
                         </div>
                     </div>
 
 
                     <div class="control-group">
                         <div class="controls">
-                            <button type="submit" class="btn btn-success">Send Message</button>
+                            <button type="submit" class="btn btn-success" id="send-button"><span id="spinner" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> <span id="submit-text">Send Message</span></button>
                         </div>
                     </div>
 
@@ -151,5 +170,38 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+    
+    <!-- Email Function -->
+    <script>
+        $(function () {
+            $("#contact-form").on('submit', function (e) {
+                e.preventDefault();
+                $("#spinner").show();
+                $("#submit-text").text('Sending')
+                $.ajax({
+                    url : "http://192.241.200.140/email/contact.php",
+                    method : "POST",
+                    data : {
+                        name : $("#InputName").val(),
+                        email : $("#InputEmail").val(),
+                        subject : $("#InputSubject").val(),
+                        message : $("#InputMessage").val()
+                    },
+                    success : function (m) {
+                        // reset form and add success message
+                        $("#contact-form")[0].reset();
+                        $("#spinner").hide();
+                        $("#submit-text").text(' Send Message');
+                        $("#success-message").show('slow')
+                                             .delay(5000).hide('slow');
+                    }, 
+                    error : function (e) {
+                        alert('Problem sending email.  Please email us at support@tannergeo.com');
+                    }
+                })
+            })
+        })
+    </script>
+
 </body>
 </html>

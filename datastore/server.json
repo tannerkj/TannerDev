@@ -13,7 +13,7 @@
 		{
 			"name" : "Python - Django",
 			"img-src" : "",
-			"description" : "Django is a high-level python web framework for rapid development and clean code design"
+			"description" : "Django is a high-level python web framework for rapid development and clean code design."
 		}
 	]
 }

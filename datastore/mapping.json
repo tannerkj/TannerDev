@@ -8,7 +8,7 @@
 		{
 			"name" : "Leaflet",
 			"img-src" : "",
-			"description" : "Leaflet, at only 33kb of JavaScript, provides a lightweight and mobile friendly mapping API.  It is open source and  can be extended with third party libraries."
+			"description" : "Leaflet, at only 33kb of JavaScript, provides a lightweight and mobile-friendly mapping API.  It is open source and  can be extended with third party libraries."
 		},
 		{
 			"name" : "Google Maps API",
@@ -28,7 +28,7 @@
 		{
 			"name" : "CartoDB",
 			"img-src" : "",
-			"description" : "CartoDB allows you to create 'amazing' maps in the cloud, with a PostGIS Backend"
+			"description" : "CartoDB allows you to create 'amazing' maps in the cloud, with a PostGIS backend."
 		}
 	]
 }

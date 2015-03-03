@@ -48,7 +48,7 @@ Lastly, let's create actual points from our Latitude and Longitude fields:
 
 If we look at our data in QGIS, we see this now!
 
-![qgis screenshpt](./screenshots/points_qgis.png)
+![qgis screenshpt]({{site.url}}/images/blog/screenshots/points_qgis.png)
 
 Now that the stations are in our database, we need to import our weather station readings.  The process will be similar to what we accomplished getting the stations in.  The readings are comma delineated and contain information or daily recordings.  The initial format looks like:
 

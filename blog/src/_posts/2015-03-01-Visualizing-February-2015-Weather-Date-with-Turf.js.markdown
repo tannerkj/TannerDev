@@ -82,7 +82,7 @@ To visualize the data in QGIS, I created a special view with just the low temp. 
 
 By adding a filter for just February 1st in QGIS and symbolizing by temperature, the cold weather trends become apparent.  The mid-west and northeast have bone chilling lows while the west coast and southern US had relatively high temperatures.
 
-![February Map](./screenshots/temp_feb01.png)
+![February Map]({{site.url}}/images/blog/screenshots/temp_feb01.png)
 
 To incorporate the data into our mapping application, it's preferable that we work with a data format suited to our needs.  I'll be using [geojson](http://geojson.org/), mostly because this format will work best with [turf.js](http://turfjs.org/static/docs/global.html#GeoJSON).  We could [build a query](http://www.postgresonline.com/journal/archives/267-Creating-GeoJSON-Feature-Collections-with-JSON-and-PostGIS-functions.html) to generate this straight from postgres, but I'd prefer to just use [pgsql2shp](http://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg) and then [GDAL's ogr2ogr](http://www.gdal.org/ogr2ogr.html) to convert to geojson.
 
@@ -122,7 +122,7 @@ I want to first make sure I can create the TIN's.  To test, I use turf.js to bui
 
 Our result is a visually interesting graphic:
 
-![tin image](./screenshots/tin_nofill.png)
+![tin image]({{site.url}}/images/blog/screenshots/tin_nofill.png)
 
 
 For our fill colors, I'm going to use a library I built called [classybrew](https://github.com/tannerjt/classybrew).  It uses the natural breaks (Jenks) method of statistical classification and applies colors based on Cynthia Brewers color palettes.  I added a new diverging color palette for red-yellow-blue.  This should give us a good thematic perspective of color.
@@ -158,10 +158,10 @@ Now that we have the classybrew object setup, we can request a color code based 
 
 Our result is rather captivating:
 
-![Weather TIN Map](./screenshots/tin_fill.png)
+![Weather TIN Map]({{site.url}}/images/blog/screenshots/tin_fill.png)
 
 If we look at a map from the NOAA National Climatic Data Center, we can see our map aligns with their model:
 
-![NOAA NCDC Map](./screenshots/noaa_temp.png)
+![NOAA NCDC Map]({{site.url}}/images/blog/screenshots/noaa_temp.png)
 
 I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I'd like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!

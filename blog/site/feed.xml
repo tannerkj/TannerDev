@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 02 Mar 2015 21:35:41 -0800</pubDate>
-    <lastBuildDate>Mon, 02 Mar 2015 21:35:41 -0800</lastBuildDate>
+    <pubDate>Mon, 02 Mar 2015 21:38:34 -0800</pubDate>
+    <lastBuildDate>Mon, 02 Mar 2015 21:38:34 -0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -99,7 +99,7 @@ ON a.wban = b.wban
 
 &lt;p&gt;By adding a filter for just February 1st in QGIS and symbolizing by temperature, the cold weather trends become apparent.  The mid-west and northeast have bone chilling lows while the west coast and southern US had relatively high temperatures.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;./screenshots/temp_feb01.png&quot; alt=&quot;February Map&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/temp_feb01.png&quot; alt=&quot;February Map&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;To incorporate the data into our mapping application, it’s preferable that we work with a data format suited to our needs.  I’ll be using &lt;a href=&quot;http://geojson.org/&quot;&gt;geojson&lt;/a&gt;, mostly because this format will work best with &lt;a href=&quot;http://turfjs.org/static/docs/global.html#GeoJSON&quot;&gt;turf.js&lt;/a&gt;.  We could &lt;a href=&quot;http://www.postgresonline.com/journal/archives/267-Creating-GeoJSON-Feature-Collections-with-JSON-and-PostGIS-functions.html&quot;&gt;build a query&lt;/a&gt; to generate this straight from postgres, but I’d prefer to just use &lt;a href=&quot;http://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg&quot;&gt;pgsql2shp&lt;/a&gt; and then &lt;a href=&quot;http://www.gdal.org/ogr2ogr.html&quot;&gt;GDAL’s ogr2ogr&lt;/a&gt; to convert to geojson.&lt;/p&gt;
 
@@ -144,7 +144,7 @@ geojson.addTo(map);
 
 &lt;p&gt;Our result is a visually interesting graphic:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;./screenshots/tin_nofill.png&quot; alt=&quot;tin image&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/tin_nofill.png&quot; alt=&quot;tin image&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;For our fill colors, I’m going to use a library I built called &lt;a href=&quot;https://github.com/tannerjt/classybrew&quot;&gt;classybrew&lt;/a&gt;.  It uses the natural breaks (Jenks) method of statistical classification and applies colors based on Cynthia Brewers color palettes.  I added a new diverging color palette for red-yellow-blue.  This should give us a good thematic perspective of color.&lt;/p&gt;
 
@@ -181,11 +181,11 @@ geojson.addTo(map);
 
 &lt;p&gt;Our result is rather captivating:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;./screenshots/tin_fill.png&quot; alt=&quot;Weather TIN Map&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/tin_fill.png&quot; alt=&quot;Weather TIN Map&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;If we look at a map from the NOAA National Climatic Data Center, we can see our map aligns with their model:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;./screenshots/noaa_temp.png&quot; alt=&quot;NOAA NCDC Map&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/noaa_temp.png&quot; alt=&quot;NOAA NCDC Map&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!&lt;/p&gt;
 </description>

@@ -162,7 +162,7 @@ ON a.wban = b.wban
 
 <p>By adding a filter for just February 1st in QGIS and symbolizing by temperature, the cold weather trends become apparent.  The mid-west and northeast have bone chilling lows while the west coast and southern US had relatively high temperatures.</p>
 
-<p><img src="./screenshots/temp_feb01.png" alt="February Map" /></p>
+<p><img src="http://tannergeo.com/images/blog/screenshots/temp_feb01.png" alt="February Map" /></p>
 
 <p>To incorporate the data into our mapping application, it’s preferable that we work with a data format suited to our needs.  I’ll be using <a href="http://geojson.org/">geojson</a>, mostly because this format will work best with <a href="http://turfjs.org/static/docs/global.html#GeoJSON">turf.js</a>.  We could <a href="http://www.postgresonline.com/journal/archives/267-Creating-GeoJSON-Feature-Collections-with-JSON-and-PostGIS-functions.html">build a query</a> to generate this straight from postgres, but I’d prefer to just use <a href="http://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg">pgsql2shp</a> and then <a href="http://www.gdal.org/ogr2ogr.html">GDAL’s ogr2ogr</a> to convert to geojson.</p>
 
@@ -207,7 +207,7 @@ geojson.addTo(map);
 
 <p>Our result is a visually interesting graphic:</p>
 
-<p><img src="./screenshots/tin_nofill.png" alt="tin image" /></p>
+<p><img src="http://tannergeo.com/images/blog/screenshots/tin_nofill.png" alt="tin image" /></p>
 
 <p>For our fill colors, I’m going to use a library I built called <a href="https://github.com/tannerjt/classybrew">classybrew</a>.  It uses the natural breaks (Jenks) method of statistical classification and applies colors based on Cynthia Brewers color palettes.  I added a new diverging color palette for red-yellow-blue.  This should give us a good thematic perspective of color.</p>
 
@@ -244,11 +244,11 @@ geojson.addTo(map);
 
 <p>Our result is rather captivating:</p>
 
-<p><img src="./screenshots/tin_fill.png" alt="Weather TIN Map" /></p>
+<p><img src="http://tannergeo.com/images/blog/screenshots/tin_fill.png" alt="Weather TIN Map" /></p>
 
 <p>If we look at a map from the NOAA National Climatic Data Center, we can see our map aligns with their model:</p>
 
-<p><img src="./screenshots/noaa_temp.png" alt="NOAA NCDC Map" /></p>
+<p><img src="http://tannergeo.com/images/blog/screenshots/noaa_temp.png" alt="NOAA NCDC Map" /></p>
 
 <p>I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!</p>
 

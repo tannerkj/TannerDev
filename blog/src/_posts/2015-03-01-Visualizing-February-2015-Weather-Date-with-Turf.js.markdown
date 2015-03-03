@@ -6,8 +6,6 @@ categories: turfjs leaflet postgresql postgis
 author: Joshua Tanner
 ---
 
-## Visualizing February 2015 Weather Data wth Turf.js##
-
 February was a particularly cold month across most of the United States.  For us here in Oregon, we've been enjoying warm weather... but most further east have had record lows and heavy snow.  I've been interested in finding new ways to visualize this data.  I'll be using [NOAA's quality controlled logical climatological data](http://cdo.ncdc.noaa.gov/qclcd/QCLCD?prior=N) to load weather station data across the US into a Postgres database.  From there I hope to generate TIN's using [turf.js](http://turfjs.org/).
 
 The initial hurdle is getting the stations and readings into our database.  Our file from NOAA has the following pipe delineated headers:

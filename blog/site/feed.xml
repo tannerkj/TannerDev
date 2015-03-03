@@ -6,15 +6,13 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 02 Mar 2015 21:26:39 -0800</pubDate>
-    <lastBuildDate>Mon, 02 Mar 2015 21:26:39 -0800</lastBuildDate>
+    <pubDate>Mon, 02 Mar 2015 21:30:33 -0800</pubDate>
+    <lastBuildDate>Mon, 02 Mar 2015 21:30:33 -0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
         <title>Visualizing February 2015 Weather Data with Turf.js</title>
-        <description>&lt;h2 id=&quot;visualizing-february-2015-weather-data-wth-turfjs&quot;&gt;Visualizing February 2015 Weather Data wth Turf.js&lt;/h2&gt;
-
-&lt;p&gt;February was a particularly cold month across most of the United States.  For us here in Oregon, we’ve been enjoying warm weather… but most further east have had record lows and heavy snow.  I’ve been interested in finding new ways to visualize this data.  I’ll be using &lt;a href=&quot;http://cdo.ncdc.noaa.gov/qclcd/QCLCD?prior=N&quot;&gt;NOAA’s quality controlled logical climatological data&lt;/a&gt; to load weather station data across the US into a Postgres database.  From there I hope to generate TIN’s using &lt;a href=&quot;http://turfjs.org/&quot;&gt;turf.js&lt;/a&gt;.&lt;/p&gt;
+        <description>&lt;p&gt;February was a particularly cold month across most of the United States.  For us here in Oregon, we’ve been enjoying warm weather… but most further east have had record lows and heavy snow.  I’ve been interested in finding new ways to visualize this data.  I’ll be using &lt;a href=&quot;http://cdo.ncdc.noaa.gov/qclcd/QCLCD?prior=N&quot;&gt;NOAA’s quality controlled logical climatological data&lt;/a&gt; to load weather station data across the US into a Postgres database.  From there I hope to generate TIN’s using &lt;a href=&quot;http://turfjs.org/&quot;&gt;turf.js&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;The initial hurdle is getting the stations and readings into our database.  Our file from NOAA has the following pipe delineated headers:&lt;/p&gt;
 

@@ -19,3 +19,6 @@ twitter_username: Tanner_Geo
 
 # Build settings
 markdown: kramdown
+
+# syntax highlighter
+highlighter: pygments

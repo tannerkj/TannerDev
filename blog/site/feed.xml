@@ -6,9 +6,205 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 11 Jan 2015 18:47:48 -0800</pubDate>
-    <lastBuildDate>Sun, 11 Jan 2015 18:47:48 -0800</lastBuildDate>
-    <generator>Jekyll v2.5.2</generator>
+    <pubDate>Mon, 02 Mar 2015 21:22:23 -0800</pubDate>
+    <lastBuildDate>Mon, 02 Mar 2015 21:22:23 -0800</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Visualizing February 2015 Weather Data with Turf.js</title>
+        <description>&lt;h2 id=&quot;visualizing-february-2015-weather-data-wth-turfjs&quot;&gt;Visualizing February 2015 Weather Data wth Turf.js&lt;/h2&gt;
+
+&lt;p&gt;February was a particularly cold month across most of the United States.  For us here in Oregon, we’ve been enjoying warm weather… but most further east have had record lows and heavy snow.  I’ve been interested in finding new ways to visualize this data.  I’ll be using &lt;a href=&quot;http://cdo.ncdc.noaa.gov/qclcd/QCLCD?prior=N&quot;&gt;NOAA’s quality controlled logical climatological data&lt;/a&gt; to load weather station data across the US into a Postgres database.  From there I hope to generate TIN’s using &lt;a href=&quot;http://turfjs.org/&quot;&gt;turf.js&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The initial hurdle is getting the stations and readings into our database.  Our file from NOAA has the following pipe delineated headers:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;WBAN|WMO|CallSign|ClimateDivisionCode|ClimateDivisionStateCode|ClimateDivisionStationCode|Name|State|Location|Latitude|Longitude|GroundHeight|StationHeight|Barometer|TimeZone
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I don’t need all of these, just the WBAN (unique id of station), State, Location, Latitude and Longitude.  Let’s create the initial table:&lt;/p&gt;
+
+&lt;p&gt;Enable postgis on database:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE EXTENSION postgis;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create table for stations:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE TABLE weather_stations (
+    WBAN integer,
+    State char(2),
+    Location varchar(150),
+    Latitude decimal(9,6) NOT NULL,
+    Longitude decimal(9,6) NOT NULL
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I deleted the erroneous columns from the original file for easy import.  From psql command line, I ran the &lt;a href=&quot;http://stackoverflow.com/questions/2987433/how-to-import-csv-file-data-into-a-postgres-table&quot;&gt;following command&lt;/a&gt; to bring the stations into postgres:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;\copy weather_stations FROM &#39;csv location&#39; DELIMITER &#39;|&#39; CSV HEADER;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add an auto incremented primary key:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ALTER TABLE weather_stations ADD COLUMN id SERIAL PRIMARY KEY;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://postgis.net/docs/AddGeometryColumn.html&quot;&gt;Add geometry column&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SELECT AddGeometryColumn (&#39;public&#39;, &#39;weather_stations&#39;, &#39;geom&#39;, 4326, &#39;POINT&#39;, 2);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, let’s create actual points from our Latitude and Longitude fields:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;UPDATE weather_stations SET
+geom = ST_SetSRID(ST_MakePoint(Longitude, Latitude),4326)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we look at our data in QGIS, we see this now!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./screenshots/points_qgis.png&quot; alt=&quot;qgis screenshpt&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that the stations are in our database, we need to import our weather station readings.  The process will be similar to what we accomplished getting the stations in.  The readings are comma delineated and contain information or daily recordings.  The initial format looks like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;WBAN,YearMonthDay,Tmax,TmaxFlag,Tmin,TminFlag,Tavg,TavgFlag,Depart,DepartFlag,DewPoint,DewPointFlag,WetBulb,WetBulbFlag,Heat,HeatFlag,Cool,CoolFlag,Sunrise,SunriseFlag,Sunset,SunsetFlag,CodeSum,CodeSumFlag,Depth,DepthFlag,Water1,Water1Flag,SnowFall,SnowFallFlag,PrecipTotal,PrecipTotalFlag,StnPressure,StnPressureFlag,SeaLevel,SeaLevelFlag,ResultSpeed,ResultSpeedFlag,ResultDir,ResultDirFlag,AvgSpeed,AvgSpeedFlag,Max5Speed,Max5SpeedFlag,Max5Dir,Max5DirFlag,Max2Speed,Max2SpeedFlag,Max2Dir,Max2DirFlag
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Obviously, we are only interested in the WBAN (station id), YearMonthDay, Tmax, Tmin and Tavg.  These will give us the ability to map low, high and average daily temperatures.  I went ahead and removed the other columns from the initial dataset.  Let’s create the table in postgres.  I used varchar for the temperatures because of some string M values which equal missing… we can filter these out later.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE TABLE readings_feb (
+    WBAN integer,
+    YearMonthDay integer NOT NULL,
+    Tmax varchar(5),
+    Tmin varchar(5),
+    Tavg varchar(5)
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Import csv file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;\copy readings_feb FROM &#39;D:\TannerGeo\WeatherTinTurf\data_raw\QCLCD201502\201502daily.csv&#39; DELIMITER &#39;,&#39; CSV HEADER;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, add a primary key:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ALTER TABLE readings_feb ADD COLUMN id SERIAL PRIMARY KEY;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To visualize the data in QGIS, I created a special view with just the low temp.  Notice we’ve casted the &lt;a href=&quot;http://dba.stackexchange.com/questions/3429/how-can-i-convert-from-double-precision-to-bigint-with-postgresql&quot;&gt;tmin to int&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE VIEW feb_weather AS
+SELECT a.id, a.wban, a.yearmonthday, a.tmin::int, b.state, b.location, b.geom
+FROM readings_feb a
+LEFT JOIN weather_stations b
+ON a.wban = b.wban
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By adding a filter for just February 1st in QGIS and symbolizing by temperature, the cold weather trends become apparent.  The mid-west and northeast have bone chilling lows while the west coast and southern US had relatively high temperatures.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./screenshots/temp_feb01.png&quot; alt=&quot;February Map&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;To incorporate the data into our mapping application, it’s preferable that we work with a data format suited to our needs.  I’ll be using &lt;a href=&quot;http://geojson.org/&quot;&gt;geojson&lt;/a&gt;, mostly because this format will work best with &lt;a href=&quot;http://turfjs.org/static/docs/global.html#GeoJSON&quot;&gt;turf.js&lt;/a&gt;.  We could &lt;a href=&quot;http://www.postgresonline.com/journal/archives/267-Creating-GeoJSON-Feature-Collections-with-JSON-and-PostGIS-functions.html&quot;&gt;build a query&lt;/a&gt; to generate this straight from postgres, but I’d prefer to just use &lt;a href=&quot;http://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg&quot;&gt;pgsql2shp&lt;/a&gt; and then &lt;a href=&quot;http://www.gdal.org/ogr2ogr.html&quot;&gt;GDAL’s ogr2ogr&lt;/a&gt; to convert to geojson.&lt;/p&gt;
+
+&lt;p&gt;Create shapefile using pgsql command line tools:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pgsql2shp -f weather_02012015 -h localhost -p 5432 -u username -P password geodata &quot;SELECT * FROM feb_weather WHERE yearmonthday = 20150201&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Convert to GeoJSON using &lt;a href=&quot;http://www.gisinternals.com/query.html?content=filelist&amp;amp;file=release-1800-x64-gdal-1-11-1-mapserver-6-4-1.zip&quot;&gt;GDAL&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ogr2ogr -f GeoJSON ../geojson/02012015.geojson 02012015.shp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our output file is 287KB could probably be smaller since we don’t necessarily need all of the fields to make the TIN map.&lt;/p&gt;
+
+&lt;p&gt;The only dependencies I know of that we need to create the map are turf.js and leaflet.  I chose to use bower to install these dependencies:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bower install turf
+bower install leaflet
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For bringing in the geojson, I’m just going to assign the object to a variable and place it in a seperate .js file.   For future reference though, &lt;a href=&quot;https://github.com/calvinmetcalf&quot;&gt;calvinmetcalf&lt;/a&gt; has created a great helper for leaflet called the &lt;a href=&quot;https://github.com/calvinmetcalf/leaflet-ajax&quot;&gt;leaflet-ajax&lt;/a&gt; library for working with geojson files.&lt;/p&gt;
+
+&lt;p&gt;We now have a .js file called 02012015.js with the geojson assigned to the variable feb01.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var feb01 = {
+    type&quot;: &quot;FeatureCollection&quot;,
+	&quot;crs&quot;: { &quot;type&quot;: &quot;name&quot;, &quot;properties&quot;: { &quot;name&quot;: &quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot; } },
+	...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I want to first make sure I can create the TIN’s.  To test, I use turf.js to build and add them to the map with no fill.  By passing in TMIN, turf generates Z values that we can then use to generate our fill colors.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, &#39;TMIN&#39;);
+var geojson = L.geoJson(tin, {
+	style : {
+		weight : 1
+	}
+});
+geojson.addTo(map);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our result is a visually interesting graphic:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./screenshots/tin_nofill.png&quot; alt=&quot;tin image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For our fill colors, I’m going to use a library I built called &lt;a href=&quot;https://github.com/tannerjt/classybrew&quot;&gt;classybrew&lt;/a&gt;.  It uses the natural breaks (Jenks) method of statistical classification and applies colors based on Cynthia Brewers color palettes.  I added a new diverging color palette for red-yellow-blue.  This should give us a good thematic perspective of color.&lt;/p&gt;
+
+&lt;p&gt;To stylize the map, we first need to initialize and setup or statistical breaks and color palette based on our minimum temperature values.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// create classification for colors
+var brew = new classyBrew();
+var values = []; // tmin values
+for( var i = 0; i &amp;lt; feb01.features.length; i++) {
+	values.push(feb01.features[i].properties[&#39;TMIN&#39;]);
+}
+brew.setSeries(values);
+brew.setNumClasses(6);
+brew.classify();
+brew.setColorCode(&quot;BuYlRd&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have the classybrew object setup, we can request a color code based on a provided value with &lt;code&gt;getColorInRange(value)&lt;/code&gt;.  We’ll use this function to return a color based on the average of minimum temperature from each station that makes up our triangles.  This can be done during instantiation of our geojson layer.  First, however we need to create our TIN from our points using &lt;code&gt;turf.tin(geojson, z value)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, &#39;TMIN&#39;);
+var geojson = L.geoJson(tin, {
+	style : function (f) {
+		return {
+			weight : 1,
+			fillColor : (function () {
+				return brew.getColorInRange((f.properties.a + f.properties.b + f.properties.c) / 3.0, true);
+			}()),
+			fillOpacity : 0.85
+		}
+	}
+});
+geojson.addTo(map);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Our result is rather captivating:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./screenshots/tin_fill.png&quot; alt=&quot;Weather TIN Map&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If we look at a map from the NOAA National Climatic Data Center, we can see our map aligns with their model:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;./screenshots/noaa_temp.png&quot; alt=&quot;NOAA NCDC Map&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!&lt;/p&gt;
+</description>
+        <pubDate>Sun, 01 Mar 2015 00:00:00 -0800</pubDate>
+        <link>http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</guid>
+        
+        
+        <category>turfjs</category>
+        
+        <category>leaflet</category>
+        
+        <category>postgresql</category>
+        
+        <category>postgis</category>
+        
+      </item>
     
       <item>
         <title>Welcome to Jekyll!!</title>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>Visualizing February 2015 Weather Data with Turf.js</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We are super grateful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//turfjs/leaflet/postgresql/postgis/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Visualizing February 2015 Weather Data with Turf.js</h1>
+    <p class="post-meta">Mar 1, 2015 • Joshua Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <h2 id="visualizing-february-2015-weather-data-wth-turfjs">Visualizing February 2015 Weather Data wth Turf.js</h2>
+
+<p>February was a particularly cold month across most of the United States.  For us here in Oregon, we’ve been enjoying warm weather… but most further east have had record lows and heavy snow.  I’ve been interested in finding new ways to visualize this data.  I’ll be using <a href="http://cdo.ncdc.noaa.gov/qclcd/QCLCD?prior=N">NOAA’s quality controlled logical climatological data</a> to load weather station data across the US into a Postgres database.  From there I hope to generate TIN’s using <a href="http://turfjs.org/">turf.js</a>.</p>
+
+<p>The initial hurdle is getting the stations and readings into our database.  Our file from NOAA has the following pipe delineated headers:</p>
+
+<pre><code>WBAN|WMO|CallSign|ClimateDivisionCode|ClimateDivisionStateCode|ClimateDivisionStationCode|Name|State|Location|Latitude|Longitude|GroundHeight|StationHeight|Barometer|TimeZone
+</code></pre>
+
+<p>I don’t need all of these, just the WBAN (unique id of station), State, Location, Latitude and Longitude.  Let’s create the initial table:</p>
+
+<p>Enable postgis on database:</p>
+
+<pre><code>CREATE EXTENSION postgis;
+</code></pre>
+
+<p>Create table for stations:</p>
+
+<pre><code>CREATE TABLE weather_stations (
+    WBAN integer,
+    State char(2),
+    Location varchar(150),
+    Latitude decimal(9,6) NOT NULL,
+    Longitude decimal(9,6) NOT NULL
+);
+</code></pre>
+
+<p>I deleted the erroneous columns from the original file for easy import.  From psql command line, I ran the <a href="http://stackoverflow.com/questions/2987433/how-to-import-csv-file-data-into-a-postgres-table">following command</a> to bring the stations into postgres:</p>
+
+<pre><code>\copy weather_stations FROM 'csv location' DELIMITER '|' CSV HEADER;
+</code></pre>
+
+<p>Add an auto incremented primary key:</p>
+
+<pre><code>ALTER TABLE weather_stations ADD COLUMN id SERIAL PRIMARY KEY;
+</code></pre>
+
+<p><a href="http://postgis.net/docs/AddGeometryColumn.html">Add geometry column</a>:</p>
+
+<pre><code>SELECT AddGeometryColumn ('public', 'weather_stations', 'geom', 4326, 'POINT', 2);
+</code></pre>
+
+<p>Lastly, let’s create actual points from our Latitude and Longitude fields:</p>
+
+<pre><code>UPDATE weather_stations SET
+geom = ST_SetSRID(ST_MakePoint(Longitude, Latitude),4326)
+</code></pre>
+
+<p>If we look at our data in QGIS, we see this now!</p>
+
+<p><img src="./screenshots/points_qgis.png" alt="qgis screenshpt" /></p>
+
+<p>Now that the stations are in our database, we need to import our weather station readings.  The process will be similar to what we accomplished getting the stations in.  The readings are comma delineated and contain information or daily recordings.  The initial format looks like:</p>
+
+<pre><code>WBAN,YearMonthDay,Tmax,TmaxFlag,Tmin,TminFlag,Tavg,TavgFlag,Depart,DepartFlag,DewPoint,DewPointFlag,WetBulb,WetBulbFlag,Heat,HeatFlag,Cool,CoolFlag,Sunrise,SunriseFlag,Sunset,SunsetFlag,CodeSum,CodeSumFlag,Depth,DepthFlag,Water1,Water1Flag,SnowFall,SnowFallFlag,PrecipTotal,PrecipTotalFlag,StnPressure,StnPressureFlag,SeaLevel,SeaLevelFlag,ResultSpeed,ResultSpeedFlag,ResultDir,ResultDirFlag,AvgSpeed,AvgSpeedFlag,Max5Speed,Max5SpeedFlag,Max5Dir,Max5DirFlag,Max2Speed,Max2SpeedFlag,Max2Dir,Max2DirFlag
+</code></pre>
+
+<p>Obviously, we are only interested in the WBAN (station id), YearMonthDay, Tmax, Tmin and Tavg.  These will give us the ability to map low, high and average daily temperatures.  I went ahead and removed the other columns from the initial dataset.  Let’s create the table in postgres.  I used varchar for the temperatures because of some string M values which equal missing… we can filter these out later.</p>
+
+<pre><code>CREATE TABLE readings_feb (
+    WBAN integer,
+    YearMonthDay integer NOT NULL,
+    Tmax varchar(5),
+    Tmin varchar(5),
+    Tavg varchar(5)
+);
+</code></pre>
+
+<p>Import csv file:</p>
+
+<pre><code>\copy readings_feb FROM 'D:\TannerGeo\WeatherTinTurf\data_raw\QCLCD201502\201502daily.csv' DELIMITER ',' CSV HEADER;
+</code></pre>
+
+<p>Finally, add a primary key:</p>
+
+<pre><code>ALTER TABLE readings_feb ADD COLUMN id SERIAL PRIMARY KEY;
+</code></pre>
+
+<p>To visualize the data in QGIS, I created a special view with just the low temp.  Notice we’ve casted the <a href="http://dba.stackexchange.com/questions/3429/how-can-i-convert-from-double-precision-to-bigint-with-postgresql">tmin to int</a>:</p>
+
+<pre><code>CREATE VIEW feb_weather AS
+SELECT a.id, a.wban, a.yearmonthday, a.tmin::int, b.state, b.location, b.geom
+FROM readings_feb a
+LEFT JOIN weather_stations b
+ON a.wban = b.wban
+</code></pre>
+
+<p>By adding a filter for just February 1st in QGIS and symbolizing by temperature, the cold weather trends become apparent.  The mid-west and northeast have bone chilling lows while the west coast and southern US had relatively high temperatures.</p>
+
+<p><img src="./screenshots/temp_feb01.png" alt="February Map" /></p>
+
+<p>To incorporate the data into our mapping application, it’s preferable that we work with a data format suited to our needs.  I’ll be using <a href="http://geojson.org/">geojson</a>, mostly because this format will work best with <a href="http://turfjs.org/static/docs/global.html#GeoJSON">turf.js</a>.  We could <a href="http://www.postgresonline.com/journal/archives/267-Creating-GeoJSON-Feature-Collections-with-JSON-and-PostGIS-functions.html">build a query</a> to generate this straight from postgres, but I’d prefer to just use <a href="http://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg">pgsql2shp</a> and then <a href="http://www.gdal.org/ogr2ogr.html">GDAL’s ogr2ogr</a> to convert to geojson.</p>
+
+<p>Create shapefile using pgsql command line tools:</p>
+
+<pre><code>pgsql2shp -f weather_02012015 -h localhost -p 5432 -u username -P password geodata "SELECT * FROM feb_weather WHERE yearmonthday = 20150201";
+</code></pre>
+
+<p>Convert to GeoJSON using <a href="http://www.gisinternals.com/query.html?content=filelist&amp;file=release-1800-x64-gdal-1-11-1-mapserver-6-4-1.zip">GDAL</a>:</p>
+
+<pre><code>ogr2ogr -f GeoJSON ../geojson/02012015.geojson 02012015.shp
+</code></pre>
+
+<p>Our output file is 287KB could probably be smaller since we don’t necessarily need all of the fields to make the TIN map.</p>
+
+<p>The only dependencies I know of that we need to create the map are turf.js and leaflet.  I chose to use bower to install these dependencies:</p>
+
+<pre><code>bower install turf
+bower install leaflet
+</code></pre>
+
+<p>For bringing in the geojson, I’m just going to assign the object to a variable and place it in a seperate .js file.   For future reference though, <a href="https://github.com/calvinmetcalf">calvinmetcalf</a> has created a great helper for leaflet called the <a href="https://github.com/calvinmetcalf/leaflet-ajax">leaflet-ajax</a> library for working with geojson files.</p>
+
+<p>We now have a .js file called 02012015.js with the geojson assigned to the variable feb01.</p>
+
+<pre><code>var feb01 = {
+    type": "FeatureCollection",
+	"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+	...
+</code></pre>
+
+<p>I want to first make sure I can create the TIN’s.  To test, I use turf.js to build and add them to the map with no fill.  By passing in TMIN, turf generates Z values that we can then use to generate our fill colors.</p>
+
+<pre><code>var tin = turf.tin(feb01, 'TMIN');
+var geojson = L.geoJson(tin, {
+	style : {
+		weight : 1
+	}
+});
+geojson.addTo(map);
+</code></pre>
+
+<p>Our result is a visually interesting graphic:</p>
+
+<p><img src="./screenshots/tin_nofill.png" alt="tin image" /></p>
+
+<p>For our fill colors, I’m going to use a library I built called <a href="https://github.com/tannerjt/classybrew">classybrew</a>.  It uses the natural breaks (Jenks) method of statistical classification and applies colors based on Cynthia Brewers color palettes.  I added a new diverging color palette for red-yellow-blue.  This should give us a good thematic perspective of color.</p>
+
+<p>To stylize the map, we first need to initialize and setup or statistical breaks and color palette based on our minimum temperature values.</p>
+
+<pre><code>// create classification for colors
+var brew = new classyBrew();
+var values = []; // tmin values
+for( var i = 0; i &lt; feb01.features.length; i++) {
+	values.push(feb01.features[i].properties['TMIN']);
+}
+brew.setSeries(values);
+brew.setNumClasses(6);
+brew.classify();
+brew.setColorCode("BuYlRd");
+</code></pre>
+
+<p>Now that we have the classybrew object setup, we can request a color code based on a provided value with <code>getColorInRange(value)</code>.  We’ll use this function to return a color based on the average of minimum temperature from each station that makes up our triangles.  This can be done during instantiation of our geojson layer.  First, however we need to create our TIN from our points using <code>turf.tin(geojson, z value)</code>.</p>
+
+<pre><code>var tin = turf.tin(feb01, 'TMIN');
+var geojson = L.geoJson(tin, {
+	style : function (f) {
+		return {
+			weight : 1,
+			fillColor : (function () {
+				return brew.getColorInRange((f.properties.a + f.properties.b + f.properties.c) / 3.0, true);
+			}()),
+			fillOpacity : 0.85
+		}
+	}
+});
+geojson.addTo(map);
+</code></pre>
+
+<p>Our result is rather captivating:</p>
+
+<p><img src="./screenshots/tin_fill.png" alt="Weather TIN Map" /></p>
+
+<p>If we look at a map from the NOAA National Climatic Data Center, we can see our map aligns with their model:</p>
+
+<p><img src="./screenshots/noaa_temp.png" alt="NOAA NCDC Map" /></p>
+
+<p>I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>TannerGeo Blog</li>
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We are super grateful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

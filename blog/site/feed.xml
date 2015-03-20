@@ -6,15 +6,13 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 19 Mar 2015 19:54:04 -0700</pubDate>
-    <lastBuildDate>Thu, 19 Mar 2015 19:54:04 -0700</lastBuildDate>
+    <pubDate>Thu, 19 Mar 2015 19:56:00 -0700</pubDate>
+    <lastBuildDate>Thu, 19 Mar 2015 19:56:00 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
         <title>A Brief Look At Vector Tiles</title>
-        <description>&lt;h1 id=&quot;a-brief-look-at-vector-tiles---part-i&quot;&gt;A Brief Look at Vector Tiles - Part I&lt;/h1&gt;
-
-&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles.&lt;/p&gt;
+        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles.&lt;/p&gt;
 
 &lt;p&gt;At ESRI’s 2015 Developer Conference, the plan to &lt;a href=&quot;http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles&quot;&gt;implement vector tiles&lt;/a&gt; into their mapping platform was announced.  Most traditional GIS analysts and developers have created &lt;a href=&quot;http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000189000000&quot;&gt;tile caches&lt;/a&gt; or &lt;a href=&quot;https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html&quot;&gt;consumed tiled map service layers&lt;/a&gt; to implement complex geometries with &lt;a href=&quot;http://www.usgs.gov/faq/categories/9860/3604&quot;&gt;more efficiency&lt;/a&gt; as part of their business processes.  To most of the industry (I’m assuming), &lt;a href=&quot;http://wiki.openstreetmap.org/wiki/Vector_tiles&quot;&gt;vector tiles&lt;/a&gt; is a new concept that offers many advantages over traditional formats.  Although the concept is similar to raster tiles, vector tiles return the actual features which creates the ability to manipulate the style and symbology of features dynamically.  This can be done, all while benefiting from the efficiency of only needing to load tiles within the current extent and not the entirety of a features geometry and attributes.  Also, vector tiles also benefit over feature services because the geometry is essentially cached and not needed to be dynamically created on the server in most cases.&lt;/p&gt;
 

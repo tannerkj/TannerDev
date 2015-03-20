@@ -6,8 +6,6 @@ categories: vector_tiles formats
 author: Joshua Tanner
 ---
 
-#A Brief Look at Vector Tiles - Part I
-
 This post is a very 'basic' look into vector tiles.  Feel free to make improvements to this post through [github](https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md).  Also, please use the links throughout this document to understand more about vector tiles. 
 
 At ESRI's 2015 Developer Conference, the plan to [implement vector tiles](http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles) into their mapping platform was announced.  Most traditional GIS analysts and developers have created [tile caches](http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000189000000) or [consumed tiled map service layers](https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html) to implement complex geometries with [more efficiency](http://www.usgs.gov/faq/categories/9860/3604) as part of their business processes.  To most of the industry (I'm assuming), [vector tiles](http://wiki.openstreetmap.org/wiki/Vector_tiles) is a new concept that offers many advantages over traditional formats.  Although the concept is similar to raster tiles, vector tiles return the actual features which creates the ability to manipulate the style and symbology of features dynamically.  This can be done, all while benefiting from the efficiency of only needing to load tiles within the current extent and not the entirety of a features geometry and attributes.  Also, vector tiles also benefit over feature services because the geometry is essentially cached and not needed to be dynamically created on the server in most cases.

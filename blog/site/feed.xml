@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 17 Mar 2015 22:23:39 -0700</pubDate>
-    <lastBuildDate>Tue, 17 Mar 2015 22:23:39 -0700</lastBuildDate>
+    <pubDate>Thu, 19 Mar 2015 19:54:04 -0700</pubDate>
+    <lastBuildDate>Thu, 19 Mar 2015 19:54:04 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -24,7 +24,7 @@
 
 &lt;p&gt;There are various tile-generation libraries available for creating vector tiles, and according to Esri’s announcement, a toolbox will be available directly though their Desktop (or Pro) software.  One nice example I found was created by &lt;a href=&quot;https://github.com/glob3mobile&quot;&gt;Glob3 Mobile&lt;/a&gt; called &lt;a href=&quot;https://github.com/glob3mobile/mmt-vector-tiles&quot;&gt;mmt-vector-tiles&lt;/a&gt; which can generate vector tiles directly from a PostGIS database.  They also have a &lt;a href=&quot;http://wb.glob3mobile.com/vl/index_lux.html&quot;&gt;good example&lt;/a&gt; posted of this in action with OpenLayers 3.  If you look at the &lt;a href=&quot;http://igosoftware.dyndns.org:8000/vectorial/lux_buildings_LEVELS_12-18_MERCATOR/GEOJSON/&quot;&gt;file stucture&lt;/a&gt; of their tiles, it looks similar to what is shown in &lt;a href=&quot;http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles&quot;&gt;Esri’s presentation&lt;/a&gt; although I’m not certain it adheres to the same specification.&lt;/p&gt;
 
-&lt;p&gt;I’ve labeled this post ‘Part I’, as I’d like to dive deeper into the specification and illustrate different workflows to creating and consuming vector tiles.  If you haven’t heard of vector tiles before, I hope this post has been useful.  More to come!&lt;/p&gt;
+&lt;p&gt;If you haven’t heard of vector tiles before, I hope this post has been useful!&lt;/p&gt;
 
 </description>
         <pubDate>Sun, 15 Mar 2015 00:00:00 -0700</pubDate>

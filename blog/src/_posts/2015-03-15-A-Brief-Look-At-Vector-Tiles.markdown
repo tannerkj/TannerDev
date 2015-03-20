@@ -18,5 +18,5 @@ Within [Esri's current JavaScript API](https://developers.arcgis.com/javascript/
 
 There are various tile-generation libraries available for creating vector tiles, and according to Esri's announcement, a toolbox will be available directly though their Desktop (or Pro) software.  One nice example I found was created by [Glob3 Mobile](https://github.com/glob3mobile) called [mmt-vector-tiles](https://github.com/glob3mobile/mmt-vector-tiles) which can generate vector tiles directly from a PostGIS database.  They also have a [good example](http://wb.glob3mobile.com/vl/index_lux.html) posted of this in action with OpenLayers 3.  If you look at the [file stucture](http://igosoftware.dyndns.org:8000/vectorial/lux_buildings_LEVELS_12-18_MERCATOR/GEOJSON/) of their tiles, it looks similar to what is shown in [Esri's presentation](http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles) although I'm not certain it adheres to the same specification.
 
-I've labeled this post 'Part I', as I'd like to dive deeper into the specification and illustrate different workflows to creating and consuming vector tiles.  If you haven't heard of vector tiles before, I hope this post has been useful.  More to come!
+If you haven't heard of vector tiles before, I hope this post has been useful!
 

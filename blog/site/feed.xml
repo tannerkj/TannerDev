@@ -6,9 +6,170 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 19 Mar 2015 19:56:00 -0700</pubDate>
-    <lastBuildDate>Thu, 19 Mar 2015 19:56:00 -0700</lastBuildDate>
+    <pubDate>Thu, 19 Mar 2015 22:36:35 -0700</pubDate>
+    <lastBuildDate>Thu, 19 Mar 2015 22:36:35 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Visualizing Percentage of Storms Resulting in Injuries/Deaths by State (1996 - 2014)</title>
+        <description>&lt;p&gt;Starting in 1996, &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf&quot;&gt;National Weather Service directive 10-1605&lt;/a&gt; mandated the reporting of 48 different weather events and its effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of injuries/deaths reported by state, and to identify which states 
+have been more fortunate than others.  The data is provided by &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/ftp.jsp&quot;&gt;NOAA&lt;/a&gt; in .csv files organized by individual year.&lt;/p&gt;
+
+&lt;p&gt;The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable postgis:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE EXTENSION postgis;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, the code to generate the table is executed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE TABLE storm_events (
+	state varchar(20),
+	year smallint,
+	state_fips smallint,	
+	event_type varchar(50),
+	injuries_direct smallint,
+	injuries_indirect smallint,
+	deaths_direct smallint,
+	deaths_indirect smallint
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Included are the attributes we need for this application, along with additional data we may opt to use in the future for further analysis.&lt;/p&gt;
+
+&lt;p&gt;To create a surrogate primary key called id for this table, the following code is executed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ALTER TABLE storm_events ADD COLUMN id SERIAL PRIMARY KEY;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To load the data into the table, several options are available.  One option, though not the most efficient, is outlined below:&lt;/p&gt;
+
+&lt;p&gt;1) a python script is written to read from each year’s .csv file in our details_raw folder and creates newly formatted .csv files, excluding the unnecessary data.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# data_loader.py
+# reads .csv files in ./details_raw
+# creates new .csv files in a separate directory
+
+import os, csv
+
+in_dir = &quot;./details_raw&quot;
+
+def filter_fields(f):
+	with open(root + &quot;/&quot; + f, &quot;rb&quot;) as source:
+    	reader = csv.DictReader(source)
+    	outf = root + &quot;/formatted/&quot; + f
+    	with open(outf, &quot;wb&quot;) as result:
+      		writer = csv.DictWriter(result, fieldnames = [&#39;STATE&#39;, &#39;YEAR&#39;,&#39;STATE_FIPS&#39;, 
+      		&#39;EVENT_TYPE&#39;, &#39;INJURIES_DIRECT&#39;, &#39;INJURIES_INDIRECT&#39;, &#39;DEATHS_DIRECT&#39;, &#39;DEATHS_INDIRECT&#39;])
+        	print (&quot;Writing&quot;, outf)
+        	writer.writeheader()
+        	for row in reader:
+            	writer.writerow({&#39;STATE&#39; : row[&#39;STATE&#39;],
+                             	&#39;YEAR&#39; : row[&#39;YEAR&#39;],
+                             	&#39;STATE_FIPS&#39; : row[&#39;STATE_FIPS&#39;],
+                             	&#39;EVENT_TYPE&#39; : row[&#39;EVENT_TYPE&#39;],
+                             	&#39;INJURIES_DIRECT&#39; : row[&#39;INJURIES_DIRECT&#39;],
+                             	&#39;INJURIES_INDIRECT&#39; : row[&#39;INJURIES_INDIRECT&#39;],
+                             	&#39;DEATHS_DIRECT&#39; : row[&#39;DEATHS_DIRECT&#39;],
+                             	&#39;DEATHS_INDIRECT&#39; : row[&#39;DEATHS_INDIRECT&#39;]})
+
+for root, dirs, files in os.walk(in_dir):
+	for f in files:
+    	filter_fields(f)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2) Using postgres command line tools for each csv file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;psql -U postgres
+
+\connect geodata
+\copy storm_events from &#39;/Path to csv&#39; delimiter &#39;,&#39; csv header
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, to create views that allow us to analyze the data you have several options but below are a few simple ones that isolate the info we are interested in.  They also allow room for growth should you choose to add aggregates of other attributes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE VIEW injuries_deaths AS
+SELECT storm_events.state, storm_events.state_fips,
+count(*) AS count
+FROM storm_events
+WHERE storm_events.injuries_direct &amp;lt;&amp;gt; 0 OR
+storm_events.injuries_indirect 	&amp;lt;&amp;gt; 0 OR
+storm_events.deaths_direct &amp;lt;&amp;gt; 0 OR
+storm_events.deaths_indirect &amp;lt;&amp;gt; 0
+GROUP BY storm_events.state, state_fips
+ORDER BY storm_events.state;
+
+CREATE VIEW state_totals AS
+SELECT total.state, total.state_fips,
+count(*) AS count
+FROM (SELECT storm_events.state,
+       storm_events.year,
+       storm_events.state_fips,
+       storm_events.event_type,
+       storm_events.injuries_direct,
+       storm_events.injuries_indirect,
+       storm_events.deaths_direct,
+       storm_events.deaths_indirect
+      FROM storm_events) total
+GROUP BY total.state, total.state_fips
+ORDER BY total.state;
+
+CREATE VIEW map_storm_data AS
+(SELECT s.state, s.state_fips, id.count injuries_death_count, s.count         	total_storms_count, round(((id.count::float/s.count::float)*         	100)::numeric, 2) percent
+FROM injuries_deaths id
+LEFT JOIN state_totals s ON id.state = s.state)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A simple query to validate the data and identify the states with the highest percentage of storms resulting in injury/death:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SELECT *
+FROM map_storm_data
+ORDER BY percent DESC
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To generate a shapefile we can use to visualize our data,  download from TIGER the shapefile needed, and then use command line to convert it to the desired projection and import it into postgres.  In this case, I entered:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;shp2pgsql -s 4269:4326 tl_2014_us_state  public.states | psql -h 
+localhost -d geodata -U postgres
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now to create a single view that includes the desired calculations along with the associated state geometry data:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CREATE VIEW state_storm_percent AS
+SELECT a.name, b.state_fips, b.injuries_death_count,
+b.total_storms_count, b.percent, ST_Simplify(a.geom, 0.005) as geom
+FROM states a
+LEFT JOIN map_storm_data b
+ON a.statefp::int = b.state_fips
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For constructing the application, we will use Leaflet and GeoJSON.  To do this, we will export the map as a shapefile, and use gdal to convert it to geojson.&lt;/p&gt;
+
+&lt;p&gt;The following code is executed in the command line for PostgreSQL to generate the shapefile and then convert to geojson:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;pgsql2shp -f storm_events -h localhost -p 5432 -u postgres -P password
+geodata public.state_storm_percent;
+
+ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create the map for our application, we will use the same process as described in this &lt;a href=&quot;http://leafletjs.com/examples/choropleth.html&quot;&gt;Leaflet tutorial&lt;/a&gt;.  The end result is a thematic map with a legend and an info window describing the data as you select each state.&lt;/p&gt;
+
+&lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 19 Mar 2015 00:00:00 -0700</pubDate>
+        <link>http://tannergeo.com/blog/site//postgis/leaflet/noaa/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//postgis/leaflet/noaa/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</guid>
+        
+        
+        <category>postgis</category>
+        
+        <category>leaflet</category>
+        
+        <category>noaa</category>
+        
+      </item>
     
       <item>
         <title>A Brief Look At Vector Tiles</title>

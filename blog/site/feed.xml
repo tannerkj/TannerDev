@@ -6,13 +6,13 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 19 Mar 2015 22:36:35 -0700</pubDate>
-    <lastBuildDate>Thu, 19 Mar 2015 22:36:35 -0700</lastBuildDate>
-    <generator>Jekyll v2.5.3</generator>
+    <pubDate>Tue, 24 Mar 2015 15:03:24 -0700</pubDate>
+    <lastBuildDate>Tue, 24 Mar 2015 15:03:24 -0700</lastBuildDate>
+    <generator>Jekyll v2.5.2</generator>
     
       <item>
         <title>Visualizing Percentage of Storms Resulting in Injuries/Deaths by State (1996 - 2014)</title>
-        <description>&lt;p&gt;Starting in 1996, &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf&quot;&gt;National Weather Service directive 10-1605&lt;/a&gt; mandated the reporting of 48 different weather events and its effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of injuries/deaths reported by state, and to identify which states 
+        <description>&lt;p&gt;Starting in 1996, &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf&quot;&gt;National Weather Service directive 10-1605&lt;/a&gt; mandated the reporting of 48 different weather events and its effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
 have been more fortunate than others.  The data is provided by &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/ftp.jsp&quot;&gt;NOAA&lt;/a&gt; in .csv files organized by individual year.&lt;/p&gt;
 
 &lt;p&gt;The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable postgis:&lt;/p&gt;
@@ -155,7 +155,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 
 &lt;p&gt;To create the map for our application, we will use the same process as described in this &lt;a href=&quot;http://leafletjs.com/examples/choropleth.html&quot;&gt;Leaflet tutorial&lt;/a&gt;.  The end result is a thematic map with a legend and an info window describing the data as you select each state.&lt;/p&gt;
 
-&lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
 
 </description>
         <pubDate>Thu, 19 Mar 2015 00:00:00 -0700</pubDate>
@@ -173,7 +173,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
     
       <item>
         <title>A Brief Look At Vector Tiles</title>
-        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles.&lt;/p&gt;
+        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles. &lt;/p&gt;
 
 &lt;p&gt;At ESRI’s 2015 Developer Conference, the plan to &lt;a href=&quot;http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles&quot;&gt;implement vector tiles&lt;/a&gt; into their mapping platform was announced.  Most traditional GIS analysts and developers have created &lt;a href=&quot;http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000189000000&quot;&gt;tile caches&lt;/a&gt; or &lt;a href=&quot;https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html&quot;&gt;consumed tiled map service layers&lt;/a&gt; to implement complex geometries with &lt;a href=&quot;http://www.usgs.gov/faq/categories/9860/3604&quot;&gt;more efficiency&lt;/a&gt; as part of their business processes.  To most of the industry (I’m assuming), &lt;a href=&quot;http://wiki.openstreetmap.org/wiki/Vector_tiles&quot;&gt;vector tiles&lt;/a&gt; is a new concept that offers many advantages over traditional formats.  Although the concept is similar to raster tiles, vector tiles return the actual features which creates the ability to manipulate the style and symbology of features dynamically.  This can be done, all while benefiting from the efficiency of only needing to load tiles within the current extent and not the entirety of a features geometry and attributes.  Also, vector tiles also benefit over feature services because the geometry is essentially cached and not needed to be dynamically created on the server in most cases.&lt;/p&gt;
 

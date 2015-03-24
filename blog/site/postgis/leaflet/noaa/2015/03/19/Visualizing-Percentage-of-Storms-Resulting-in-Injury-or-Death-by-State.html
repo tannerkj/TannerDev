@@ -182,14 +182,14 @@ CREATE VIEW map_storm_data AS
 total_storms_count, 
 round(((id.count::float/s.count::float)*100)::numeric,2) percent
 FROM injuries_deaths id
-LEFT JOIN state_totals s ON id.state = s.state)
+LEFT JOIN state_totals s ON id.state = s.state);
 </code></pre>
 
 <p>A simple query to validate the data and identify the states with the highest percentage of storms resulting in injury/death:</p>
 
 <pre><code>SELECT *
 FROM map_storm_data
-ORDER BY percent DESC
+ORDER BY percent DESC;
 </code></pre>
 
 <p>To generate a shapefile we can use to visualize our data,  download from TIGER the shapefile needed, and then use command line to convert it to the desired projection and import it into postgres.  In this case, I entered:</p>
@@ -205,7 +205,7 @@ SELECT a.name, b.state_fips, b.injuries_death_count,
 b.total_storms_count, b.percent, ST_Simplify(a.geom, 0.005) as geom
 FROM states a
 LEFT JOIN map_storm_data b
-ON a.statefp::int = b.state_fips
+ON a.statefp::int = b.state_fips;
 </code></pre>
 
 <p>For constructing the application, we will use Leaflet and GeoJSON.  To do this, we will export the map as a shapefile, and use gdal to convert it to GeoJSON.</p>

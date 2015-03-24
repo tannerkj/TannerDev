@@ -6,7 +6,7 @@ categories: postgis leaflet noaa
 author: Kristin Tanner
 ---
 
-Starting in 1996, [National Weather Service directive 10-1605](http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf) mandated the reporting of 48 different weather events and its effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of injuries/deaths reported by state, and to identify which states 
+Starting in 1996, [National Weather Service directive 10-1605](http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf) mandated the reporting of 48 different weather events and its effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
 have been more fortunate than others.  The data is provided by [NOAA](http://www.ncdc.noaa.gov/stormevents/ftp.jsp) in .csv files organized by individual year.
 
 The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable postgis:

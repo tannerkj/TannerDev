@@ -8,9 +8,9 @@ title: TannerGeo Blog
 email: support@tannergeo.com
 description: > # this means to ignore newlines until "baseurl:"
   TannerGeo is passionate about computer science, web development
-  and everything geospatial!  We are super grateful for all of the great tutorials and blog
-  posts others have created.  We want to help give back by posting our 
-  experiences and tutorials on new technologies.
+  and everything geospatial!  We appreciate the helpful tutorials and blog
+  posts others have created.  We would like to give back by posting our 
+  experiences and tutorials on new technologies as well.
 baseurl: "/blog/site/" # the subpath of your site, e.g. /blog/
 #siteurl: "/~joshuatanner/tannergeo/"
 url: "http://tannergeo.com" # the base hostname & protocol for your site

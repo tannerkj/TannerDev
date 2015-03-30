@@ -2,12 +2,12 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>TannerGeo Blog</title>
-    <description>TannerGeo is passionate about computer science, web development and everything geospatial!  We are super grateful for all of the great tutorials and blog posts others have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
+    <description>TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back by posting our  experiences and tutorials on new technologies as well.
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 30 Mar 2015 15:49:26 -0700</pubDate>
-    <lastBuildDate>Mon, 30 Mar 2015 15:49:26 -0700</lastBuildDate>
+    <pubDate>Mon, 30 Mar 2015 15:53:39 -0700</pubDate>
+    <lastBuildDate>Mon, 30 Mar 2015 15:53:39 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>

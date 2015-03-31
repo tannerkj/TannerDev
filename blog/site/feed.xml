@@ -6,13 +6,13 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 30 Mar 2015 18:42:18 -0700</pubDate>
-    <lastBuildDate>Mon, 30 Mar 2015 18:42:18 -0700</lastBuildDate>
+    <pubDate>Tue, 31 Mar 2015 14:25:22 -0700</pubDate>
+    <lastBuildDate>Tue, 31 Mar 2015 14:25:22 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
         <title>Visualizing Percentage of Storms Resulting in Injuries/Deaths by State (1996 - 2014)</title>
-        <description>&lt;p&gt;Starting in 1996, &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf&quot;&gt;National Weather Service directive 10-1605&lt;/a&gt; mandated the reporting of 48 different weather events and its effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
+        <description>&lt;p&gt;Starting in 1996, &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf&quot;&gt;National Weather Service directive 10-1605&lt;/a&gt; mandated the reporting of 48 different types of weather events and their effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
 have been more fortunate than others.  The data is provided by &lt;a href=&quot;http://www.ncdc.noaa.gov/stormevents/ftp.jsp&quot;&gt;NOAA&lt;/a&gt; in .csv files organized by individual year.&lt;/p&gt;
 
 &lt;p&gt;The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable postgis:&lt;/p&gt;
@@ -34,7 +34,7 @@ have been more fortunate than others.  The data is provided by &lt;a href=&quot;
 );
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Included are the attributes we need for this application, along with additional data we may opt to use in the future for further analysis.&lt;/p&gt;
+&lt;p&gt;Included are the attributes we need for this application, along with additional fields we may opt to use in the future for further analysis.&lt;/p&gt;
 
 &lt;p&gt;To create a surrogate primary key called id for this table, the following code is executed:&lt;/p&gt;
 

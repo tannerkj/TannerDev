@@ -75,7 +75,7 @@
   </header>
 
   <article class="post-content">
-    <p>Starting in 1996, <a href="http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf">National Weather Service directive 10-1605</a> mandated the reporting of 48 different weather events and its effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
+    <p>Starting in 1996, <a href="http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf">National Weather Service directive 10-1605</a> mandated the reporting of 48 different types of weather events and their effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
 have been more fortunate than others.  The data is provided by <a href="http://www.ncdc.noaa.gov/stormevents/ftp.jsp">NOAA</a> in .csv files organized by individual year.</p>
 
 <p>The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable postgis:</p>
@@ -97,7 +97,7 @@ have been more fortunate than others.  The data is provided by <a href="http://w
 );
 </code></pre>
 
-<p>Included are the attributes we need for this application, along with additional data we may opt to use in the future for further analysis.</p>
+<p>Included are the attributes we need for this application, along with additional fields we may opt to use in the future for further analysis.</p>
 
 <p>To create a surrogate primary key called id for this table, the following code is executed:</p>
 

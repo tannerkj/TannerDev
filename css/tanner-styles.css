@@ -96,6 +96,10 @@ h1 .dev {
     color: #000000;
 }
 
+.tannerjt-github {
+    padding-bottom: 10px;
+}
+
 @-webkit-keyframes spin2 {
     from { -webkit-transform: rotate(0deg);}
     to { -webkit-transform: rotate(360deg);}

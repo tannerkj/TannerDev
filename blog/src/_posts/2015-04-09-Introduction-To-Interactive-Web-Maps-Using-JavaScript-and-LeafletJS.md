@@ -15,8 +15,9 @@ The full MIT tutorial can be found [here](http://duspviz.mit.edu/leaflet-js/).
 
 Application can be found [here](http://tannerkj.github.io/MIT-campus-coffee/).
 
-######Adjustments I made when running through this tutorial:
-######Step 1.b
+###### Adjustments I made when running through this tutorial:
+
+###### Step 1.b
 
 I did not serve locally using Python.  I created a [GitHub repo](https://github.com/tannerkj/MIT-campus-coffee) and viewed changes locally using *http://localhost/~username/projectname/* before pushing to GitHub.  It is a good standard practice to follow.  Also, you then have the ability to publish your webpages using GitHub Pages.  
 

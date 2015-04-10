@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 09 Apr 2015 20:40:06 -0700</pubDate>
-    <lastBuildDate>Thu, 09 Apr 2015 20:40:06 -0700</lastBuildDate>
+    <pubDate>Thu, 09 Apr 2015 20:46:18 -0700</pubDate>
+    <lastBuildDate>Thu, 09 Apr 2015 20:46:18 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
@@ -19,7 +19,8 @@
 &lt;p&gt;Application can be found &lt;a href=&quot;http://tannerkj.github.io/MIT-campus-coffee/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h6 id=&quot;adjustments-i-made-when-running-through-this-tutorial&quot;&gt;Adjustments I made when running through this tutorial:&lt;/h6&gt;
-&lt;p&gt;######Step 1.b&lt;/p&gt;
+
+&lt;h6 id=&quot;step-1b&quot;&gt;Step 1.b&lt;/h6&gt;
 
 &lt;p&gt;I did not serve locally using Python.  I created a &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;GitHub repo&lt;/a&gt; and viewed changes locally using &lt;em&gt;http://localhost/~username/projectname/&lt;/em&gt; before pushing to GitHub.  It is a good standard practice to follow.  Also, you then have the ability to publish your webpages using GitHub Pages.  &lt;/p&gt;
 

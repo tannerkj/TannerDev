@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 09 Apr 2015 20:51:48 -0700</pubDate>
-    <lastBuildDate>Thu, 09 Apr 2015 20:51:48 -0700</lastBuildDate>
+    <pubDate>Thu, 09 Apr 2015 20:55:47 -0700</pubDate>
+    <lastBuildDate>Thu, 09 Apr 2015 20:55:47 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
@@ -43,7 +43,7 @@
 &lt;pre&gt;&lt;code&gt;&amp;lt;script src=&quot;./bower_components/leaflet/dist/leaflet.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;		&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;		&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 09 Apr 2015 00:00:00 -0700</pubDate>

@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 09 Apr 2015 20:55:47 -0700</pubDate>
-    <lastBuildDate>Thu, 09 Apr 2015 20:55:47 -0700</lastBuildDate>
+    <pubDate>Thu, 09 Apr 2015 21:09:23 -0700</pubDate>
+    <lastBuildDate>Thu, 09 Apr 2015 21:09:23 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
@@ -16,7 +16,7 @@
 
 &lt;p&gt;The full MIT tutorial can be found &lt;a href=&quot;http://duspviz.mit.edu/leaflet-js/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Application can be found &lt;a href=&quot;http://tannerkj.github.io/MIT-campus-coffee/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;View my application &lt;a href=&quot;http://tannerkj.github.io/MIT-campus-coffee/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h6 id=&quot;adjustments-i-made-when-running-through-this-tutorial&quot;&gt;Adjustments I made when running through this tutorial:&lt;/h6&gt;
 
@@ -42,6 +42,8 @@
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;script src=&quot;./bower_components/leaflet/dist/leaflet.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;View my application &lt;a href=&quot;http://tannerkj.github.io/MIT-campus-coffee/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;		&lt;/p&gt;
 

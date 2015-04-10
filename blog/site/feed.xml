@@ -6,9 +6,61 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 01 Apr 2015 22:22:25 -0700</pubDate>
-    <lastBuildDate>Wed, 01 Apr 2015 22:22:25 -0700</lastBuildDate>
+    <pubDate>Thu, 09 Apr 2015 20:40:06 -0700</pubDate>
+    <lastBuildDate>Thu, 09 Apr 2015 20:40:06 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
+    
+      <item>
+        <title>Introduction to Interactive Web Maps Using JavaScript and LeafletJS</title>
+        <description>&lt;p&gt;This is an excellent beginning web application for anyone new to JavaScript and/or &lt;a href=&quot;http://leafletjs.com/&quot;&gt;LeafletJS&lt;/a&gt;.  The tutorial was developed by MIT and is easy to understand.  As someone who is grateful to all professors/peers who have shared their knowledge and experience with me, I like to contribute when able.  I have included some modifications for aspiring web developers below that address publishing your application via &lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub Pages&lt;/a&gt; as well as &lt;a href=&quot;http://bower.io/&quot;&gt;Bower&lt;/a&gt;, a package manager that makes including frameworks, libraries, and utilities in your projects more convenient for developers.  Altogether, this makes for an excellent start to learning about general web development as well as creating interactive web maps.&lt;/p&gt;
+
+&lt;p&gt;The full MIT tutorial can be found &lt;a href=&quot;http://duspviz.mit.edu/leaflet-js/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Application can be found &lt;a href=&quot;http://tannerkj.github.io/MIT-campus-coffee/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h6 id=&quot;adjustments-i-made-when-running-through-this-tutorial&quot;&gt;Adjustments I made when running through this tutorial:&lt;/h6&gt;
+&lt;p&gt;######Step 1.b&lt;/p&gt;
+
+&lt;p&gt;I did not serve locally using Python.  I created a &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;GitHub repo&lt;/a&gt; and viewed changes locally using &lt;em&gt;http://localhost/~username/projectname/&lt;/em&gt; before pushing to GitHub.  It is a good standard practice to follow.  Also, you then have the ability to publish your webpages using GitHub Pages.  &lt;/p&gt;
+
+&lt;h6 id=&quot;step-1d&quot;&gt;Step 1.d&lt;/h6&gt;
+
+&lt;p&gt;I used &lt;a href=&quot;http://bower.io/&quot;&gt;Bower&lt;/a&gt;, as mentioned above, to add Leaflet to my project.  It would be prudent to become familiar with Bower and its dependencies since many common packages can be easily installed with its use.  Dependencies for Bower include &lt;a href=&quot;https://nodejs.org/&quot;&gt;Node and npm&lt;/a&gt; and &lt;a href=&quot;http://git-scm.com/&quot;&gt;Git&lt;/a&gt;.  &lt;/p&gt;
+
+&lt;p&gt;Using command line, inside my working directory, I entered the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bower install leaflet
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You will notice a new folder in your working directory called &lt;em&gt;bower_components&lt;/em&gt; that contains the necessary Leaflet files for your project.  Therefore, the Leaflet CSS link in the &lt;em&gt;head&lt;/em&gt; section of your index.html would be referenced as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;./bower_components/leaflet/dist/leaflet.css&quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and the Leaflet JavaScript link at the bottom of the &lt;em&gt;body&lt;/em&gt; section would be referenced as: &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;script src=&quot;./bower_components/leaflet/dist/leaflet.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;		&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 09 Apr 2015 00:00:00 -0700</pubDate>
+        <link>http://tannergeo.com/blog/site//leaflet/github/bower/development/beginner/2015/04/09/Introduction-To-Interactive-Web-Maps-Using-JavaScript-and-LeafletJS.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//leaflet/github/bower/development/beginner/2015/04/09/Introduction-To-Interactive-Web-Maps-Using-JavaScript-and-LeafletJS.html</guid>
+        
+        
+        <category>leaflet</category>
+        
+        <category>github</category>
+        
+        <category>bower</category>
+        
+        <category>development</category>
+        
+        <category>beginner</category>
+        
+      </item>
     
       <item>
         <title>Visualizing Percentage of Storms Resulting in Injuries/Deaths by State (1996 - 2014)</title>

@@ -38,7 +38,7 @@ and the Leaflet JavaScript link at the bottom of the *body* section would be ref
 	<script src="./bower_components/leaflet/dist/leaflet.js"></script>
 
 
-![MIT-campus-coffee](/images/MIT_campus_coffee.png)		
+![MIT-campus-coffee]({{site.url}}/images/blog/screenshots/MIT_campus_coffee.png)		
 
 	
 

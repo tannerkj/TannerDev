@@ -39,6 +39,8 @@ and the Leaflet JavaScript link at the bottom of the *body* section would be ref
 
 View my application [here](http://tannerkj.github.io/MIT-campus-coffee/).
 
+View my source code [here](https://github.com/tannerkj/MIT-campus-coffee).
+
 
 ![MIT-campus-coffee]({{site.url}}/images/blog/screenshots/MIT_campus_coffee.png)		
 

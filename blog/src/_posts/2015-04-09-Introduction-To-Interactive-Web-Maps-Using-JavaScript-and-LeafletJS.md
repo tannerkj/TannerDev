@@ -8,7 +8,7 @@ author: Kristin Tanner
 
 
 
-This is an excellent beginning web application for anyone new to JavaScript and/or [LeafletJS](http://leafletjs.com/).  The tutorial was developed by MIT and is easy to understand.  As someone who is grateful to all professors/peers who have shared their knowledge and experience with me, I like to contribute when able.  I have included some modifications for aspiring web developers below that address publishing your application via [GitHub Pages](https://pages.github.com/) as well as [Bower](http://bower.io/), a package manager that makes including frameworks, libraries, and utilities in your projects more convenient for developers.  Altogether, this makes for an excellent start to learning about general web development as well as creating interactive web maps.
+This is an excellent beginning web application for anyone new to JavaScript and/or [LeafletJS](http://leafletjs.com/).  The tutorial was developed by MIT and is easy to understand.  As someone who is grateful to all professors/peers who have shared their knowledge and experience with me over the years, I like to contribute when able.  I have included some modifications for aspiring web developers below that address publishing your application via [GitHub Pages](https://pages.github.com/) as well as [Bower](http://bower.io/), a package manager that makes including frameworks, libraries, and utilities in your projects more convenient for developers.  Altogether, this makes for an excellent start to learning about general web development as well as creating interactive web maps.
 
 
 The full MIT tutorial can be found [here](http://duspviz.mit.edu/leaflet-js/).

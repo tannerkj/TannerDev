@@ -2,7 +2,7 @@
 layout: post
 title:  "Visualizing Percentage of Storms Resulting in Injuries/Deaths by State (1996 - 2014)"
 date:   2015-03-19
-categories: postgis leaflet noaa
+categories: postgis leaflet noaa postgresql
 author: Kristin Tanner
 ---
 

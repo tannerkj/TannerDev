@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 10 Apr 2015 00:27:11 -0700</pubDate>
-    <lastBuildDate>Fri, 10 Apr 2015 00:27:11 -0700</lastBuildDate>
+    <pubDate>Mon, 13 Apr 2015 09:08:35 -0700</pubDate>
+    <lastBuildDate>Mon, 13 Apr 2015 09:08:35 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
@@ -218,8 +218,8 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 
 </description>
         <pubDate>Thu, 19 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://tannergeo.com/blog/site//postgis/leaflet/noaa/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</link>
-        <guid isPermaLink="true">http://tannergeo.com/blog/site//postgis/leaflet/noaa/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</guid>
+        <link>http://tannergeo.com/blog/site//postgis/leaflet/noaa/postgresql/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//postgis/leaflet/noaa/postgresql/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</guid>
         
         
         <category>postgis</category>
@@ -227,6 +227,8 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
         <category>leaflet</category>
         
         <category>noaa</category>
+        
+        <category>postgresql</category>
         
       </item>
     
@@ -436,8 +438,8 @@ geojson.addTo(map);
 &lt;p&gt;I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!&lt;/p&gt;
 </description>
         <pubDate>Sun, 01 Mar 2015 00:00:00 -0800</pubDate>
-        <link>http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</link>
-        <guid isPermaLink="true">http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</guid>
+        <link>http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</guid>
         
         
         <category>turfjs</category>
@@ -447,6 +449,8 @@ geojson.addTo(map);
         <category>postgresql</category>
         
         <category>postgis</category>
+        
+        <category>noaa</category>
         
       </item>
     

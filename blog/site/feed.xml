@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 13 Apr 2015 09:08:35 -0700</pubDate>
-    <lastBuildDate>Mon, 13 Apr 2015 09:08:35 -0700</lastBuildDate>
+    <pubDate>Thu, 16 Apr 2015 23:59:43 -0700</pubDate>
+    <lastBuildDate>Thu, 16 Apr 2015 23:59:43 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
@@ -202,7 +202,7 @@ LEFT JOIN map_storm_data b
 ON a.statefp::int = b.state_fips;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;For constructing the application, we will use Leaflet and GeoJSON.  To do this, we will export the map as a shapefile, and use gdal to convert it to GeoJSON.&lt;/p&gt;
+&lt;p&gt;For constructing the application, we will use Leaflet and GeoJSON.  To do this, we will export the map as a shapefile, and use &lt;a href=&quot;http://www.gdal.org/&quot;&gt;GDAL&lt;/a&gt; to convert it to GeoJSON.&lt;/p&gt;
 
 &lt;p&gt;The following code is executed in the command line for PostgreSQL to generate the shapefile and then convert to geojson:&lt;/p&gt;
 

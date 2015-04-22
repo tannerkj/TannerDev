@@ -140,7 +140,7 @@ The following code is executed in the command line for PostgreSQL to generate th
 	
 	ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 	
-To create the map for our application, we will use the same process as described in this [Leaflet tutorial](http://leafletjs.com/examples/choropleth.html).  The end result is a thematic map with a legend and an info window describing the data as you select each state.
+To create the map for our application, we will use the same process as described in this [Leaflet tutorial](http://leafletjs.com/examples/choropleth.html).  The end result is a choropleth map with a legend and an info window describing the data as you select each state.
 
 View application [here](http://tannerkj.github.io/NOAA_Storm_Events/index.html). 
 

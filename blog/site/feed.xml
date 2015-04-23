@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 23 Apr 2015 14:51:19 -0700</pubDate>
-    <lastBuildDate>Thu, 23 Apr 2015 14:51:19 -0700</lastBuildDate>
+    <pubDate>Thu, 23 Apr 2015 14:59:16 -0700</pubDate>
+    <lastBuildDate>Thu, 23 Apr 2015 14:59:16 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
@@ -52,10 +52,8 @@
 
     &lt;pre&gt;&lt;code&gt;  var map,           // main appliation map
   		basemap;       // leaflet basemap layer
-&lt;/code&gt;&lt;/pre&gt;
-
-  	// Application Configuraton Object
-    &lt;pre&gt;&lt;code&gt;  var app_config = {
+		
+  var app_config = {
   basemap : &quot;http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png&quot;,
   basemapAttribution : &quot;&amp;amp;copy; &amp;lt;a href=\&quot;http://www.openstreetmap.org/copyright\&quot;&amp;gt;OpenStreetMap&amp;lt;/a&amp;gt;&quot;
   };

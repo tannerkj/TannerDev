@@ -7,9 +7,9 @@ author: Kristin Tanner
 ---
 
 Starting in 1996, [National Weather Service directive 10-1605](http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf) mandated the reporting of 48 different types of weather events and their effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
-have been more fortunate than others.  The data is provided by [NOAA](http://www.ncdc.noaa.gov/stormevents/ftp.jsp) in .csv files organized by individual year.
+have been more fortunate than others.  The data is provided by [NOAA](http://www.ncdc.noaa.gov/stormevents/ftp.jsp) in .csv files organized by individual year.  This tutorial requires a working knowledge of the command line, [PostgreSQL/PostGIS](http://postgis.net/), [GDAL/ogr2ogr](http://www.gdal.org/), [LeafletJS](http://leafletjs.com/), Python, and JavaScript.
 
-The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable postgis:
+The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable PostGIS:
 
 	CREATE EXTENSION postgis;
 
@@ -34,7 +34,7 @@ To create a surrogate primary key called id for this table, the following code i
 
 To load the data into the table, several options are available.  One option, though not the most efficient, is outlined below:
 
-1) A python script is written to read from each year's .csv file in our details_raw folder and creates newly formatted .csv files, excluding the unnecessary data.
+1) A python script is written to read from each year's .csv file in our details_raw folder and creates newly formatted .csv files, excluding the unnecessary data.  It is then executed in the appropriate directory using the command line.
 
 	# data_loader.py
 	# reads .csv files in ./details_raw
@@ -140,11 +140,7 @@ The following code is executed in the command line for PostgreSQL to generate th
 	
 	ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 	
-To create the map for our application, we will use the same process as described in this [Leaflet tutorial](http://leafletjs.com/examples/choropleth.html).  The end result is a choropleth map with a legend and an info window describing the data as you select each state.
+To create the map for our application, we will use the same process as described in this [Leaflet tutorial](http://leafletjs.com/examples/choropleth.html).  The end result is a thematic map with a legend and an info window describing the data as you select each state.
 
 View application [here](http://tannerkj.github.io/NOAA_Storm_Events/index.html). 
-
-	
-
-	
 

@@ -6,13 +6,13 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 23 Apr 2015 15:14:44 -0700</pubDate>
-    <lastBuildDate>Thu, 23 Apr 2015 15:14:44 -0700</lastBuildDate>
+    <pubDate>Thu, 23 Apr 2015 16:11:34 -0700</pubDate>
+    <lastBuildDate>Thu, 23 Apr 2015 16:11:34 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
         <title>National Parks Map and Image Gallery</title>
-        <description>&lt;p&gt;This application and the accompanying tutorial are a tribute to National Park Week (Apr 18-26).  A working knowledge of &lt;a href=&quot;http://www.qgis.org/en/site/&quot;&gt;QGIS&lt;/a&gt;, &lt;a href=&quot;http://leafletjs.com/&quot;&gt;Leaflet&lt;/a&gt;, &lt;a href=&quot;http://turfjs.org/&quot;&gt;Turf.js&lt;/a&gt;, &lt;a href=&quot;https://jquery.com/&quot;&gt;jQuery&lt;/a&gt;, &lt;a href=&quot;http://getbootstrap.com/&quot;&gt;Bootstrap&lt;/a&gt;, &lt;a href=&quot;http://lokeshdhakar.com/projects/lightbox2/&quot;&gt;Lightbox&lt;/a&gt;, and &lt;a href=&quot;https://www.flickr.com/services/api/&quot;&gt;Flickr API&lt;/a&gt; are required to build out this application using this tutorial.&lt;/p&gt;
+        <description>&lt;p&gt;This application and its accompanying tutorial are our tribute to National Park Week (Apr 18-26).  A working knowledge of &lt;a href=&quot;http://www.qgis.org/en/site/&quot;&gt;QGIS&lt;/a&gt;, &lt;a href=&quot;http://leafletjs.com/&quot;&gt;Leaflet&lt;/a&gt;, &lt;a href=&quot;http://turfjs.org/&quot;&gt;Turf.js&lt;/a&gt;, &lt;a href=&quot;https://jquery.com/&quot;&gt;jQuery&lt;/a&gt;, &lt;a href=&quot;http://getbootstrap.com/&quot;&gt;Bootstrap&lt;/a&gt;, &lt;a href=&quot;http://lokeshdhakar.com/projects/lightbox2/&quot;&gt;Lightbox&lt;/a&gt;, and &lt;a href=&quot;https://www.flickr.com/services/api/&quot;&gt;Flickr API&lt;/a&gt; are required to build out this application using this tutorial.&lt;/p&gt;
 
 &lt;h6 id=&quot;data-acquisition-and-conversiongetting-required-modules&quot;&gt;Data Acquisition and Conversion/Getting Required Modules&lt;/h6&gt;
 

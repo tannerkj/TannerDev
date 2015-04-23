@@ -293,9 +293,11 @@ Below is an outline of the steps taken to build out this application, along with
 
 ![National Park Gallery Image 4]({{site.url}}/images/blog/screenshots/natl-park-gallery-4.png)
 
-- add sidebar content and style
+- finally, add sidebar content and style
 
-View Application [Here](http://tannerjt.github.io/natl-park-gallery/)
+[View Application](http://tannerjt.github.io/natl-park-gallery/)
+
+[View Source](https://github.com/tannerjt/natl-park-gallery)
 
 What it looks like:
 

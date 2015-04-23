@@ -76,9 +76,9 @@
 
   <article class="post-content">
     <p>Starting in 1996, <a href="http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf">National Weather Service directive 10-1605</a> mandated the reporting of 48 different types of weather events and their effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
-have been more fortunate than others.  The data is provided by <a href="http://www.ncdc.noaa.gov/stormevents/ftp.jsp">NOAA</a> in .csv files organized by individual year.</p>
+have been more fortunate than others.  The data is provided by <a href="http://www.ncdc.noaa.gov/stormevents/ftp.jsp">NOAA</a> in .csv files organized by individual year.  This tutorial requires a working knowledge of the command line, <a href="http://postgis.net/">PostgreSQL/PostGIS</a>, <a href="http://www.gdal.org/">GDAL/ogr2ogr</a>, <a href="http://leafletjs.com/">LeafletJS</a>, Python, and JavaScript.</p>
 
-<p>The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable postgis:</p>
+<p>The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable PostGIS:</p>
 
 <pre><code>CREATE EXTENSION postgis;
 </code></pre>
@@ -106,7 +106,7 @@ have been more fortunate than others.  The data is provided by <a href="http://w
 
 <p>To load the data into the table, several options are available.  One option, though not the most efficient, is outlined below:</p>
 
-<p>1) A python script is written to read from each year’s .csv file in our details_raw folder and creates newly formatted .csv files, excluding the unnecessary data.</p>
+<p>1) A python script is written to read from each year’s .csv file in our details_raw folder and creates newly formatted .csv files, excluding the unnecessary data.  It is then executed in the appropriate directory using the command line.</p>
 
 <pre><code># data_loader.py
 # reads .csv files in ./details_raw
@@ -218,7 +218,7 @@ geodata public.state_storm_percent;
 ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 </code></pre>
 
-<p>To create the map for our application, we will use the same process as described in this <a href="http://leafletjs.com/examples/choropleth.html">Leaflet tutorial</a>.  The end result is a choropleth map with a legend and an info window describing the data as you select each state.</p>
+<p>To create the map for our application, we will use the same process as described in this <a href="http://leafletjs.com/examples/choropleth.html">Leaflet tutorial</a>.  The end result is a thematic map with a legend and an info window describing the data as you select each state.</p>
 
 <p>View application <a href="http://tannerkj.github.io/NOAA_Storm_Events/index.html">here</a>. </p>
 

@@ -42,7 +42,6 @@ Below is an outline of the steps taken to build out this application, along with
 		var map,           // main appliation map
     		basemap;       // leaflet basemap layer
     		
-    	// Application Configuraton Object
 		var app_config = {
 		basemap : "http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png",
 		basemapAttribution : "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"

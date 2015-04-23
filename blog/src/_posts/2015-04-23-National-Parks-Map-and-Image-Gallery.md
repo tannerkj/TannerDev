@@ -6,7 +6,7 @@ categories: leaflet qgis turfjs lightbox flickr_api data.gov
 author: Kristin Tanner
 ---
 
-This application and the accompanying tutorial are a tribute to National Park Week (Apr 18-26).  A working knowledge of [QGIS](http://www.qgis.org/en/site/), [Leaflet](http://leafletjs.com/), [Turf.js](http://turfjs.org/), [jQuery](https://jquery.com/), [Bootstrap](http://getbootstrap.com/), [Lightbox](http://lokeshdhakar.com/projects/lightbox2/), and [Flickr API](https://www.flickr.com/services/api/) are required to build out this application using this tutorial.
+This application and its accompanying tutorial are our tribute to National Park Week (Apr 18-26).  A working knowledge of [QGIS](http://www.qgis.org/en/site/), [Leaflet](http://leafletjs.com/), [Turf.js](http://turfjs.org/), [jQuery](https://jquery.com/), [Bootstrap](http://getbootstrap.com/), [Lightbox](http://lokeshdhakar.com/projects/lightbox2/), and [Flickr API](https://www.flickr.com/services/api/) are required to build out this application using this tutorial.
 
 ###### Data Acquisition and Conversion/Getting Required Modules
 

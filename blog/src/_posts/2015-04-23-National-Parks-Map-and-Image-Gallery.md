@@ -40,7 +40,7 @@ Below is an outline of the steps taken to build out this application, along with
 - add a Leaflet basemap
 
 		var map,           // main appliation map
-    		basemap;       // leaflet basemap layer
+			basemap;       // leaflet basemap layer
     		
 		var app_config = {
 		basemap : "http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png",

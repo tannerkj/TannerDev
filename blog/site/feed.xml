@@ -6,9 +6,354 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 23 Apr 2015 14:42:26 -0700</pubDate>
-    <lastBuildDate>Thu, 23 Apr 2015 14:42:26 -0700</lastBuildDate>
+    <pubDate>Thu, 23 Apr 2015 14:46:09 -0700</pubDate>
+    <lastBuildDate>Thu, 23 Apr 2015 14:46:09 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
+    
+      <item>
+        <title>National Parks Map and Image Gallery</title>
+        <description>&lt;p&gt;This application and the accompanying tutorial are a tribute to National Park Week (Apr 18-26).  A working knowledge of &lt;a href=&quot;http://www.qgis.org/en/site/&quot;&gt;QGIS&lt;/a&gt;, &lt;a href=&quot;http://leafletjs.com/&quot;&gt;Leaflet&lt;/a&gt;, &lt;a href=&quot;http://turfjs.org/&quot;&gt;Turf.js&lt;/a&gt;, &lt;a href=&quot;https://jquery.com/&quot;&gt;jQuery&lt;/a&gt;, &lt;a href=&quot;http://getbootstrap.com/&quot;&gt;Bootstrap&lt;/a&gt;, &lt;a href=&quot;http://lokeshdhakar.com/projects/lightbox2/&quot;&gt;Lightbox&lt;/a&gt;, and &lt;a href=&quot;https://www.flickr.com/services/api/&quot;&gt;Flickr API&lt;/a&gt; are required to build out this application using this tutorial.&lt;/p&gt;
+
+&lt;h6 id=&quot;data-acquisition-and-conversiongetting-required-modules&quot;&gt;Data Acquisition and Conversion/Getting Required Modules&lt;/h6&gt;
+
+&lt;p&gt;To get started, the first step is to download the &lt;a href=&quot;https://catalog.data.gov/dataset/national-park-boundariesf0a4c&quot;&gt;national parks boundaries dataset&lt;/a&gt; and save to your working directory. Load the shapefile into QGIS to view and, in this case, simplify geometries due to the file size.  To accomplish that in QGIS, select Vector -&amp;gt; Geometry Tools -&amp;gt; Simplify Geometries.&lt;/p&gt;
+
+&lt;p&gt;Next, using command line and in our working directory, convert the shapefile to GeoJSON using &lt;a href=&quot;http://www.gdal.org/&quot;&gt;GDAL&lt;/a&gt;.  In this case we entered:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ogr2ogr -f GeoJSON &amp;lt;output geojson&amp;gt; &amp;lt;input shapefile&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create the application, we will define our dependencies in our &lt;em&gt;package.json&lt;/em&gt; file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&quot;dependencies&quot; : {
+   	&quot;turf&quot; : &quot;*&quot;,
+   	&quot;leaflet&quot; : &quot;*&quot;,
+   	&quot;bootstrap&quot; : &quot;*&quot;,
+   	&quot;jquery&quot; : &quot;*&quot;
+  	}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, using command line, use npm to add the appropriate packages locally.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You will see your packages in a new directory called &lt;em&gt;node_modules&lt;/em&gt; inside your project folder.&lt;/p&gt;
+
+&lt;p&gt;In your &lt;em&gt;.gitignore&lt;/em&gt; file, add node_modules, and they will be left out when pushing to your &lt;a href=&quot;https://github.com/&quot;&gt;GitHub&lt;/a&gt; repo.&lt;/p&gt;
+
+&lt;h6 id=&quot;building-the-application&quot;&gt;Building the Application&lt;/h6&gt;
+
+&lt;p&gt;Below is an outline of the steps taken to build out this application, along with some code and image samples.  Dig further into the source code for more information.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;add a Leaflet basemap&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  var map,           // main appliation map
+  		basemap;       // leaflet basemap layer
+&lt;/code&gt;&lt;/pre&gt;
+
+  	// Application Configuraton Object
+    &lt;pre&gt;&lt;code&gt;  var app_config = {
+  basemap : &quot;http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png&quot;,
+  basemapAttribution : &quot;&amp;amp;copy; &amp;lt;a href=\&quot;http://www.openstreetmap.org/copyright\&quot;&amp;gt;OpenStreetMap&amp;lt;/a&amp;gt;&quot;
+  };
+	
+  // create map and add tiled basemap
+  map = L.map(&#39;map&#39;).setView([40.12, -98.57], 4);
+  basemap = L.tileLayer(app_config.basemap, {
+  attribution: app_config.basemapAttribution
+  });
+  basemap.addTo(map);
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;filter features to exclude geometries that aren’t parks (rivers, monuments, etc.)&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;setup GeoJSON layer style&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  var np_boundaries, // raw geojson
+  	np_geo;        // leaflet geojson layer
+	
+  // filter geojson to only parks
+  np_boundaries.features = $.map(np_boundaries.features, function (val, i){
+      if(val.properties[&#39;UNIT_TYPE&#39;] == &#39;National Park&#39;) {
+          return val;
+      }
+  });
+	
+  function style(feature) {
+      return {
+          weight : 1,
+          color : &#39;green&#39;,
+          fillColor : &#39;green&#39;
+      }
+  }
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;setup Flickr configuration&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  // Flickr Configuration
+  var flickr_config = {
+  maxNumImages : 4, // max number of images to request for each park
+  url : &quot;https://api.flickr.com/services/rest&quot;,
+  key : &amp;lt;your flickr-provided key&amp;gt;
+  };
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;add GeoJSON to map along with initial Flickr images&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  /* GEOJSON LAYER */
+  np_geo = L.geoJson(np_boundaries, {
+      style : style,
+      onEachFeature : function (f, l) {
+          var pn =  f.properties[&#39;UNIT_NAME&#39;] + &quot; National Park&quot;;
+          l.bindPopup(
+              &quot;&amp;lt;h3&amp;gt;&quot; + pn + &quot;&amp;lt;/h3&amp;gt;&quot; +
+              &quot;&amp;lt;a href=&#39;http://en.wikipedia.org/wiki/&quot; + pn.split(&quot; &quot;).join(&quot;_&quot;) + 
+      &quot;&#39; target=&#39;_blank&#39;&amp;gt;Learn more about this National Park&amp;lt;/a&amp;gt;&quot;, {
+              autoPan : false
+          });
+
+      }
+  });
+  np_geo.addTo(map);
+  getImages(); // make inital call once
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/natl-park-gallery-1.png&quot; alt=&quot;National Park Gallery Image 1&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;add events for extent change&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  // setup map events 
+  map.on(&#39;moveend&#39;, function (e) {
+      getImages();
+  });
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;acquire bounding boxes and park name tags in preparation for Flickr API calls (uses Turf.js)&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  var queue = []; // placeholder if need for queue and digest management
+  var cached = {}; // cache park images to limit api calls
+  var current_gallery = {}; // images and details in current extent
+  var current_req_length = 0;
+  var queue_length = 0;
+	
+  function callFlickr(f, parkName) {
+      var bbox = turf.extent(f.geometry).join(&quot;,&quot;);
+      var tags = parkName.split(&quot; &quot;);
+      tags.push(&quot;park&quot;);
+      tags.push(&quot;national&quot;);
+      tags = tags.join(&quot;,&quot;);
+      $.ajax({
+          url : flickr_config.url,
+          dataType : &#39;json&#39;,
+          data : {
+              api_key : flickr_config.key,
+              tags : tags,
+              bbox : bbox,
+              format : &#39;json&#39;,
+              method : &#39;flickr.photos.search&#39;,
+              per_page : flickr_config.maxNumImages,
+              nojsoncallback : 1
+          }
+      }).done(function (resp) {
+          queue_length += 1;
+          if(resp.stat !== &quot;ok&quot;) {
+              if(queue_length == current_req_length) {
+                  buildHtml(parkName)
+              }
+              return;
+          }
+          var photos = [];
+          $.each(resp.photos.photo, function (i, v) {
+              photos.push(&quot;https://farm&quot; + v.farm + &quot;.staticflickr.com/&quot; + v.server + &quot;/&quot; + v.id + &quot;_&quot; + v.secret + &quot;_n.jpg&quot;);
+          });
+          // add to cache
+          cached[parkName] = photos;
+          current_gallery[parkName] = photos;
+          if(queue_length == current_req_length) {
+              buildHtml(parkName);
+          }
+      });
+  }
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;get current extent and clear current gallery&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;calculate the # of matches for image queue and make Flickr API calls&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  function getImages() {
+      // get current extent
+      var mapBounds = map.getBounds();
+      var centroid;
+      // clear current gallery
+      current_gallery = {};
+      current_req_length = 0;
+      queue_length = 0;
+      // calculate number of matches for queue
+      $.each(np_geo.getLayers(), function (i, l) {
+          // get centroid of layer
+          centroid = turf.centroid(l.feature);
+          var latlng = L.latLng([centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]]);
+          if(mapBounds.contains(latlng)) {
+              current_req_length += 1;
+          }
+      });
+      // Make flickr calls
+      $.each(np_geo.getLayers(), function (i, l) {
+          // get centroid of layer
+          centroid = turf.centroid(l.feature);
+          var latlng = L.latLng([centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]]);
+          if(mapBounds.contains(latlng)) {
+              if(l.feature.properties[&#39;UNIT_NAME&#39;] in cached) {
+                  // push existing parks with images
+                  current_gallery[l.feature.properties[&#39;UNIT_NAME&#39;]] = cached[l.feature.properties[&#39;UNIT_NAME&#39;]];
+                  queue_length += 1;
+                  if(queue_length == current_req_length) {
+                      buildHtml(l.feature.properties[&#39;UNIT_NAME&#39;]);
+                  }
+              } else {
+                  callFlickr(l.feature, l.feature.properties[&#39;UNIT_NAME&#39;]);
+              }
+          }
+      });
+  }
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;add events for mouseover, mouseout, and click (uses Lightbox)&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;build html for image carousel&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  function highlightStyle() {
+      return {
+          weight : 4,
+          color : &#39;red&#39;,
+          fillColor : &#39;red&#39;
+      }
+  }
+	
+  function highlightPark(park) {
+      var park = park;
+      $.each(np_geo.getLayers(), function (idx, layer) {
+          if (layer.feature.properties[&#39;UNIT_NAME&#39;] == park) {
+              layer.setStyle(highlightStyle());
+              layer.openPopup();
+          } else {
+              layer.setStyle(style());
+          }
+      })
+  }
+
+  // build html for image carousel
+  function buildHtml() {
+      var gallery_items;
+      var gallery_container = $(&quot;&amp;lt;div /&amp;gt;&quot;, {
+          id : &#39;owl-slider&#39;,
+          class : &#39;own-carousel&#39;
+      });
+      var list = [];
+      $.each(current_gallery, function (park, photos) {
+          list.push(&quot;&amp;lt;a class=&#39;park-item&#39; href=&#39;&#39; target=&#39;_blank&#39;&amp;gt;&quot; + park + &quot;&amp;lt;/a&amp;gt;&quot;);
+          $.each(photos, function (idx, photo) {
+              var div = $(&quot;&amp;lt;div /&amp;gt;&quot;, {
+                  class : &#39;thumbnail&#39;
+              });
+
+              div.on(&#39;mouseover&#39;, function (e) {
+                  highlightPark(park);
+              });
+              div.on(&#39;mouseout&#39;, function (e) {
+                  $.each(np_geo.getLayers(), function (i, l) {
+                      l.setStyle(style());
+                  });
+              });
+
+              var title = $(&quot;&amp;lt;span /&amp;gt;&quot;, {
+                  html : &quot;&amp;lt;h2&amp;gt;&amp;lt;span class=&#39;glyphicon glyphicon-globe inverse&#39;&amp;gt;&amp;lt;/span&amp;gt;  &quot; + park + &quot; National Park&amp;lt;/h2&amp;gt;&quot;,
+                  class : &#39;parkname-title&#39;
+              });
+
+              var fullPhoto = photo.replace(&quot;n.jpg&quot;, &quot;b.jpg&quot;);
+	
+              var link = $(&quot;&amp;lt;a /&amp;gt;&quot;, {
+                  &quot;data-lightbox&quot; : &quot;image-&quot; + idx,
+                  &quot;data-title&quot; : park + &quot; (courtesy of Flickr)&quot;,
+                  href : fullPhoto
+              });
+
+              var img = $(&quot;&amp;lt;img /&amp;gt;&quot;, {
+                  src : photo
+              });
+
+              link.append(img);
+              div.append(link);
+              div.append(title);
+              gallery_container.append(div);
+          });
+      });
+
+      list = list.join(&#39; | &#39;);
+      $(&quot;#parkslist&quot;).html(list);
+      $(&quot;.park-item&quot;).on(&#39;click&#39;, function (e) {
+          e.preventDefault();
+          highlightPark(e.target.text);
+      })
+      $(&quot;#slider&quot;).empty();
+      $(&quot;#slider&quot;).append(gallery_container);
+      $(&quot;#owl-slider&quot;).owlCarousel({
+          margin : 10,
+          autoWidth : true,
+          stagePadding : 50
+      });
+  }
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/natl-park-gallery-2.png&quot; alt=&quot;National Park Gallery Image 2&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;add style with Bootstrap and dynamic sizing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/natl-park-gallery-4.png&quot; alt=&quot;National Park Gallery Image 4&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;add sidebar content and style&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;View Application &lt;a href=&quot;http://tannerjt.github.io/natl-park-gallery/&quot;&gt;Here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;What it looks like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/natl-park-gallery-5.png&quot; alt=&quot;National Park Gallery Image 5&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 23 Apr 2015 00:00:00 -0700</pubDate>
+        <link>http://tannergeo.com/blog/site//leaflet/qgis/turfjs/lightbox/flickr_api/data.gov/2015/04/23/National-Parks-Map-and-Image-Gallery.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//leaflet/qgis/turfjs/lightbox/flickr_api/data.gov/2015/04/23/National-Parks-Map-and-Image-Gallery.html</guid>
+        
+        
+        <category>leaflet</category>
+        
+        <category>qgis</category>
+        
+        <category>turfjs</category>
+        
+        <category>lightbox</category>
+        
+        <category>flickr_api</category>
+        
+        <category>data.gov</category>
+        
+      </item>
     
       <item>
         <title>Introduction to Interactive Web Maps Using JavaScript and LeafletJS</title>

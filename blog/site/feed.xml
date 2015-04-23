@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 23 Apr 2015 15:07:04 -0700</pubDate>
-    <lastBuildDate>Thu, 23 Apr 2015 15:07:04 -0700</lastBuildDate>
+    <pubDate>Thu, 23 Apr 2015 15:14:44 -0700</pubDate>
+    <lastBuildDate>Thu, 23 Apr 2015 15:14:44 -0700</lastBuildDate>
     <generator>Jekyll v2.5.2</generator>
     
       <item>
@@ -51,7 +51,7 @@
     &lt;p&gt;add a Leaflet basemap&lt;/p&gt;
 
     &lt;pre&gt;&lt;code&gt;  var map,           // main appliation map
-  		basemap;       // leaflet basemap layer
+      basemap;       // leaflet basemap layer
 		
   var app_config = {
   basemap : &quot;http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png&quot;,

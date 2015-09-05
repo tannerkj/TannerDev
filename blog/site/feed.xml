@@ -6,15 +6,13 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 04 Sep 2015 18:42:52 -0700</pubDate>
-    <lastBuildDate>Fri, 04 Sep 2015 18:42:52 -0700</lastBuildDate>
+    <pubDate>Fri, 04 Sep 2015 18:46:46 -0700</pubDate>
+    <lastBuildDate>Fri, 04 Sep 2015 18:46:46 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
         <title>Spatial Version Control with GeoGig</title>
-        <description>&lt;h1 id=&quot;spatial-version-control-with-giggig&quot;&gt;Spatial Version Control with GigGig&lt;/h1&gt;
-
-&lt;p&gt;There are a lot of concepts that are core to the programming and development communities that have yet to manifest themselves (to the masses) in the GIS world.  One of them is version control.&lt;/p&gt;
+        <description>&lt;p&gt;There are a lot of concepts that are core to the programming and development communities that have yet to manifest themselves (to the masses) in the GIS world.  One of them is version control.&lt;/p&gt;
 
 &lt;h4 id=&quot;basics&quot;&gt;Basics&lt;/h4&gt;
 

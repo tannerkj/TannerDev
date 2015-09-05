@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>Spatial Version Control with GeoGig</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//geogig/git/versioning/gis/data/2015/09/04/Spatial-Version-Control-with-GeoGig.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Spatial Version Control with GeoGig</h1>
+    <p class="post-meta">Sep 4, 2015 • Joshua Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <h1 id="spatial-version-control-with-giggig">Spatial Version Control with GigGig</h1>
+
+<p>There are a lot of concepts that are core to the programming and development communities that have yet to manifest themselves (to the masses) in the GIS world.  One of them is version control.</p>
+
+<h4 id="basics">Basics</h4>
+
+<p>If you have ever used git or svn, you know of it’s usefulness in maintaining a movable history of the ‘state’ of your code or other files.  If you have never heard of version control, it is simply a system that keeps track of changes and allows you to ‘roll-back’ if needed.  You can visualize these changes (additions and subtractions) and provide readable comments with every <em>commit</em>.  It also provides methods to resolve <em>conflicts</em> if multiple changes contradict each other.</p>
+
+<p>I one had a colleague who explained version control very elegantly.</p>
+
+<blockquote>
+  <p>‘copy and paste is the one true evil.’ - colleague/friend</p>
+</blockquote>
+
+<p>To be honest, I use this all the time when I try to explain the usefulness of version control.  When you copy and paste, you now have two completely separate datasets that know nothing about each other.  When one is updated, the other falls behind and trying to keep them smartly in sync can become futile.  With version control, we can checkout a copy, make changes, and commit them back to the remote repository.  If updates need to be rolled back, we can easily revert them.</p>
+
+<h4 id="why-gis-needs-it">Why GIS Needs It</h4>
+<p>Technically, Esri has been using versioning in enterprise geodatabase solutions for some time now.  It allows concurrent editing of a geodatabase, conflict management, and the ability to revert to a previous state. However, it requires complex setup and the need to be in the Esri environment.</p>
+
+<p>I’ll be the first to admit my working project folders usually have about 10+ versions of the same dataset.  GIS analysts are always worried about needing to revert their edits or make a backup in the event of bad edits.  When I worked for the City of Charleston, most of my work was with the planning department.  My ‘final changes’ were never actually final and I would gulp when I heard the phrase “let’s go back to the version we used for the last city council meeting…”.  If your like me, you have a folder that looks like this:</p>
+
+<pre><code>bike_route_01152014.shp
+bike_route_01202014.shp
+bike_route_proposal1.shp
+bike_route_final.shp
+bike_route_final2.shp
+bike_route_final_for_real.shp
+</code></pre>
+
+<p>This is a one simple example of why we need version control… badly.</p>
+
+<p>Another reason is making sure your team is always working with the latest data.  Even if everybody is working on a local clone of a spatial dataset, they could run a quick <em>pull</em> command at anytime and retrieve the most up to date data.</p>
+
+<h4 id="why-not-just-use-git">Why Not Just Use Git?</h4>
+<p>Current version control systems like git work great for text.  The flawlessly track what text was added or removed, and this provides the information we need to understand changes.  Spatial data is binary, and although current systems will track the changes, it doesn’t provide us with much insight into what changed.  If we wanted to understand what changes were made in our latest commit, we would only see that a bunch of 1’s and 0’s changed… not much help.  What we need to see is how many features were added, modified, or removed and on which dataset.</p>
+
+<h4 id="geogig-background">Geogig Background</h4>
+<p><a href="http://geogig.org/">GeoGig</a> (previouly GeoGit) is a distributed version control system (DVCS) for geospatial data.  The ‘distributed’ term is important and follows closer to the architecture of Git than SVN (google git vs svn for more info).  The software is open source, and currently maintained by the <a href="https://www.locationtech.org/projects/technology.geogig">Eclipse Foundation</a> and formerly maintained by BoundlessGeo.  A disclaimer on the GeoGig site states that is in ‘development’ and considered unstable.  In my short experience with the software, it worked great, but I would not yet use this in a full production environment.</p>
+
+<p>I would love to see <a href="http://geogig.org/">GeoGig</a> developed to be stable enough to use as a reliable tool for spatial data version control.</p>
+
+<h4 id="geogig-sample-workflow">GeoGig Sample Workflow</h4>
+<p>I would recommend following the <a href="http://geogig.org/#install">Getting Started</a> guide for downloading and getting up and running with GeoGig.  The following workflow will demonstrate the following scenario:</p>
+
+<p><em>You are working in a team environment editing bike routes.  The shapefile needs to be accessible on your local computer for when you are editing in the field and taking work home.  You also need to push your changes to a shared network drive and pull down changes that other editors are doing.  I will assume you are working in a windows environment.</em></p>
+
+<ol>
+  <li>
+    <p>On your (S:) shared drive, initialize a GeoGig repository.  This is where your master repo will live, and will act like a library for users to check out and back in their edits.</p>
+
+    <pre><code> S:master_routes&gt; geogig init
+</code></pre>
+  </li>
+  <li>
+    <p>This will create a .geogig directory that will track all of your changes, among other things.  You will need to import your bike_routes shapefile which can be anywhere.  For this example I will assume it’s in the same folder as your newly created GeoGig repository.  Think of this step as putting it into a warehouse.</p>
+
+    <pre><code> S:master_routes&gt; geogig shp import ./bike_routes.shp 
+</code></pre>
+  </li>
+  <li>
+    <p>Now that it is in the warehouse, you need add it to a <em>loading dock</em> - like location before committing it entirely.  Only changes will be added, and in our initial case will be all of our existing features in bike_routes.</p>
+
+    <pre><code> S:master_routes&gt; geogig add 
+</code></pre>
+  </li>
+  <li>
+    <p>This is the equivalent of ‘add all changes’ to our loading dock to be shipped from the warehouse.  Next we will commit our added changes, which is like putting it on the truck.</p>
+
+    <pre><code> S:master_routes&gt; geogig commit -m "Add initial commit of bike routes"
+</code></pre>
+  </li>
+  <li>
+    <p>The -m trigger allows us to add a message with our commit.  This is helpful to make each commit human readable and easier to use.  Now we want all of our users/editors of this repository to pull down a working repo to their local machines.  For this, our (S:) shared drive will act as a remote repository.  From our (C:) local drive, we can add our connection:</p>
+
+    <pre><code> C:local_bike_routes&gt; geogig clone S:/bike_routes/
+</code></pre>
+  </li>
+  <li>
+    <p>The clone command clones our master repository and automatically creates a remote tracking branch.  In essence, it is a clone that knows how to access it’s master.  It can pull down any changes done to, or push changes up to the master.  Our master remote branch is automatically named <em>origin</em>.  If you look in your directory you might be confused.  There bike_routes shapefile is nowhere to be found, only a .geogig directory?!?! With GeoGig, everything is stored in the database within the .geogig repository.  If you want to export the shapefile to work on, you will have to do this implicitly:</p>
+
+    <pre><code> C:local_bike_routes&gt; geogig shp export HEAD:bike_routes ./bike_routes.shp
+</code></pre>
+  </li>
+  <li>
+    <p>This exports out a shapefile for you to work on.  You can also export the data out in various different formats (geojson, postgres, spatialite, etc), which can be a great tool in itself.  Now that you have a local shapefile to edit, you can make the changes you need in whatever software you are using (qgis, arcgis, etc).  Once you are ready to push the changes up to the master repository, you will have to use a couple command line steps.  You will need to: import the shapefile into your local repo, stage your edits (loading dock), and commit them (put them on the truck).  Once everything is committed in your local geogig repository, you will push the changes to your remote (origin) branch.</p>
+
+    <pre><code> C:local_bike_routes&gt; geogig shp import ./bike_routes.shp -d bike_routes
+ C:local_bike_routes&gt; geogig add
+ C:local_bike_routes&gt; geogig commit -m "Add new rutledge ave bike route"
+ C:local_bike_routes&gt; geogig push origin master
+</code></pre>
+  </li>
+  <li>
+    <p>We have now updated not only our own bike_routes feature, but also the feature on our S: drive.  All our other editors working on their own local repositories can pull in these changes, and view your comments in the log.</p>
+
+    <pre><code> C:local_bike_routes&gt; geogig pull origin master
+ C:local_bike_routes&gt; geogig log
+</code></pre>
+  </li>
+</ol>
+
+<h4 id="discussion">Discussion</h4>
+
+<p>I tried this workflow on a dataset that I need to continually update and share (even through I warned you not to use it in production).  It worked without error and organized my process ten-fold.  Below are things I liked, and some I didn’t.</p>
+
+<p>Positive:</p>
+
+<ul>
+  <li>I liked that it inherits from git.  Most of the commands are the same, although the workflow is slightly different.  This makes the learning curve very minimal for those already familiar with git.</li>
+  <li>The distributed architecture works well for geospatial data</li>
+  <li>Being able to export to different formats is great.</li>
+  <li>The documentation is clear and concise.</li>
+  <li>Fast.</li>
+</ul>
+
+<p>Negative:</p>
+
+<ul>
+  <li>No support for file geodatabase.  This means you will have to export to a shapefile to use this utility.</li>
+  <li>I don’t like that I have to import my data before I add and commit it.  Importing and then adding seems redundant and complicates the process.  This part is different from git.</li>
+  <li>This may be lazy, but typing git is easier than typing geogig.  I typed it a lot in my workflow and it would be easier if it defaulted to gig or something simple.  Again, I could just be lazy and this could probably be changed easily.</li>
+</ul>
+
+<p>It would be also nice to see a GitHub-like solution for publishing and collaborating on spatial data.  Overall I liked it and will be using this a lot more in my current work.  I encourage both the use and further development of GeoGig to create a stable solution for geospatial data version control.</p>
+
+<h4 id="extras">Extras</h4>
+
+<p>GeoGig has many extras that I didn’t cover in this article that I think others should check out.  Here are a few:</p>
+
+<ul>
+  <li><a href="http://geogig.org/docs/interaction/osm.html">Importing OSM Data into GeoGig</a></li>
+  <li><a href="http://geogig.org/docs/interaction/console.html">The GeoGig Console</a></li>
+  <li><a href="http://geogig.org/docs/interaction/geoserver_ui.html">Using GeoGig with GeoServer</a></li>
+  <li><a href="http://geogig.org/docs/interaction/web-api.html">Build in Web Server and API</a></li>
+</ul>
+
+<p>I especially liked the GeoGig console.  This allowed me to more easily write a batch script that exported the latest shapefiles our of my master repository and output a log of all recent commits.</p>
+
+<h1 id="section">#</h1>
+
+<p>Other Links:
+<a href="http://www.spatiallyadjusted.com/gis-version-control/">James Fee Article on GIS Version Control</a></p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<!-- Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58675189-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+
+</html>

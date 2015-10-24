@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>Visualizing Percentage of Storms Resulting in Injuries/Deaths by State (1996 - 2014)</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//postgis/leaflet/noaa/postgresql/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Visualizing Percentage of Storms Resulting in Injuries/Deaths by State (1996 - 2014)</h1>
+    <p class="post-meta">Mar 19, 2015 • Kristin Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <p>Starting in 1996, <a href="http://www.ncdc.noaa.gov/stormevents/pd01016005curr.pdf">National Weather Service directive 10-1605</a> mandated the reporting of 48 different types of weather events and their effects on the impacted community.  This tutorial aims to create a visualization focusing on the percent of storms resulting in injuries/deaths reported by state, and to identify which states 
+have been more fortunate than others.  The data is provided by <a href="http://www.ncdc.noaa.gov/stormevents/ftp.jsp">NOAA</a> in .csv files organized by individual year.  This tutorial requires a working knowledge of the command line, <a href="http://postgis.net/">PostgreSQL/PostGIS</a>, <a href="http://www.gdal.org/">GDAL/ogr2ogr</a>, <a href="http://leafletjs.com/">LeafletJS</a>, Python, and JavaScript.</p>
+
+<p>The first step is to create the tables in PostgreSQL and load the data.  A new database is created and the following code executed to enable PostGIS:</p>
+
+<pre><code>CREATE EXTENSION postgis;
+</code></pre>
+
+<p>Next, the code to generate the table is executed:</p>
+
+<pre><code>CREATE TABLE storm_events (
+	state varchar(20),
+	year smallint,
+	state_fips smallint,	
+	event_type varchar(50),
+	injuries_direct smallint,
+	injuries_indirect smallint,
+	deaths_direct smallint,
+	deaths_indirect smallint
+);
+</code></pre>
+
+<p>Included are the attributes we need for this application, along with additional fields we may opt to use in the future for further analysis.</p>
+
+<p>To create a surrogate primary key called id for this table, the following code is executed:</p>
+
+<pre><code>ALTER TABLE storm_events ADD COLUMN id SERIAL PRIMARY KEY;
+</code></pre>
+
+<p>To load the data into the table, several options are available.  One option, though not the most efficient, is outlined below:</p>
+
+<p>1) A python script is written to read from each year’s .csv file in our details_raw folder and creates newly formatted .csv files, excluding the unnecessary data.  It is then executed in the appropriate directory using the command line.</p>
+
+<pre><code># data_loader.py
+# reads .csv files in ./details_raw
+# creates new .csv files in a separate directory
+
+import os, csv
+
+in_dir = "./details_raw"
+
+def filter_fields(f):
+	with open(root + "/" + f, "rb") as source:
+    	reader = csv.DictReader(source)
+    	outf = root + "/formatted/" + f
+    	with open(outf, "wb") as result:
+      		writer = csv.DictWriter(result, fieldnames = ['STATE', 'YEAR','STATE_FIPS', 
+      		'EVENT_TYPE', 'INJURIES_DIRECT', 'INJURIES_INDIRECT', 'DEATHS_DIRECT', 'DEATHS_INDIRECT'])
+        	print ("Writing", outf)
+        	writer.writeheader()
+        	for row in reader:
+            	writer.writerow({'STATE' : row['STATE'],
+                             	'YEAR' : row['YEAR'],
+                             	'STATE_FIPS' : row['STATE_FIPS'],
+                             	'EVENT_TYPE' : row['EVENT_TYPE'],
+                             	'INJURIES_DIRECT' : row['INJURIES_DIRECT'],
+                             	'INJURIES_INDIRECT' : row['INJURIES_INDIRECT'],
+                             	'DEATHS_DIRECT' : row['DEATHS_DIRECT'],
+                             	'DEATHS_INDIRECT' : row['DEATHS_INDIRECT']})
+
+for root, dirs, files in os.walk(in_dir):
+	for f in files:
+    	filter_fields(f)
+</code></pre>
+
+<p>2) Using postgres command line tools for each csv file:</p>
+
+<pre><code>psql -U postgres
+
+\connect geodata
+\copy storm_events from '/Path to csv' delimiter ',' csv header
+...
+</code></pre>
+
+<p>Now, to create views that allow us to analyze the data you have several options but below are a few simple ones that isolate the info we are interested in.  They also allow room for growth should you choose to add aggregates of other attributes:</p>
+
+<pre><code>CREATE VIEW injuries_deaths AS
+SELECT storm_events.state, storm_events.state_fips,
+count(*) AS count
+FROM storm_events
+WHERE storm_events.injuries_direct &lt;&gt; 0 OR
+storm_events.injuries_indirect 	&lt;&gt; 0 OR
+storm_events.deaths_direct &lt;&gt; 0 OR
+storm_events.deaths_indirect &lt;&gt; 0
+GROUP BY storm_events.state, state_fips
+ORDER BY storm_events.state;
+
+CREATE VIEW state_totals AS
+SELECT total.state, total.state_fips,
+count(*) AS count
+FROM (SELECT storm_events.state,
+       storm_events.year,
+       storm_events.state_fips,
+       storm_events.event_type,
+       storm_events.injuries_direct,
+       storm_events.injuries_indirect,
+       storm_events.deaths_direct,
+       storm_events.deaths_indirect
+      FROM storm_events) total
+GROUP BY total.state, total.state_fips
+ORDER BY total.state;
+
+CREATE VIEW map_storm_data AS
+(SELECT s.state, s.state_fips, id.count injuries_death_count, s.count 
+total_storms_count, 
+round(((id.count::float/s.count::float)*100)::numeric,2) percent
+FROM injuries_deaths id
+LEFT JOIN state_totals s ON id.state = s.state);
+</code></pre>
+
+<p>A simple query to validate the data and identify the states with the highest percentage of storms resulting in injury/death:</p>
+
+<pre><code>SELECT *
+FROM map_storm_data
+ORDER BY percent DESC;
+</code></pre>
+
+<p>To generate a shapefile we can use to visualize our data,  download from TIGER the shapefile needed, and then use command line to convert it to the desired projection and import it into postgres.  In this case, I entered:</p>
+
+<pre><code>shp2pgsql -s 4269:4326 tl_2014_us_state  public.states | psql -h 
+localhost -d geodata -U postgres
+</code></pre>
+
+<p>Now to create a single view that includes the desired calculations along with the associated state geometry data:</p>
+
+<pre><code>CREATE VIEW state_storm_percent AS
+SELECT a.name, b.state_fips, b.injuries_death_count,
+b.total_storms_count, b.percent, ST_Simplify(a.geom, 0.005) as geom
+FROM states a
+LEFT JOIN map_storm_data b
+ON a.statefp::int = b.state_fips;
+</code></pre>
+
+<p>For constructing the application, we will use Leaflet and GeoJSON.  To do this, we will export the map as a shapefile, and use <a href="http://www.gdal.org/">GDAL</a> to convert it to GeoJSON.</p>
+
+<p>The following code is executed in the command line for PostgreSQL to generate the shapefile and then convert to geojson:</p>
+
+<pre><code>pgsql2shp -f storm_events -h localhost -p 5432 -u postgres -P password
+geodata public.state_storm_percent;
+
+ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
+</code></pre>
+
+<p>To create the map for our application, we will use the same process as described in this <a href="http://leafletjs.com/examples/choropleth.html">Leaflet tutorial</a>.  The end result is a thematic map with a legend and an info window describing the data as you select each state.</p>
+
+<p>View application <a href="http://tannerkj.github.io/NOAA_Storm_Events/index.html">here</a>.</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<!-- Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58675189-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+
+</html>

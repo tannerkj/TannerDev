@@ -2,7 +2,7 @@
 layout: post
 title:  "Visualizing February 2015 Weather Data with Turf.js"
 date:   2015-03-01
-categories: turfjs leaflet postgresql postgis
+categories: turfjs leaflet postgresql postgis noaa
 author: Joshua Tanner
 ---
 

@@ -8,7 +8,7 @@
 		{
 			"name" : "MySQL",
 			"img-src" : "",
-			"description" : "MySQL is the most popular open-source database, especially for web development."
+			"description" : "MySQL is the most popular open source database, especially for web development."
 		},
 		{
 			"name" : "SQL Server",
@@ -18,7 +18,7 @@
 		{
 			"name" : "MongoDB",
 			"img-src" : "",
-			"description" : "MondgoDB is the leading NoSQL, document database, written in C++.  It even supports spatial indexing and queries."
+			"description" : "MondgoDB is the leading NoSQL document database, written in C++.  It even supports spatial indexing and queries."
 		},
 		{
 			"name" : "Redis",

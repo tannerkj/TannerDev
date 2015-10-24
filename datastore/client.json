@@ -13,7 +13,7 @@
 		{
 			"name" : "jQuery",
 			"img-src" : "",
-			"description" : "jQuery provides a intuitive interface for selecting and manipulating the DOM, performing AJAX requests, and a host of other helpful methods."
+			"description" : "jQuery provides an intuitive interface for selecting and manipulating the DOM, performing AJAX requests, and a host of other helpful methods."
 		},
 		{
 			"name" : "Underscore",

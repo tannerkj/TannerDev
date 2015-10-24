@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>A Brief Look At Vector Tiles</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//vector_tiles/formats/2015/03/15/A-Brief-Look-At-Vector-Tiles.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">A Brief Look At Vector Tiles</h1>
+    <p class="post-meta">Mar 15, 2015 • Joshua Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <p>This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through <a href="https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md">github</a>.  Also, please use the links throughout this document to understand more about vector tiles.</p>
+
+<p>At ESRI’s 2015 Developer Conference, the plan to <a href="http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles">implement vector tiles</a> into their mapping platform was announced.  Most traditional GIS analysts and developers have created <a href="http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000189000000">tile caches</a> or <a href="https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html">consumed tiled map service layers</a> to implement complex geometries with <a href="http://www.usgs.gov/faq/categories/9860/3604">more efficiency</a> as part of their business processes.  To most of the industry (I’m assuming), <a href="http://wiki.openstreetmap.org/wiki/Vector_tiles">vector tiles</a> is a new concept that offers many advantages over traditional formats.  Although the concept is similar to raster tiles, vector tiles return the actual features which creates the ability to manipulate the style and symbology of features dynamically.  This can be done, all while benefiting from the efficiency of only needing to load tiles within the current extent and not the entirety of a features geometry and attributes.  Also, vector tiles also benefit over feature services because the geometry is essentially cached and not needed to be dynamically created on the server in most cases.</p>
+
+<p>It is important to know that although vector tiles are new to Esri’s platform, they are already present in the geospatial community elsewhere.  <a href="https://www.mapbox.com/">Mapbox</a>  has <a href="https://www.mapbox.com/blog/vector-tiles/">developed a standard for an open source vector tile format</a> and uses it at the core of <a href="https://www.mapbox.com/tilemill/">tilemill</a>.  In fact, <a href="https://www.mapbox.com/blog/vector-tile-adoption/">Esri has adopted</a> this specification in it’s implementation of vector tiles.  If you look at the vector tile spec defined by mapbox, you will also see various <a href="https://github.com/mapbox/vector-tile-spec/wiki/Implementations">applications and tools that implement it</a>.</p>
+
+<p>Within <a href="https://developers.arcgis.com/javascript/jsapi/">Esri’s current JavaScript API</a>, I don’t see support for vector tiles but I’m sure the next release will include it.  OpenLayers  does support <a href="http://openlayers.org/en/v3.3.0/apidoc/ol.source.TileVector.html">a TileVector</a> format, as illustrated in <a href="http://openlayers.org/en/v3.3.0/examples/tile-vector.html">this example</a>.</p>
+
+<p>There are various tile-generation libraries available for creating vector tiles, and according to Esri’s announcement, a toolbox will be available directly though their Desktop (or Pro) software.  One nice example I found was created by <a href="https://github.com/glob3mobile">Glob3 Mobile</a> called <a href="https://github.com/glob3mobile/mmt-vector-tiles">mmt-vector-tiles</a> which can generate vector tiles directly from a PostGIS database.  They also have a <a href="http://wb.glob3mobile.com/vl/index_lux.html">good example</a> posted of this in action with OpenLayers 3.  If you look at the <a href="http://igosoftware.dyndns.org:8000/vectorial/lux_buildings_LEVELS_12-18_MERCATOR/GEOJSON/">file stucture</a> of their tiles, it looks similar to what is shown in <a href="http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles">Esri’s presentation</a> although I’m not certain it adheres to the same specification.</p>
+
+<p>If you haven’t heard of vector tiles before, I hope this post has been useful!</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<!-- Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58675189-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+
+</html>

@@ -109,6 +109,9 @@ h1 .dev {
     from { transform: scale(1) rotate(0deg);}
     to { transform: scale(1) rotate(360deg);}
 }
+.img-responsive {
+    width : 100%;
+}
 
 
 

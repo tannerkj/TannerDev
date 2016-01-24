@@ -8,13 +8,13 @@
     <meta name="author" content="Joshua and Kristin Tanner">
     <meta name="robots" content="index,follow">
 
-    <title>About</title>
+    <title>A Quick Look At Aurelia</title>
     <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
 ">
 
     <link href="/blog/site/css/main.css" rel="stylesheet">
 
-    <link rel="canonical" href="/blog/site//about/">
+    <link rel="canonical" href="/blog/site//aurelia/javascript/2016/01/23/A-Quick-Look-At-Aurelia.html">
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -66,18 +66,41 @@
 
     <div class="page-content">
       <div class="container">
-        <div class="post">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title">A Quick Look At Aurelia</h1>
+    <p class="post-meta">Jan 23, 2016 • Joshua Tanner</p>
   </header>
 
   <article class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="http://jekyllrb.com/">jekyllrb.com</a></p>
+    <p>I have been a big proponent of AngularJS.  My biggest compaint with any framework however, is the learning curve compared to just jumping into coding with no new <em>stuff</em> to learn.  I spent years working with Angular, but I am always suprised at how quickly I forget the ins and outs of new language or framework.  Now that I’m preparing to work on a new project, I tried to go back to Angular docs to freshen up.  AngularJS 2.0 is out, which means more things to learn and test out.  Learning is never a bad thing, but re-learning can get tedious and sometimes counterproductive.  I know JavaScript like the back of my hand, shouldn’t a framework feel the same?</p>
 
-<p>You can find the source code for the Jekyll new theme at: <a href="https://github.com/jglovier/jekyll-new">github.com/jglovier/jekyll-new</a></p>
+<p>At last, a quick browse around the web led me to discover <a href="http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/what-is-aurelia">Aurelia</a>.  It’s new (<a href="http://www.isaacchansky.me/days-since-last-new-js-framework/">although this is relative</a>), but already it is up to a production ready Beta 1 release.  It is built using modern ECMAScript 2016 and follows similar concepts we use in all modern MV* frameworks.  Data binding, dependency injection, templating, routing, etc.  </p>
 
-<p>You can find the source code for Jekyll at <a href="https://github.com/jekyll/jekyll">github.com/jekyll/jekyll</a></p>
+<p>The best thing I noticed so far is that the framework is very discreet.  There aren’t many ‘frameworky’ things to learn and lets you leverage the power of a framework without needing to be intimate with the framework.  If you’ve spent hours re-learning backbone, AngularJS, React, etc… you know what I mean.  </p>
+
+<p>I feel like the Aurelia framework should follow Douglas Crockfords convention of: <strong>AngularJS 2.0 - The Good Parts</strong> by <strong>Rob Eisenberg</strong> (the creator of Aurelia).  In fact, it turns out <a href="https://github.com/EisenbergEffect">Rob Eisenberg</a> is actually the driving input behind Angular 2.0 and now known as <a href="http://eisenbergeffect.bluespire.com/leaving-angular/">the guy who left Angular</a>.  </p>
+
+<p><strong>Getting Started</strong></p>
+
+<p>The <a href="http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/what-is-aurelia">Getting Started Guide</a> on Aurelia provides a straight forward approach to getting introduced to the framework.  Different paths are avaialbe depending on what type of background you are coming from. You can follow along with their <a href="http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/getting-started">getting started guide</a> on your own using either the ES 2016 or Typescript kit.</p>
+
+<p>I’m using a <a href="https://www.npmjs.com/package/http-server">simple web server</a> to serve out the web files, since Aurelia is simply client side libraries.  This is also referenced in the guide:</p>
+
+<p><code>
+npm install http-server -g
+http-server -o
+</code></p>
+
+<p>The -o flag will open your app in a browser.  You should see a comforting ‘Welcome to Aurelia’ string in your browser.</p>
+
+<p>I also suggest watching <a href="https://vimeo.com/131641012">Rob’s video introducing Aurelia</a>.  The video intoduces the framework in a very straightforward, digestable manner.  I think this was the point, as is the point of the framework itself.</p>
+
+<p><strong>Final Thoughts</strong></p>
+
+<p>I’ve spent the better part the last day building some sample apps with Aurelia… and I have to say I’m impressed.  This should be my primary framework for the coming year.</p>
 
   </article>
 

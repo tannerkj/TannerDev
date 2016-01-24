@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-<<<<<<< HEAD
-    <title>tanner geo Blog</title>
-    <description>tannergeo is passionate about computer science, web development and everything geospatial!  We are super greatful for all of the great tutorials and blog posts other have created.  We want to help give back by posting our  experiences and tutorials on new technologies.
-</description>
-    <link>http://tannergeo.com/~joshuatanner/tannergeo//</link>
-    <atom:link href="http://tannergeo.com/~joshuatanner/tannergeo//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 08 Jan 2015 20:26:44 -0800</pubDate>
-    <lastBuildDate>Thu, 08 Jan 2015 20:26:44 -0800</lastBuildDate>
-    <generator>Jekyll v2.4.0</generator>
-=======
     <title>TannerGeo Blog</title>
     <description>TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <pubDate>Sun, 11 Jan 2015 18:47:48 -0800</pubDate>
-    <lastBuildDate>Sun, 11 Jan 2015 18:47:48 -0800</lastBuildDate>
-    <generator>Jekyll v2.5.2</generator>
->>>>>>> gh-pages
-=======
-    <pubDate>Mon, 02 Mar 2015 21:38:34 -0800</pubDate>
-    <lastBuildDate>Mon, 02 Mar 2015 21:38:34 -0800</lastBuildDate>
-=======
-    <pubDate>Fri, 04 Sep 2015 18:46:46 -0700</pubDate>
-    <lastBuildDate>Fri, 04 Sep 2015 18:46:46 -0700</lastBuildDate>
->>>>>>> gh-pages
-    <generator>Jekyll v2.5.3</generator>
->>>>>>> gh-pages
+    <pubDate>Sat, 23 Jan 2016 21:40:53 -0800</pubDate>
+    <lastBuildDate>Sat, 23 Jan 2016 21:40:53 -0800</lastBuildDate>
+    <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>A Quick Look At Aurelia</title>
+        <description>&lt;p&gt;I have been a big proponent of AngularJS.  My biggest compaint with any framework however, is the learning curve compared to just jumping into coding with no new &lt;em&gt;stuff&lt;/em&gt; to learn.  I spent years working with Angular, but I am always suprised at how quickly I forget the ins and outs of new language or framework.  Now that I’m preparing to work on a new project, I tried to go back to Angular docs to freshen up.  AngularJS 2.0 is out, which means more things to learn and test out.  Learning is never a bad thing, but re-learning can get tedious and sometimes counterproductive.  I know JavaScript like the back of my hand, shouldn’t a framework feel the same?&lt;/p&gt;
+
+&lt;p&gt;At last, a quick browse around the web led me to discover &lt;a href=&quot;http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/what-is-aurelia&quot;&gt;Aurelia&lt;/a&gt;.  It’s new (&lt;a href=&quot;http://www.isaacchansky.me/days-since-last-new-js-framework/&quot;&gt;although this is relative&lt;/a&gt;), but already it is up to a production ready Beta 1 release.  It is built using modern ECMAScript 2016 and follows similar concepts we use in all modern MV* frameworks.  Data binding, dependency injection, templating, routing, etc.  &lt;/p&gt;
+
+&lt;p&gt;The best thing I noticed so far is that the framework is very discreet.  There aren’t many ‘frameworky’ things to learn and lets you leverage the power of a framework without needing to be intimate with the framework.  If you’ve spent hours re-learning backbone, AngularJS, React, etc… you know what I mean.  &lt;/p&gt;
+
+&lt;p&gt;I feel like the Aurelia framework should follow Douglas Crockfords convention of: &lt;strong&gt;AngularJS 2.0 - The Good Parts&lt;/strong&gt; by &lt;strong&gt;Rob Eisenberg&lt;/strong&gt; (the creator of Aurelia).  In fact, it turns out &lt;a href=&quot;https://github.com/EisenbergEffect&quot;&gt;Rob Eisenberg&lt;/a&gt; is actually the driving input behind Angular 2.0 and now known as &lt;a href=&quot;http://eisenbergeffect.bluespire.com/leaving-angular/&quot;&gt;the guy who left Angular&lt;/a&gt;.  &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Getting Started&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&quot;http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/what-is-aurelia&quot;&gt;Getting Started Guide&lt;/a&gt; on Aurelia provides a straight forward approach to getting introduced to the framework.  Different paths are avaialbe depending on what type of background you are coming from. You can follow along with their &lt;a href=&quot;http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/getting-started&quot;&gt;getting started guide&lt;/a&gt; on your own using either the ES 2016 or Typescript kit.&lt;/p&gt;
+
+&lt;p&gt;I’m using a &lt;a href=&quot;https://www.npmjs.com/package/http-server&quot;&gt;simple web server&lt;/a&gt; to serve out the web files, since Aurelia is simply client side libraries.  This is also referenced in the guide:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+npm install http-server -g
+http-server -o
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;The -o flag will open your app in a browser.  You should see a comforting ‘Welcome to Aurelia’ string in your browser.&lt;/p&gt;
+
+&lt;p&gt;I also suggest watching &lt;a href=&quot;https://vimeo.com/131641012&quot;&gt;Rob’s video introducing Aurelia&lt;/a&gt;.  The video intoduces the framework in a very straightforward, digestable manner.  I think this was the point, as is the point of the framework itself.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Final Thoughts&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;I’ve spent the better part the last day building some sample apps with Aurelia… and I have to say I’m impressed.  This should be my primary framework for the coming year.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 23 Jan 2016 00:00:00 -0800</pubDate>
+        <link>http://tannergeo.com/blog/site//aurelia/javascript/2016/01/23/A-Quick-Look-At-Aurelia.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//aurelia/javascript/2016/01/23/A-Quick-Look-At-Aurelia.html</guid>
+        
+        
+        <category>aurelia</category>
+        
+        <category>javascript</category>
+        
+      </item>
     
       <item>
         <title>Spatial Version Control with GeoGig</title>
@@ -38,7 +56,7 @@
 
 &lt;h4 id=&quot;basics&quot;&gt;Basics&lt;/h4&gt;
 
-&lt;p&gt;If you have ever used git or svn, you know of it’s usefulness in maintaining a movable history of the ‘state’ of your code or other files.  If you have never heard of version control, it is simply a system that keeps track of changes and allows you to ‘roll-back’ if needed.  You can visualize these changes (additions and subtractions) and provide readable comments with every &lt;em&gt;commit&lt;/em&gt;.  It also provides methods to resolve &lt;em&gt;conflicts&lt;/em&gt; if multiple changes contradict each other.&lt;/p&gt;
+&lt;p&gt;If you have ever used git or svn, you know of it’s usefulness in maintaining a movable history of the ‘state’ of your code or other files.  If you have never heard of version control, it is simply a system that keeps track of changes and allows you to ‘roll-back’ if needed.  You can visualize these changes (additions and subtractions) and provide readable comments with every &lt;em&gt;commit&lt;/em&gt;.  It also provides methods to resolve &lt;em&gt;conflicts&lt;/em&gt; if multiple changes contradict each other. &lt;/p&gt;
 
 &lt;p&gt;I one had a colleague who explained version control very elegantly.&lt;/p&gt;
 
@@ -46,7 +64,7 @@
   &lt;p&gt;‘copy and paste is the one true evil.’ - colleague/friend&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;To be honest, I use this all the time when I try to explain the usefulness of version control.  When you copy and paste, you now have two completely separate datasets that know nothing about each other.  When one is updated, the other falls behind and trying to keep them smartly in sync can become futile.  With version control, we can checkout a copy, make changes, and commit them back to the remote repository.  If updates need to be rolled back, we can easily revert them.&lt;/p&gt;
+&lt;p&gt;To be honest, I use this all the time when I try to explain the usefulness of version control.  When you copy and paste, you now have two completely separate datasets that know nothing about each other.  When one is updated, the other falls behind and trying to keep them smartly in sync can become futile.  With version control, we can checkout a copy, make changes, and commit them back to the remote repository.  If updates need to be rolled back, we can easily revert them.  &lt;/p&gt;
 
 &lt;h4 id=&quot;why-gis-needs-it&quot;&gt;Why GIS Needs It&lt;/h4&gt;
 &lt;p&gt;Technically, Esri has been using versioning in enterprise geodatabase solutions for some time now.  It allows concurrent editing of a geodatabase, conflict management, and the ability to revert to a previous state. However, it requires complex setup and the need to be in the Esri environment.&lt;/p&gt;
@@ -71,7 +89,7 @@ bike_route_final_for_real.shp
 &lt;h4 id=&quot;geogig-background&quot;&gt;Geogig Background&lt;/h4&gt;
 &lt;p&gt;&lt;a href=&quot;http://geogig.org/&quot;&gt;GeoGig&lt;/a&gt; (previouly GeoGit) is a distributed version control system (DVCS) for geospatial data.  The ‘distributed’ term is important and follows closer to the architecture of Git than SVN (google git vs svn for more info).  The software is open source, and currently maintained by the &lt;a href=&quot;https://www.locationtech.org/projects/technology.geogig&quot;&gt;Eclipse Foundation&lt;/a&gt; and formerly maintained by BoundlessGeo.  A disclaimer on the GeoGig site states that is in ‘development’ and considered unstable.  In my short experience with the software, it worked great, but I would not yet use this in a full production environment.&lt;/p&gt;
 
-&lt;p&gt;I would love to see &lt;a href=&quot;http://geogig.org/&quot;&gt;GeoGig&lt;/a&gt; developed to be stable enough to use as a reliable tool for spatial data version control.&lt;/p&gt;
+&lt;p&gt;I would love to see &lt;a href=&quot;http://geogig.org/&quot;&gt;GeoGig&lt;/a&gt; developed to be stable enough to use as a reliable tool for spatial data version control.  &lt;/p&gt;
 
 &lt;h4 id=&quot;geogig-sample-workflow&quot;&gt;GeoGig Sample Workflow&lt;/h4&gt;
 &lt;p&gt;I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot;&gt;Getting Started&lt;/a&gt; guide for downloading and getting up and running with GeoGig.  The following workflow will demonstrate the following scenario:&lt;/p&gt;
@@ -92,7 +110,7 @@ bike_route_final_for_real.shp
 &lt;/code&gt;&lt;/pre&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Now that it is in the warehouse, you need add it to a &lt;em&gt;loading dock&lt;/em&gt; - like location before committing it entirely.  Only changes will be added, and in our initial case will be all of our existing features in bike_routes.&lt;/p&gt;
+    &lt;p&gt;Now that it is in the warehouse, you need add it to a &lt;em&gt;loading dock&lt;/em&gt; - like location before committing it entirely.  Only changes will be added, and in our initial case will be all of our existing features in bike_routes.  &lt;/p&gt;
 
     &lt;pre&gt;&lt;code&gt; S:master_routes&amp;gt; geogig add 
 &lt;/code&gt;&lt;/pre&gt;
@@ -116,7 +134,7 @@ bike_route_final_for_real.shp
 &lt;/code&gt;&lt;/pre&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;This exports out a shapefile for you to work on.  You can also export the data out in various different formats (geojson, postgres, spatialite, etc), which can be a great tool in itself.  Now that you have a local shapefile to edit, you can make the changes you need in whatever software you are using (qgis, arcgis, etc).  Once you are ready to push the changes up to the master repository, you will have to use a couple command line steps.  You will need to: import the shapefile into your local repo, stage your edits (loading dock), and commit them (put them on the truck).  Once everything is committed in your local geogig repository, you will push the changes to your remote (origin) branch.&lt;/p&gt;
+    &lt;p&gt;This exports out a shapefile for you to work on.  You can also export the data out in various different formats (geojson, postgres, spatialite, etc), which can be a great tool in itself.  Now that you have a local shapefile to edit, you can make the changes you need in whatever software you are using (qgis, arcgis, etc).  Once you are ready to push the changes up to the master repository, you will have to use a couple command line steps.  You will need to: import the shapefile into your local repo, stage your edits (loading dock), and commit them (put them on the truck).  Once everything is committed in your local geogig repository, you will push the changes to your remote (origin) branch.  &lt;/p&gt;
 
     &lt;pre&gt;&lt;code&gt; C:local_bike_routes&amp;gt; geogig shp import ./bike_routes.shp -d bike_routes
  C:local_bike_routes&amp;gt; geogig add
@@ -549,11 +567,11 @@ bike_route_final_for_real.shp
 
 &lt;h6 id=&quot;step-1b&quot;&gt;Step 1.b&lt;/h6&gt;
 
-&lt;p&gt;I did not serve locally using Python.  I created a &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;GitHub repo&lt;/a&gt; and viewed changes locally using &lt;em&gt;http://localhost/~username/projectname/&lt;/em&gt; before pushing to GitHub.  It is a good standard practice to follow.  Also, you then have the ability to publish your webpages using GitHub Pages.&lt;/p&gt;
+&lt;p&gt;I did not serve locally using Python.  I created a &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;GitHub repo&lt;/a&gt; and viewed changes locally using &lt;em&gt;http://localhost/~username/projectname/&lt;/em&gt; before pushing to GitHub.  It is a good standard practice to follow.  Also, you then have the ability to publish your webpages using GitHub Pages.  &lt;/p&gt;
 
 &lt;h6 id=&quot;step-1d&quot;&gt;Step 1.d&lt;/h6&gt;
 
-&lt;p&gt;I used &lt;a href=&quot;http://bower.io/&quot;&gt;Bower&lt;/a&gt;, as mentioned above, to add Leaflet to my project.  It would be prudent to become familiar with Bower and its dependencies since many common packages can be easily installed with its use.  Dependencies for Bower include &lt;a href=&quot;https://nodejs.org/&quot;&gt;Node and npm&lt;/a&gt; and &lt;a href=&quot;http://git-scm.com/&quot;&gt;Git&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I used &lt;a href=&quot;http://bower.io/&quot;&gt;Bower&lt;/a&gt;, as mentioned above, to add Leaflet to my project.  It would be prudent to become familiar with Bower and its dependencies since many common packages can be easily installed with its use.  Dependencies for Bower include &lt;a href=&quot;https://nodejs.org/&quot;&gt;Node and npm&lt;/a&gt; and &lt;a href=&quot;http://git-scm.com/&quot;&gt;Git&lt;/a&gt;.  &lt;/p&gt;
 
 &lt;p&gt;Using command line, inside my working directory, I entered the following:&lt;/p&gt;
 
@@ -565,7 +583,7 @@ bike_route_final_for_real.shp
 &lt;pre&gt;&lt;code&gt;&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;./bower_components/leaflet/dist/leaflet.css&quot; /&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;and the Leaflet JavaScript link at the bottom of the &lt;em&gt;body&lt;/em&gt; section would be referenced as:&lt;/p&gt;
+&lt;p&gt;and the Leaflet JavaScript link at the bottom of the &lt;em&gt;body&lt;/em&gt; section would be referenced as: &lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;script src=&quot;./bower_components/leaflet/dist/leaflet.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -574,7 +592,7 @@ bike_route_final_for_real.shp
 
 &lt;p&gt;View my source code &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;		&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 09 Apr 2015 00:00:00 -0700</pubDate>
@@ -741,7 +759,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 
 &lt;p&gt;To create the map for our application, we will use the same process as described in this &lt;a href=&quot;http://leafletjs.com/examples/choropleth.html&quot;&gt;Leaflet tutorial&lt;/a&gt;.  The end result is a thematic map with a legend and an info window describing the data as you select each state.&lt;/p&gt;
 
-&lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
 
 </description>
         <pubDate>Thu, 19 Mar 2015 00:00:00 -0700</pubDate>
@@ -761,7 +779,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
     
       <item>
         <title>A Brief Look At Vector Tiles</title>
-        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles.&lt;/p&gt;
+        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles. &lt;/p&gt;
 
 &lt;p&gt;At ESRI’s 2015 Developer Conference, the plan to &lt;a href=&quot;http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles&quot;&gt;implement vector tiles&lt;/a&gt; into their mapping platform was announced.  Most traditional GIS analysts and developers have created &lt;a href=&quot;http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000189000000&quot;&gt;tile caches&lt;/a&gt; or &lt;a href=&quot;https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html&quot;&gt;consumed tiled map service layers&lt;/a&gt; to implement complex geometries with &lt;a href=&quot;http://www.usgs.gov/faq/categories/9860/3604&quot;&gt;more efficiency&lt;/a&gt; as part of their business processes.  To most of the industry (I’m assuming), &lt;a href=&quot;http://wiki.openstreetmap.org/wiki/Vector_tiles&quot;&gt;vector tiles&lt;/a&gt; is a new concept that offers many advantages over traditional formats.  Although the concept is similar to raster tiles, vector tiles return the actual features which creates the ability to manipulate the style and symbology of features dynamically.  This can be done, all while benefiting from the efficiency of only needing to load tiles within the current extent and not the entirety of a features geometry and attributes.  Also, vector tiles also benefit over feature services because the geometry is essentially cached and not needed to be dynamically created on the server in most cases.&lt;/p&gt;
 
@@ -964,23 +982,12 @@ geojson.addTo(map);
 
 &lt;p&gt;I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!&lt;/p&gt;
 </description>
-<<<<<<< HEAD
-        <pubDate>Wed, 03 Dec 2014 10:44:02 -0800</pubDate>
-<<<<<<< HEAD
-        <link>http://tannergeo.com/~joshuatanner/tannergeo//jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">http://tannergeo.com/~joshuatanner/tannergeo//jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
-=======
-        <link>http://tannergeo.com/blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">http://tannergeo.com/blog/site//jekyll/update/2014/12/03/welcome-to-jekyll.html</guid>
->>>>>>> gh-pages
-=======
         <pubDate>Sun, 01 Mar 2015 00:00:00 -0800</pubDate>
         <link>http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</guid>
         
         
         <category>turfjs</category>
->>>>>>> gh-pages
         
         <category>leaflet</category>
         

@@ -79,7 +79,7 @@
 
 <h4 id="basics">Basics</h4>
 
-<p>If you have ever used git or svn, you know of it’s usefulness in maintaining a movable history of the ‘state’ of your code or other files.  If you have never heard of version control, it is simply a system that keeps track of changes and allows you to ‘roll-back’ if needed.  You can visualize these changes (additions and subtractions) and provide readable comments with every <em>commit</em>.  It also provides methods to resolve <em>conflicts</em> if multiple changes contradict each other.</p>
+<p>If you have ever used git or svn, you know of it’s usefulness in maintaining a movable history of the ‘state’ of your code or other files.  If you have never heard of version control, it is simply a system that keeps track of changes and allows you to ‘roll-back’ if needed.  You can visualize these changes (additions and subtractions) and provide readable comments with every <em>commit</em>.  It also provides methods to resolve <em>conflicts</em> if multiple changes contradict each other. </p>
 
 <p>I one had a colleague who explained version control very elegantly.</p>
 
@@ -87,7 +87,7 @@
   <p>‘copy and paste is the one true evil.’ - colleague/friend</p>
 </blockquote>
 
-<p>To be honest, I use this all the time when I try to explain the usefulness of version control.  When you copy and paste, you now have two completely separate datasets that know nothing about each other.  When one is updated, the other falls behind and trying to keep them smartly in sync can become futile.  With version control, we can checkout a copy, make changes, and commit them back to the remote repository.  If updates need to be rolled back, we can easily revert them.</p>
+<p>To be honest, I use this all the time when I try to explain the usefulness of version control.  When you copy and paste, you now have two completely separate datasets that know nothing about each other.  When one is updated, the other falls behind and trying to keep them smartly in sync can become futile.  With version control, we can checkout a copy, make changes, and commit them back to the remote repository.  If updates need to be rolled back, we can easily revert them.  </p>
 
 <h4 id="why-gis-needs-it">Why GIS Needs It</h4>
 <p>Technically, Esri has been using versioning in enterprise geodatabase solutions for some time now.  It allows concurrent editing of a geodatabase, conflict management, and the ability to revert to a previous state. However, it requires complex setup and the need to be in the Esri environment.</p>
@@ -112,7 +112,7 @@ bike_route_final_for_real.shp
 <h4 id="geogig-background">Geogig Background</h4>
 <p><a href="http://geogig.org/">GeoGig</a> (previouly GeoGit) is a distributed version control system (DVCS) for geospatial data.  The ‘distributed’ term is important and follows closer to the architecture of Git than SVN (google git vs svn for more info).  The software is open source, and currently maintained by the <a href="https://www.locationtech.org/projects/technology.geogig">Eclipse Foundation</a> and formerly maintained by BoundlessGeo.  A disclaimer on the GeoGig site states that is in ‘development’ and considered unstable.  In my short experience with the software, it worked great, but I would not yet use this in a full production environment.</p>
 
-<p>I would love to see <a href="http://geogig.org/">GeoGig</a> developed to be stable enough to use as a reliable tool for spatial data version control.</p>
+<p>I would love to see <a href="http://geogig.org/">GeoGig</a> developed to be stable enough to use as a reliable tool for spatial data version control.  </p>
 
 <h4 id="geogig-sample-workflow">GeoGig Sample Workflow</h4>
 <p>I would recommend following the <a href="http://geogig.org/#install">Getting Started</a> guide for downloading and getting up and running with GeoGig.  The following workflow will demonstrate the following scenario:</p>
@@ -133,7 +133,7 @@ bike_route_final_for_real.shp
 </code></pre>
   </li>
   <li>
-    <p>Now that it is in the warehouse, you need add it to a <em>loading dock</em> - like location before committing it entirely.  Only changes will be added, and in our initial case will be all of our existing features in bike_routes.</p>
+    <p>Now that it is in the warehouse, you need add it to a <em>loading dock</em> - like location before committing it entirely.  Only changes will be added, and in our initial case will be all of our existing features in bike_routes.  </p>
 
     <pre><code> S:master_routes&gt; geogig add 
 </code></pre>
@@ -157,7 +157,7 @@ bike_route_final_for_real.shp
 </code></pre>
   </li>
   <li>
-    <p>This exports out a shapefile for you to work on.  You can also export the data out in various different formats (geojson, postgres, spatialite, etc), which can be a great tool in itself.  Now that you have a local shapefile to edit, you can make the changes you need in whatever software you are using (qgis, arcgis, etc).  Once you are ready to push the changes up to the master repository, you will have to use a couple command line steps.  You will need to: import the shapefile into your local repo, stage your edits (loading dock), and commit them (put them on the truck).  Once everything is committed in your local geogig repository, you will push the changes to your remote (origin) branch.</p>
+    <p>This exports out a shapefile for you to work on.  You can also export the data out in various different formats (geojson, postgres, spatialite, etc), which can be a great tool in itself.  Now that you have a local shapefile to edit, you can make the changes you need in whatever software you are using (qgis, arcgis, etc).  Once you are ready to push the changes up to the master repository, you will have to use a couple command line steps.  You will need to: import the shapefile into your local repo, stage your edits (loading dock), and commit them (put them on the truck).  Once everything is committed in your local geogig repository, you will push the changes to your remote (origin) branch.  </p>
 
     <pre><code> C:local_bike_routes&gt; geogig shp import ./bike_routes.shp -d bike_routes
  C:local_bike_routes&gt; geogig add

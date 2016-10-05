@@ -97,9 +97,9 @@
                 <div id="success-message">
                         Thank you for contacting us, we'll be in touch soon.
                 </div>
-                
-                <form id="contact-form" action="mailto:support@tannergeo.com?subject=" method="post">
-                    
+
+                <form id="contact-form" action="https://formspree.io/support@tannergeo.com" method="post">
+
                     <div class="control-group">
                         <label class="control-label" for="InputName"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Full Name</label>
                         <div class="controls controls-row">
@@ -143,7 +143,7 @@
 
 
             <section class="col-lg-6">
-                
+
                 <div class="well">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d90384.8045266037!2d-123.02820740000001!3d44.93299145!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1417574740504" width="100%" height="350" frameborder="0" style="border:0"></iframe>
                 </div>
@@ -151,7 +151,7 @@
 
             </section>
         </div>
-    
+
 
     <!-- Footer -->
         <footer>
@@ -170,7 +170,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-    
+
     <!-- Email Function -->
     <script>
         $(function () {
@@ -179,7 +179,7 @@
                 $("#spinner").show();
                 $("#submit-text").text('Sending')
                 $.ajax({
-                    url : "http://192.241.200.140/email/contact.php",
+                    url : "https://formspree.io/support@tannergeo.com",
                     method : "POST",
                     data : {
                         name : $("#InputName").val(),
@@ -194,9 +194,15 @@
                         $("#submit-text").text(' Send Message');
                         $("#success-message").show('slow')
                                              .delay(5000).hide('slow');
-                    }, 
+                    },
                     error : function (e) {
-                        alert('Problem sending email.  Please email us at support@tannergeo.com');
+                        // alert('Problem sending email.  Please email us at support@tannergeo.com');
+                        // reset form and add success message
+                        $("#contact-form")[0].reset();
+                        $("#spinner").hide();
+                        $("#submit-text").text(' Send Message');
+                        $("#success-message").show('slow')
+                                             .delay(5000).hide('slow');
                     }
                 })
             })

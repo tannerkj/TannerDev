@@ -6,19 +6,276 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 23 Jan 2016 21:40:53 -0800</pubDate>
-    <lastBuildDate>Sat, 23 Jan 2016 21:40:53 -0800</lastBuildDate>
-    <generator>Jekyll v2.4.0</generator>
+    <pubDate>Thu, 05 Jan 2017 21:32:31 -0800</pubDate>
+    <lastBuildDate>Thu, 05 Jan 2017 21:32:31 -0800</lastBuildDate>
+    <generator>Jekyll v3.3.1</generator>
+    
+      <item>
+        <title>Adding ArcGIS Sign In Using Omniauth and Rails</title>
+        <description>&lt;p&gt;We’re all familiar with being able to sign into other applications with our Facebook
+or Google account, but what about an ArcGIS Online account? This is possible because
+ArcGIS Online uses OAuth 2 as it’s authentication framework.  There is limited information on
+how this process works, so this post is meant to shed some light into the process.&lt;/p&gt;
+
+&lt;p&gt;For this tutorial, we will create a dummy application that will allow users to sign in using their existing
+ArcGIS Online credentials.  Once signed in, the user will be able to post a message. Pretty simple!&lt;/p&gt;
+
+&lt;p&gt;The process assumes you have a working knowledge of Ruby on Rails and a basic understanding of OAuth and authentication
+workflows in Rails.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-1-application-setup&quot;&gt;Step 1. Application Setup&lt;/h2&gt;
+
+&lt;p&gt;We must first create our rails application using the command line rails generator:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails new MySecretApp
+cd MySecretApp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;step-2-generate-models&quot;&gt;Step 2. Generate Models&lt;/h2&gt;
+
+&lt;p&gt;Our basic application only needs two data models; &lt;code&gt;User&lt;/code&gt; and  &lt;code&gt;Message&lt;/code&gt;.  Let’s
+create the &lt;code&gt;message&lt;/code&gt; model:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails generate scaffold message body:text
+rils db:migrate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We used &lt;code&gt;generate scaffold&lt;/code&gt; because we also want the controller and corresponding views
+to be created automatically.&lt;/p&gt;
+
+&lt;p&gt;Our message currently only has one field (body) of type text.  This will be the body of the
+message that an authenticated user will will write.&lt;/p&gt;
+
+&lt;p&gt;Next, we need to create our user model.  To do that, we will use a gem called Devise, which will
+also handle our authentication workflows.  Place the following gem in your Gemfile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gem 'devise', '~&amp;gt; 4.2'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and run &lt;code&gt;bundle install&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Run the Devise generator:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails genererate devise:install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to setup the default URL for our Devise mailer in our development environment:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# /config/environments/development.rb
+config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, we need to generate our &lt;code&gt;user&lt;/code&gt; model using a Devise generator.  This will create
+all of the necessary fields for handling authentication.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails generate devise user
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To persist our changes to the database, run the database migration&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails db:migrate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;step-3-configure-associations&quot;&gt;Step 3. Configure Associations&lt;/h2&gt;
+
+&lt;p&gt;For active record to know about the association between our user and their corresponding messages,
+we need to add the association to our models:&lt;/p&gt;
+
+&lt;p&gt;A message belongs_to a user:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# /app/models/message.rb
+class Message &amp;lt; ApplicationRecord
+  belongs_to :user
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A user has many message.  If a user is deleted, all dependent messages are also removed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# app/models/user.rb
+class User &amp;lt; ApplicationRecord
+  has_many :messages, dependent: :destroy
+  ...
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To associate a message with a particular user, we need to add the user as a foreign key
+to the message model:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails generate migration add_user_to_message user:references
+rails db:migrate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;step-4-wiring-everything-together&quot;&gt;Step 4. Wiring Everything Together&lt;/h2&gt;
+
+&lt;p&gt;So far, we’ve added our message scaffold, created an authenticated user model, and hooked up the
+associations for our active directory to work as intended.  This was all done with the help
+of Rails generators, and the Devise authentication gem.  Now, we need to tie all these parts
+together for a working application.&lt;/p&gt;
+
+&lt;p&gt;When a user visits the site, the home page should show a list of posted messages, which
+requires us to set the root route:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# config/routes.rb
+...
+root 'messages#index'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, we need to modify our app to accomodate the security measures created by adding our Devise user
+model.  First, let’s restrict the ability to create, update, or delete messages unless a user is
+signed in:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# /app/controllers/messages_controller.rb
+before_action :authenticate_user!, except: [:index, :show]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This limits any unauthenticated user to only access the index and show actions of the messages
+controller.  Next, we need to modify some of the actions to associate the messages with the current
+user.  Modify the actions in the messages controller:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# /app/controllers/messages_controller.rb
+def new
+  @message = current_user.messages.build
+end
+def create
+  @message = current_user.messages.build(message_params)
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, we need to add some navigation links to our main application template for signing in and
+signing out &lt;code&gt;app/layouts/application.html.erb&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;body&amp;gt;
+  &amp;lt;% if user_signed_in? %&amp;gt;
+    &amp;lt;%= link_to &quot;Sign Out&quot;, destroy_user_session_path, method: :delete %&amp;gt;
+  &amp;lt;% else %&amp;gt;
+    &amp;lt;%= link_to &quot;Sign In&quot;, new_user_session_path %&amp;gt;
+    &amp;lt;%= link_to &quot;Sign Up&quot;, new_user_registration_path %&amp;gt;
+  &amp;lt;% end %&amp;gt;
+  &amp;lt;%= yield %&amp;gt;
+&amp;lt;/body&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have a working application that has built in authentication.  Give it a try by running
+&lt;code&gt;rails s&lt;/code&gt; and testing your app.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-5-sign-in-with-arcgis&quot;&gt;Step 5. Sign in With ArcGIS&lt;/h2&gt;
+
+&lt;p&gt;When we’re signing in now, were doing so by creating a new account.  What we want to do, is avoid this by
+allowing users to sign in with their existing ArcGIS Online accounts.  Devise supports this by adding
+OmniAuth.  The first step is to add the ArcGIS OmniAuth and support for OAuth2 gem to our Gemfile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gem 'omniauth-oauth2', '~&amp;gt; 1.3.1'
+gem 'omniauth-arcgis', '~&amp;gt; 0.1.1'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Install gems:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bundle install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to update the user model to accomodate the ArcGIS Provider and user id:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails generate migration add_omniauth_to_users provider:string uid:string
+rails db:migrate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In order to enable OAuth with ArcGIS Online, you need to register the application
+on &lt;a href=&quot;http://developers.arcgis.com&quot;&gt;http://developers.arcgis.com&lt;/a&gt;.  After you have registered
+the application, add your development URL (http://localhost:3000) to the Redirect URI form
+under the authentication tab.  Notice the Client and Client Secret listed on the page?  We will
+use these to setup our OmniAuth.&lt;/p&gt;
+
+&lt;p&gt;While you could hard code the Cleint ID an Secret into your initializer, I like to use
+&lt;a href=&quot;https://github.com/laserlemon/figaro&quot;&gt;Figaro&lt;/a&gt; to manage the setting of my environment variables.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gem 'figaro', '~&amp;gt; 1.1', '&amp;gt;= 1.1.1'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;bundle install
+bundle exec figaro install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This adds a new file &lt;code&gt;config/application.yml&lt;/code&gt; and adds it to our &lt;code&gt;.gitignore&lt;/code&gt; file.  Add your Client ID
+and Secret here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;arcgis_client_id: 'xxxxx'
+arcgis_client_secret: 'xxxxx'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will allow us to access ENV[‘arcgis_client_id’] from anywhere in our application.&lt;/p&gt;
+
+&lt;p&gt;Next, declare the ArcGIS provider in &lt;code&gt;config/initializers/devise.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;config.omniauth :arcgis, ENV['arcgis_client_id'], ENV['arcgis_client_secret']
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Make our user model omniauthable:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# /app/models/user.rb
+devise :omniauthable, :omniauth_providers =&amp;gt; [:arcgis]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Setup our omniauth callback URL in our routes &lt;code&gt;config/routes.rb&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;devise_for :users, :controllers =&amp;gt; { :omniauth_callbacks =&amp;gt; &quot;omniauth_callbacks&quot; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add the file for our OmniAUth callbacks that inherits from Devise &lt;code&gt;app/controllers/omniauth_callbacks_controller&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class OmniauthCallbacksController &amp;lt; Devise::OmniauthCallbacksController
+  def arcgis
+    @user = User.from_omniauth(request.env[&quot;omniauth.auth&quot;])
+
+    # sign_in_and_redirect @user
+    if @user.persisted?
+      sign_in_and_redirect @user, :event =&amp;gt; :authentication
+      set_flash_message(:notice, :success, :kind =&amp;gt; &quot;arcgis&quot;) if is_navigational_format?
+    else
+      session[&quot;devise.arcgis_data&quot;] = request.env[&quot;omniauth.auth&quot;]
+      redirect_to new_user_registration_url
+    end
+  end
+
+  def failure
+    redirect_to root_path
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, we need to add the above &lt;code&gt;from_omniauth&lt;/code&gt; method to our user model&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def self.from_omniauth(auth)
+  where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+    user.email = auth.info.email
+    user.password = Devise.friendly_token[0,20]
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And that’s it! This is a very simple applcation, but it shows how we can use the OAuth2 capabilities of ArcGIS Online to sign into our app.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 05 Jan 2017 00:00:00 -0800</pubDate>
+        <link>http://tannergeo.com/blog/site//rails/omniauth/arcgis/2017/01/05/Adding-ArcGIS-Sign-In-Using-Omniauth-and-Rails.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//rails/omniauth/arcgis/2017/01/05/Adding-ArcGIS-Sign-In-Using-Omniauth-and-Rails.html</guid>
+        
+        
+        <category>rails</category>
+        
+        <category>omniauth</category>
+        
+        <category>arcgis</category>
+        
+      </item>
     
       <item>
         <title>A Quick Look At Aurelia</title>
         <description>&lt;p&gt;I have been a big proponent of AngularJS.  My biggest compaint with any framework however, is the learning curve compared to just jumping into coding with no new &lt;em&gt;stuff&lt;/em&gt; to learn.  I spent years working with Angular, but I am always suprised at how quickly I forget the ins and outs of new language or framework.  Now that I’m preparing to work on a new project, I tried to go back to Angular docs to freshen up.  AngularJS 2.0 is out, which means more things to learn and test out.  Learning is never a bad thing, but re-learning can get tedious and sometimes counterproductive.  I know JavaScript like the back of my hand, shouldn’t a framework feel the same?&lt;/p&gt;
 
-&lt;p&gt;At last, a quick browse around the web led me to discover &lt;a href=&quot;http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/what-is-aurelia&quot;&gt;Aurelia&lt;/a&gt;.  It’s new (&lt;a href=&quot;http://www.isaacchansky.me/days-since-last-new-js-framework/&quot;&gt;although this is relative&lt;/a&gt;), but already it is up to a production ready Beta 1 release.  It is built using modern ECMAScript 2016 and follows similar concepts we use in all modern MV* frameworks.  Data binding, dependency injection, templating, routing, etc.  &lt;/p&gt;
+&lt;p&gt;At last, a quick browse around the web led me to discover &lt;a href=&quot;http://aurelia.io/docs.html#/aurelia/framework/1.0.0-beta.1.0.8/doc/article/what-is-aurelia&quot;&gt;Aurelia&lt;/a&gt;.  It’s new (&lt;a href=&quot;http://www.isaacchansky.me/days-since-last-new-js-framework/&quot;&gt;although this is relative&lt;/a&gt;), but already it is up to a production ready Beta 1 release.  It is built using modern ECMAScript 2016 and follows similar concepts we use in all modern MV* frameworks.  Data binding, dependency injection, templating, routing, etc.&lt;/p&gt;
 
-&lt;p&gt;The best thing I noticed so far is that the framework is very discreet.  There aren’t many ‘frameworky’ things to learn and lets you leverage the power of a framework without needing to be intimate with the framework.  If you’ve spent hours re-learning backbone, AngularJS, React, etc… you know what I mean.  &lt;/p&gt;
+&lt;p&gt;The best thing I noticed so far is that the framework is very discreet.  There aren’t many ‘frameworky’ things to learn and lets you leverage the power of a framework without needing to be intimate with the framework.  If you’ve spent hours re-learning backbone, AngularJS, React, etc… you know what I mean.&lt;/p&gt;
 
-&lt;p&gt;I feel like the Aurelia framework should follow Douglas Crockfords convention of: &lt;strong&gt;AngularJS 2.0 - The Good Parts&lt;/strong&gt; by &lt;strong&gt;Rob Eisenberg&lt;/strong&gt; (the creator of Aurelia).  In fact, it turns out &lt;a href=&quot;https://github.com/EisenbergEffect&quot;&gt;Rob Eisenberg&lt;/a&gt; is actually the driving input behind Angular 2.0 and now known as &lt;a href=&quot;http://eisenbergeffect.bluespire.com/leaving-angular/&quot;&gt;the guy who left Angular&lt;/a&gt;.  &lt;/p&gt;
+&lt;p&gt;I feel like the Aurelia framework should follow Douglas Crockfords convention of: &lt;strong&gt;AngularJS 2.0 - The Good Parts&lt;/strong&gt; by &lt;strong&gt;Rob Eisenberg&lt;/strong&gt; (the creator of Aurelia).  In fact, it turns out &lt;a href=&quot;https://github.com/EisenbergEffect&quot;&gt;Rob Eisenberg&lt;/a&gt; is actually the driving input behind Angular 2.0 and now known as &lt;a href=&quot;http://eisenbergeffect.bluespire.com/leaving-angular/&quot;&gt;the guy who left Angular&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Getting Started&lt;/strong&gt;&lt;/p&gt;
 
@@ -26,10 +283,9 @@
 
 &lt;p&gt;I’m using a &lt;a href=&quot;https://www.npmjs.com/package/http-server&quot;&gt;simple web server&lt;/a&gt; to serve out the web files, since Aurelia is simply client side libraries.  This is also referenced in the guide:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;
-npm install http-server -g
+&lt;pre&gt;&lt;code&gt;npm install http-server -g
 http-server -o
-&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The -o flag will open your app in a browser.  You should see a comforting ‘Welcome to Aurelia’ string in your browser.&lt;/p&gt;
 
@@ -56,7 +312,7 @@ http-server -o
 
 &lt;h4 id=&quot;basics&quot;&gt;Basics&lt;/h4&gt;
 
-&lt;p&gt;If you have ever used git or svn, you know of it’s usefulness in maintaining a movable history of the ‘state’ of your code or other files.  If you have never heard of version control, it is simply a system that keeps track of changes and allows you to ‘roll-back’ if needed.  You can visualize these changes (additions and subtractions) and provide readable comments with every &lt;em&gt;commit&lt;/em&gt;.  It also provides methods to resolve &lt;em&gt;conflicts&lt;/em&gt; if multiple changes contradict each other. &lt;/p&gt;
+&lt;p&gt;If you have ever used git or svn, you know of it’s usefulness in maintaining a movable history of the ‘state’ of your code or other files.  If you have never heard of version control, it is simply a system that keeps track of changes and allows you to ‘roll-back’ if needed.  You can visualize these changes (additions and subtractions) and provide readable comments with every &lt;em&gt;commit&lt;/em&gt;.  It also provides methods to resolve &lt;em&gt;conflicts&lt;/em&gt; if multiple changes contradict each other.&lt;/p&gt;
 
 &lt;p&gt;I one had a colleague who explained version control very elegantly.&lt;/p&gt;
 
@@ -64,7 +320,7 @@ http-server -o
   &lt;p&gt;‘copy and paste is the one true evil.’ - colleague/friend&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;To be honest, I use this all the time when I try to explain the usefulness of version control.  When you copy and paste, you now have two completely separate datasets that know nothing about each other.  When one is updated, the other falls behind and trying to keep them smartly in sync can become futile.  With version control, we can checkout a copy, make changes, and commit them back to the remote repository.  If updates need to be rolled back, we can easily revert them.  &lt;/p&gt;
+&lt;p&gt;To be honest, I use this all the time when I try to explain the usefulness of version control.  When you copy and paste, you now have two completely separate datasets that know nothing about each other.  When one is updated, the other falls behind and trying to keep them smartly in sync can become futile.  With version control, we can checkout a copy, make changes, and commit them back to the remote repository.  If updates need to be rolled back, we can easily revert them.&lt;/p&gt;
 
 &lt;h4 id=&quot;why-gis-needs-it&quot;&gt;Why GIS Needs It&lt;/h4&gt;
 &lt;p&gt;Technically, Esri has been using versioning in enterprise geodatabase solutions for some time now.  It allows concurrent editing of a geodatabase, conflict management, and the ability to revert to a previous state. However, it requires complex setup and the need to be in the Esri environment.&lt;/p&gt;
@@ -83,16 +339,16 @@ bike_route_final_for_real.shp
 
 &lt;p&gt;Another reason is making sure your team is always working with the latest data.  Even if everybody is working on a local clone of a spatial dataset, they could run a quick &lt;em&gt;pull&lt;/em&gt; command at anytime and retrieve the most up to date data.&lt;/p&gt;
 
-&lt;h4 id=&quot;why-not-just-use-git&quot;&gt;Why Not Just Use Git?&lt;/h4&gt;
-&lt;p&gt;Current version control systems like git work great for text.  The flawlessly track what text was added or removed, and this provides the information we need to understand changes.  Spatial data is binary, and although current systems will track the changes, it doesn’t provide us with much insight into what changed.  If we wanted to understand what changes were made in our latest commit, we would only see that a bunch of 1’s and 0’s changed… not much help.  What we need to see is how many features were added, modified, or removed and on which dataset.&lt;/p&gt;
+&lt;p&gt;####Why Not Just Use Git?
+Current version control systems like git work great for text.  The flawlessly track what text was added or removed, and this provides the information we need to understand changes.  Spatial data is binary, and although current systems will track the changes, it doesn’t provide us with much insight into what changed.  If we wanted to understand what changes were made in our latest commit, we would only see that a bunch of 1’s and 0’s changed… not much help.  What we need to see is how many features were added, modified, or removed and on which dataset.&lt;/p&gt;
 
-&lt;h4 id=&quot;geogig-background&quot;&gt;Geogig Background&lt;/h4&gt;
-&lt;p&gt;&lt;a href=&quot;http://geogig.org/&quot;&gt;GeoGig&lt;/a&gt; (previouly GeoGit) is a distributed version control system (DVCS) for geospatial data.  The ‘distributed’ term is important and follows closer to the architecture of Git than SVN (google git vs svn for more info).  The software is open source, and currently maintained by the &lt;a href=&quot;https://www.locationtech.org/projects/technology.geogig&quot;&gt;Eclipse Foundation&lt;/a&gt; and formerly maintained by BoundlessGeo.  A disclaimer on the GeoGig site states that is in ‘development’ and considered unstable.  In my short experience with the software, it worked great, but I would not yet use this in a full production environment.&lt;/p&gt;
+&lt;p&gt;####Geogig Background
+&lt;a href=&quot;http://geogig.org/&quot;&gt;GeoGig&lt;/a&gt; (previouly GeoGit) is a distributed version control system (DVCS) for geospatial data.  The ‘distributed’ term is important and follows closer to the architecture of Git than SVN (google git vs svn for more info).  The software is open source, and currently maintained by the &lt;a href=&quot;https://www.locationtech.org/projects/technology.geogig&quot;&gt;Eclipse Foundation&lt;/a&gt; and formerly maintained by BoundlessGeo.  A disclaimer on the GeoGig site states that is in ‘development’ and considered unstable.  In my short experience with the software, it worked great, but I would not yet use this in a full production environment.&lt;/p&gt;
 
-&lt;p&gt;I would love to see &lt;a href=&quot;http://geogig.org/&quot;&gt;GeoGig&lt;/a&gt; developed to be stable enough to use as a reliable tool for spatial data version control.  &lt;/p&gt;
+&lt;p&gt;I would love to see &lt;a href=&quot;http://geogig.org/&quot;&gt;GeoGig&lt;/a&gt; developed to be stable enough to use as a reliable tool for spatial data version control.&lt;/p&gt;
 
-&lt;h4 id=&quot;geogig-sample-workflow&quot;&gt;GeoGig Sample Workflow&lt;/h4&gt;
-&lt;p&gt;I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot;&gt;Getting Started&lt;/a&gt; guide for downloading and getting up and running with GeoGig.  The following workflow will demonstrate the following scenario:&lt;/p&gt;
+&lt;p&gt;####GeoGig Sample Workflow
+I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot;&gt;Getting Started&lt;/a&gt; guide for downloading and getting up and running with GeoGig.  The following workflow will demonstrate the following scenario:&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;You are working in a team environment editing bike routes.  The shapefile needs to be accessible on your local computer for when you are editing in the field and taking work home.  You also need to push your changes to a shared network drive and pull down changes that other editors are doing.  I will assume you are working in a windows environment.&lt;/em&gt;&lt;/p&gt;
 
@@ -110,7 +366,7 @@ bike_route_final_for_real.shp
 &lt;/code&gt;&lt;/pre&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Now that it is in the warehouse, you need add it to a &lt;em&gt;loading dock&lt;/em&gt; - like location before committing it entirely.  Only changes will be added, and in our initial case will be all of our existing features in bike_routes.  &lt;/p&gt;
+    &lt;p&gt;Now that it is in the warehouse, you need add it to a &lt;em&gt;loading dock&lt;/em&gt; - like location before committing it entirely.  Only changes will be added, and in our initial case will be all of our existing features in bike_routes.&lt;/p&gt;
 
     &lt;pre&gt;&lt;code&gt; S:master_routes&amp;gt; geogig add 
 &lt;/code&gt;&lt;/pre&gt;
@@ -134,7 +390,7 @@ bike_route_final_for_real.shp
 &lt;/code&gt;&lt;/pre&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;This exports out a shapefile for you to work on.  You can also export the data out in various different formats (geojson, postgres, spatialite, etc), which can be a great tool in itself.  Now that you have a local shapefile to edit, you can make the changes you need in whatever software you are using (qgis, arcgis, etc).  Once you are ready to push the changes up to the master repository, you will have to use a couple command line steps.  You will need to: import the shapefile into your local repo, stage your edits (loading dock), and commit them (put them on the truck).  Once everything is committed in your local geogig repository, you will push the changes to your remote (origin) branch.  &lt;/p&gt;
+    &lt;p&gt;This exports out a shapefile for you to work on.  You can also export the data out in various different formats (geojson, postgres, spatialite, etc), which can be a great tool in itself.  Now that you have a local shapefile to edit, you can make the changes you need in whatever software you are using (qgis, arcgis, etc).  Once you are ready to push the changes up to the master repository, you will have to use a couple command line steps.  You will need to: import the shapefile into your local repo, stage your edits (loading dock), and commit them (put them on the truck).  Once everything is committed in your local geogig repository, you will push the changes to your remote (origin) branch.&lt;/p&gt;
 
     &lt;pre&gt;&lt;code&gt; C:local_bike_routes&amp;gt; geogig shp import ./bike_routes.shp -d bike_routes
  C:local_bike_routes&amp;gt; geogig add
@@ -151,7 +407,7 @@ bike_route_final_for_real.shp
   &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h4 id=&quot;discussion&quot;&gt;Discussion&lt;/h4&gt;
+&lt;p&gt;####Discussion&lt;/p&gt;
 
 &lt;p&gt;I tried this workflow on a dataset that I need to continually update and share (even through I warned you not to use it in production).  It worked without error and organized my process ten-fold.  Below are things I liked, and some I didn’t.&lt;/p&gt;
 
@@ -175,7 +431,7 @@ bike_route_final_for_real.shp
 
 &lt;p&gt;It would be also nice to see a GitHub-like solution for publishing and collaborating on spatial data.  Overall I liked it and will be using this a lot more in my current work.  I encourage both the use and further development of GeoGig to create a stable solution for geospatial data version control.&lt;/p&gt;
 
-&lt;h4 id=&quot;extras&quot;&gt;Extras&lt;/h4&gt;
+&lt;p&gt;####Extras&lt;/p&gt;
 
 &lt;p&gt;GeoGig has many extras that I didn’t cover in this article that I think others should check out.  Here are a few:&lt;/p&gt;
 
@@ -188,7 +444,7 @@ bike_route_final_for_real.shp
 
 &lt;p&gt;I especially liked the GeoGig console.  This allowed me to more easily write a batch script that exported the latest shapefiles our of my master repository and output a log of all recent commits.&lt;/p&gt;
 
-&lt;h1 id=&quot;section&quot;&gt;#&lt;/h1&gt;
+&lt;h1&gt;#&lt;/h1&gt;
 
 &lt;p&gt;Other Links:
 &lt;a href=&quot;http://www.spatiallyadjusted.com/gis-version-control/&quot;&gt;James Fee Article on GIS Version Control&lt;/a&gt;&lt;/p&gt;
@@ -259,7 +515,7 @@ bike_route_final_for_real.shp
   };
 	
   // create map and add tiled basemap
-  map = L.map(&#39;map&#39;).setView([40.12, -98.57], 4);
+  map = L.map('map').setView([40.12, -98.57], 4);
   basemap = L.tileLayer(app_config.basemap, {
   attribution: app_config.basemapAttribution
   });
@@ -275,7 +531,7 @@ bike_route_final_for_real.shp
 	
   // filter geojson to only parks
   np_boundaries.features = $.map(np_boundaries.features, function (val, i){
-      if(val.properties[&#39;UNIT_TYPE&#39;] == &#39;National Park&#39;) {
+      if(val.properties['UNIT_TYPE'] == 'National Park') {
           return val;
       }
   });
@@ -283,8 +539,8 @@ bike_route_final_for_real.shp
   function style(feature) {
       return {
           weight : 1,
-          color : &#39;green&#39;,
-          fillColor : &#39;green&#39;
+          color : 'green',
+          fillColor : 'green'
       }
   }
 &lt;/code&gt;&lt;/pre&gt;
@@ -307,11 +563,11 @@ bike_route_final_for_real.shp
   np_geo = L.geoJson(np_boundaries, {
       style : style,
       onEachFeature : function (f, l) {
-          var pn =  f.properties[&#39;UNIT_NAME&#39;] + &quot; National Park&quot;;
+          var pn =  f.properties['UNIT_NAME'] + &quot; National Park&quot;;
           l.bindPopup(
               &quot;&amp;lt;h3&amp;gt;&quot; + pn + &quot;&amp;lt;/h3&amp;gt;&quot; +
-              &quot;&amp;lt;a href=&#39;http://en.wikipedia.org/wiki/&quot; + pn.split(&quot; &quot;).join(&quot;_&quot;) + 
-      &quot;&#39; target=&#39;_blank&#39;&amp;gt;Learn more about this National Park&amp;lt;/a&amp;gt;&quot;, {
+              &quot;&amp;lt;a href='http://en.wikipedia.org/wiki/&quot; + pn.split(&quot; &quot;).join(&quot;_&quot;) + 
+      &quot;' target='_blank'&amp;gt;Learn more about this National Park&amp;lt;/a&amp;gt;&quot;, {
               autoPan : false
           });
 
@@ -330,7 +586,7 @@ bike_route_final_for_real.shp
     &lt;p&gt;add events for extent change&lt;/p&gt;
 
     &lt;pre&gt;&lt;code&gt;  // setup map events 
-  map.on(&#39;moveend&#39;, function (e) {
+  map.on('moveend', function (e) {
       getImages();
   });
 &lt;/code&gt;&lt;/pre&gt;
@@ -352,13 +608,13 @@ bike_route_final_for_real.shp
       tags = tags.join(&quot;,&quot;);
       $.ajax({
           url : flickr_config.url,
-          dataType : &#39;json&#39;,
+          dataType : 'json',
           data : {
               api_key : flickr_config.key,
               tags : tags,
               bbox : bbox,
-              format : &#39;json&#39;,
-              method : &#39;flickr.photos.search&#39;,
+              format : 'json',
+              method : 'flickr.photos.search',
               per_page : flickr_config.maxNumImages,
               nojsoncallback : 1
           }
@@ -411,15 +667,15 @@ bike_route_final_for_real.shp
           centroid = turf.centroid(l.feature);
           var latlng = L.latLng([centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]]);
           if(mapBounds.contains(latlng)) {
-              if(l.feature.properties[&#39;UNIT_NAME&#39;] in cached) {
+              if(l.feature.properties['UNIT_NAME'] in cached) {
                   // push existing parks with images
-                  current_gallery[l.feature.properties[&#39;UNIT_NAME&#39;]] = cached[l.feature.properties[&#39;UNIT_NAME&#39;]];
+                  current_gallery[l.feature.properties['UNIT_NAME']] = cached[l.feature.properties['UNIT_NAME']];
                   queue_length += 1;
                   if(queue_length == current_req_length) {
-                      buildHtml(l.feature.properties[&#39;UNIT_NAME&#39;]);
+                      buildHtml(l.feature.properties['UNIT_NAME']);
                   }
               } else {
-                  callFlickr(l.feature, l.feature.properties[&#39;UNIT_NAME&#39;]);
+                  callFlickr(l.feature, l.feature.properties['UNIT_NAME']);
               }
           }
       });
@@ -433,15 +689,15 @@ bike_route_final_for_real.shp
     &lt;pre&gt;&lt;code&gt;  function highlightStyle() {
       return {
           weight : 4,
-          color : &#39;red&#39;,
-          fillColor : &#39;red&#39;
+          color : 'red',
+          fillColor : 'red'
       }
   }
 	
   function highlightPark(park) {
       var park = park;
       $.each(np_geo.getLayers(), function (idx, layer) {
-          if (layer.feature.properties[&#39;UNIT_NAME&#39;] == park) {
+          if (layer.feature.properties['UNIT_NAME'] == park) {
               layer.setStyle(highlightStyle());
               layer.openPopup();
           } else {
@@ -454,29 +710,29 @@ bike_route_final_for_real.shp
   function buildHtml() {
       var gallery_items;
       var gallery_container = $(&quot;&amp;lt;div /&amp;gt;&quot;, {
-          id : &#39;owl-slider&#39;,
-          class : &#39;own-carousel&#39;
+          id : 'owl-slider',
+          class : 'own-carousel'
       });
       var list = [];
       $.each(current_gallery, function (park, photos) {
-          list.push(&quot;&amp;lt;a class=&#39;park-item&#39; href=&#39;&#39; target=&#39;_blank&#39;&amp;gt;&quot; + park + &quot;&amp;lt;/a&amp;gt;&quot;);
+          list.push(&quot;&amp;lt;a class='park-item' href='' target='_blank'&amp;gt;&quot; + park + &quot;&amp;lt;/a&amp;gt;&quot;);
           $.each(photos, function (idx, photo) {
               var div = $(&quot;&amp;lt;div /&amp;gt;&quot;, {
-                  class : &#39;thumbnail&#39;
+                  class : 'thumbnail'
               });
 
-              div.on(&#39;mouseover&#39;, function (e) {
+              div.on('mouseover', function (e) {
                   highlightPark(park);
               });
-              div.on(&#39;mouseout&#39;, function (e) {
+              div.on('mouseout', function (e) {
                   $.each(np_geo.getLayers(), function (i, l) {
                       l.setStyle(style());
                   });
               });
 
               var title = $(&quot;&amp;lt;span /&amp;gt;&quot;, {
-                  html : &quot;&amp;lt;h2&amp;gt;&amp;lt;span class=&#39;glyphicon glyphicon-globe inverse&#39;&amp;gt;&amp;lt;/span&amp;gt;  &quot; + park + &quot; National Park&amp;lt;/h2&amp;gt;&quot;,
-                  class : &#39;parkname-title&#39;
+                  html : &quot;&amp;lt;h2&amp;gt;&amp;lt;span class='glyphicon glyphicon-globe inverse'&amp;gt;&amp;lt;/span&amp;gt;  &quot; + park + &quot; National Park&amp;lt;/h2&amp;gt;&quot;,
+                  class : 'parkname-title'
               });
 
               var fullPhoto = photo.replace(&quot;n.jpg&quot;, &quot;b.jpg&quot;);
@@ -498,9 +754,9 @@ bike_route_final_for_real.shp
           });
       });
 
-      list = list.join(&#39; | &#39;);
+      list = list.join(' | ');
       $(&quot;#parkslist&quot;).html(list);
-      $(&quot;.park-item&quot;).on(&#39;click&#39;, function (e) {
+      $(&quot;.park-item&quot;).on('click', function (e) {
           e.preventDefault();
           highlightPark(e.target.text);
       })
@@ -567,11 +823,11 @@ bike_route_final_for_real.shp
 
 &lt;h6 id=&quot;step-1b&quot;&gt;Step 1.b&lt;/h6&gt;
 
-&lt;p&gt;I did not serve locally using Python.  I created a &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;GitHub repo&lt;/a&gt; and viewed changes locally using &lt;em&gt;http://localhost/~username/projectname/&lt;/em&gt; before pushing to GitHub.  It is a good standard practice to follow.  Also, you then have the ability to publish your webpages using GitHub Pages.  &lt;/p&gt;
+&lt;p&gt;I did not serve locally using Python.  I created a &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;GitHub repo&lt;/a&gt; and viewed changes locally using &lt;em&gt;http://localhost/~username/projectname/&lt;/em&gt; before pushing to GitHub.  It is a good standard practice to follow.  Also, you then have the ability to publish your webpages using GitHub Pages.&lt;/p&gt;
 
 &lt;h6 id=&quot;step-1d&quot;&gt;Step 1.d&lt;/h6&gt;
 
-&lt;p&gt;I used &lt;a href=&quot;http://bower.io/&quot;&gt;Bower&lt;/a&gt;, as mentioned above, to add Leaflet to my project.  It would be prudent to become familiar with Bower and its dependencies since many common packages can be easily installed with its use.  Dependencies for Bower include &lt;a href=&quot;https://nodejs.org/&quot;&gt;Node and npm&lt;/a&gt; and &lt;a href=&quot;http://git-scm.com/&quot;&gt;Git&lt;/a&gt;.  &lt;/p&gt;
+&lt;p&gt;I used &lt;a href=&quot;http://bower.io/&quot;&gt;Bower&lt;/a&gt;, as mentioned above, to add Leaflet to my project.  It would be prudent to become familiar with Bower and its dependencies since many common packages can be easily installed with its use.  Dependencies for Bower include &lt;a href=&quot;https://nodejs.org/&quot;&gt;Node and npm&lt;/a&gt; and &lt;a href=&quot;http://git-scm.com/&quot;&gt;Git&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Using command line, inside my working directory, I entered the following:&lt;/p&gt;
 
@@ -583,7 +839,7 @@ bike_route_final_for_real.shp
 &lt;pre&gt;&lt;code&gt;&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;./bower_components/leaflet/dist/leaflet.css&quot; /&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;and the Leaflet JavaScript link at the bottom of the &lt;em&gt;body&lt;/em&gt; section would be referenced as: &lt;/p&gt;
+&lt;p&gt;and the Leaflet JavaScript link at the bottom of the &lt;em&gt;body&lt;/em&gt; section would be referenced as:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;lt;script src=&quot;./bower_components/leaflet/dist/leaflet.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
@@ -592,7 +848,7 @@ bike_route_final_for_real.shp
 
 &lt;p&gt;View my source code &lt;a href=&quot;https://github.com/tannerkj/MIT-campus-coffee&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;		&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 09 Apr 2015 00:00:00 -0700</pubDate>
@@ -660,19 +916,19 @@ def filter_fields(f):
     	reader = csv.DictReader(source)
     	outf = root + &quot;/formatted/&quot; + f
     	with open(outf, &quot;wb&quot;) as result:
-      		writer = csv.DictWriter(result, fieldnames = [&#39;STATE&#39;, &#39;YEAR&#39;,&#39;STATE_FIPS&#39;, 
-      		&#39;EVENT_TYPE&#39;, &#39;INJURIES_DIRECT&#39;, &#39;INJURIES_INDIRECT&#39;, &#39;DEATHS_DIRECT&#39;, &#39;DEATHS_INDIRECT&#39;])
+      		writer = csv.DictWriter(result, fieldnames = ['STATE', 'YEAR','STATE_FIPS', 
+      		'EVENT_TYPE', 'INJURIES_DIRECT', 'INJURIES_INDIRECT', 'DEATHS_DIRECT', 'DEATHS_INDIRECT'])
         	print (&quot;Writing&quot;, outf)
         	writer.writeheader()
         	for row in reader:
-            	writer.writerow({&#39;STATE&#39; : row[&#39;STATE&#39;],
-                             	&#39;YEAR&#39; : row[&#39;YEAR&#39;],
-                             	&#39;STATE_FIPS&#39; : row[&#39;STATE_FIPS&#39;],
-                             	&#39;EVENT_TYPE&#39; : row[&#39;EVENT_TYPE&#39;],
-                             	&#39;INJURIES_DIRECT&#39; : row[&#39;INJURIES_DIRECT&#39;],
-                             	&#39;INJURIES_INDIRECT&#39; : row[&#39;INJURIES_INDIRECT&#39;],
-                             	&#39;DEATHS_DIRECT&#39; : row[&#39;DEATHS_DIRECT&#39;],
-                             	&#39;DEATHS_INDIRECT&#39; : row[&#39;DEATHS_INDIRECT&#39;]})
+            	writer.writerow({'STATE' : row['STATE'],
+                             	'YEAR' : row['YEAR'],
+                             	'STATE_FIPS' : row['STATE_FIPS'],
+                             	'EVENT_TYPE' : row['EVENT_TYPE'],
+                             	'INJURIES_DIRECT' : row['INJURIES_DIRECT'],
+                             	'INJURIES_INDIRECT' : row['INJURIES_INDIRECT'],
+                             	'DEATHS_DIRECT' : row['DEATHS_DIRECT'],
+                             	'DEATHS_INDIRECT' : row['DEATHS_INDIRECT']})
 
 for root, dirs, files in os.walk(in_dir):
 	for f in files:
@@ -684,7 +940,7 @@ for root, dirs, files in os.walk(in_dir):
 &lt;pre&gt;&lt;code&gt;psql -U postgres
 
 \connect geodata
-\copy storm_events from &#39;/Path to csv&#39; delimiter &#39;,&#39; csv header
+\copy storm_events from '/Path to csv' delimiter ',' csv header
 ...
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -759,7 +1015,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 
 &lt;p&gt;To create the map for our application, we will use the same process as described in this &lt;a href=&quot;http://leafletjs.com/examples/choropleth.html&quot;&gt;Leaflet tutorial&lt;/a&gt;.  The end result is a thematic map with a legend and an info window describing the data as you select each state.&lt;/p&gt;
 
-&lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 19 Mar 2015 00:00:00 -0700</pubDate>
@@ -779,7 +1035,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
     
       <item>
         <title>A Brief Look At Vector Tiles</title>
-        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles. &lt;/p&gt;
+        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles.&lt;/p&gt;
 
 &lt;p&gt;At ESRI’s 2015 Developer Conference, the plan to &lt;a href=&quot;http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles&quot;&gt;implement vector tiles&lt;/a&gt; into their mapping platform was announced.  Most traditional GIS analysts and developers have created &lt;a href=&quot;http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000189000000&quot;&gt;tile caches&lt;/a&gt; or &lt;a href=&quot;https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html&quot;&gt;consumed tiled map service layers&lt;/a&gt; to implement complex geometries with &lt;a href=&quot;http://www.usgs.gov/faq/categories/9860/3604&quot;&gt;more efficiency&lt;/a&gt; as part of their business processes.  To most of the industry (I’m assuming), &lt;a href=&quot;http://wiki.openstreetmap.org/wiki/Vector_tiles&quot;&gt;vector tiles&lt;/a&gt; is a new concept that offers many advantages over traditional formats.  Although the concept is similar to raster tiles, vector tiles return the actual features which creates the ability to manipulate the style and symbology of features dynamically.  This can be done, all while benefiting from the efficiency of only needing to load tiles within the current extent and not the entirety of a features geometry and attributes.  Also, vector tiles also benefit over feature services because the geometry is essentially cached and not needed to be dynamically created on the server in most cases.&lt;/p&gt;
 
@@ -832,7 +1088,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 
 &lt;p&gt;I deleted the erroneous columns from the original file for easy import.  From psql command line, I ran the &lt;a href=&quot;http://stackoverflow.com/questions/2987433/how-to-import-csv-file-data-into-a-postgres-table&quot;&gt;following command&lt;/a&gt; to bring the stations into postgres:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;\copy weather_stations FROM &#39;csv location&#39; DELIMITER &#39;|&#39; CSV HEADER;
+&lt;pre&gt;&lt;code&gt;\copy weather_stations FROM 'csv location' DELIMITER '|' CSV HEADER;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Add an auto incremented primary key:&lt;/p&gt;
@@ -842,7 +1098,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 
 &lt;p&gt;&lt;a href=&quot;http://postgis.net/docs/AddGeometryColumn.html&quot;&gt;Add geometry column&lt;/a&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;SELECT AddGeometryColumn (&#39;public&#39;, &#39;weather_stations&#39;, &#39;geom&#39;, 4326, &#39;POINT&#39;, 2);
+&lt;pre&gt;&lt;code&gt;SELECT AddGeometryColumn ('public', 'weather_stations', 'geom', 4326, 'POINT', 2);
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Lastly, let’s create actual points from our Latitude and Longitude fields:&lt;/p&gt;
@@ -873,7 +1129,7 @@ geom = ST_SetSRID(ST_MakePoint(Longitude, Latitude),4326)
 
 &lt;p&gt;Import csv file:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;\copy readings_feb FROM &#39;D:\TannerGeo\WeatherTinTurf\data_raw\QCLCD201502\201502daily.csv&#39; DELIMITER &#39;,&#39; CSV HEADER;
+&lt;pre&gt;&lt;code&gt;\copy readings_feb FROM 'D:\TannerGeo\WeatherTinTurf\data_raw\QCLCD201502\201502daily.csv' DELIMITER ',' CSV HEADER;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Finally, add a primary key:&lt;/p&gt;
@@ -926,7 +1182,7 @@ bower install leaflet
 
 &lt;p&gt;I want to first make sure I can create the TIN’s.  To test, I use turf.js to build and add them to the map with no fill.  By passing in TMIN, turf generates Z values that we can then use to generate our fill colors.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, &#39;TMIN&#39;);
+&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, 'TMIN');
 var geojson = L.geoJson(tin, {
 	style : {
 		weight : 1
@@ -947,7 +1203,7 @@ geojson.addTo(map);
 var brew = new classyBrew();
 var values = []; // tmin values
 for( var i = 0; i &amp;lt; feb01.features.length; i++) {
-	values.push(feb01.features[i].properties[&#39;TMIN&#39;]);
+	values.push(feb01.features[i].properties['TMIN']);
 }
 brew.setSeries(values);
 brew.setNumClasses(6);
@@ -957,7 +1213,7 @@ brew.setColorCode(&quot;BuYlRd&quot;);
 
 &lt;p&gt;Now that we have the classybrew object setup, we can request a color code based on a provided value with &lt;code&gt;getColorInRange(value)&lt;/code&gt;.  We’ll use this function to return a color based on the average of minimum temperature from each station that makes up our triangles.  This can be done during instantiation of our geojson layer.  First, however we need to create our TIN from our points using &lt;code&gt;turf.tin(geojson, z value)&lt;/code&gt;.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, &#39;TMIN&#39;);
+&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, 'TMIN');
 var geojson = L.geoJson(tin, {
 	style : function (f) {
 		return {

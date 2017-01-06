@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>Adding ArcGIS Sign In Using Omniauth and Rails</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//rails/omniauth/arcgis/2017/01/05/Adding-ArcGIS-Sign-In-Using-Omniauth-and-Rails.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Adding ArcGIS Sign In Using Omniauth and Rails</h1>
+    <p class="post-meta">Jan 5, 2017 • Joshua Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <p>We’re all familiar with being able to sign into other applications with our Facebook
+or Google account, but what about an ArcGIS Online account? This is possible because
+ArcGIS Online uses OAuth 2 as it’s authentication framework.  There is limited information on
+how this process works, so this post is meant to shed some light into the process.</p>
+
+<p>For this tutorial, we will create a dummy application that will allow users to sign in using their existing
+ArcGIS Online credentials.  Once signed in, the user will be able to post a message. Pretty simple!</p>
+
+<p>The process assumes you have a working knowledge of Ruby on Rails and a basic understanding of OAuth and authentication
+workflows in Rails.</p>
+
+<h2 id="step-1-application-setup">Step 1. Application Setup</h2>
+
+<p>We must first create our rails application using the command line rails generator:</p>
+
+<pre><code>rails new MySecretApp
+cd MySecretApp
+</code></pre>
+
+<h2 id="step-2-generate-models">Step 2. Generate Models</h2>
+
+<p>Our basic application only needs two data models; <code>User</code> and  <code>Message</code>.  Let’s
+create the <code>message</code> model:</p>
+
+<pre><code>rails generate scaffold message body:text
+rils db:migrate
+</code></pre>
+
+<p>We used <code>generate scaffold</code> because we also want the controller and corresponding views
+to be created automatically.</p>
+
+<p>Our message currently only has one field (body) of type text.  This will be the body of the
+message that an authenticated user will will write.</p>
+
+<p>Next, we need to create our user model.  To do that, we will use a gem called Devise, which will
+also handle our authentication workflows.  Place the following gem in your Gemfile:</p>
+
+<pre><code>gem 'devise', '~&gt; 4.2'
+</code></pre>
+
+<p>and run <code>bundle install</code></p>
+
+<p>Run the Devise generator:</p>
+
+<pre><code>rails genererate devise:install
+</code></pre>
+
+<p>We need to setup the default URL for our Devise mailer in our development environment:</p>
+
+<pre><code># /config/environments/development.rb
+config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+</code></pre>
+
+<p>Lastly, we need to generate our <code>user</code> model using a Devise generator.  This will create
+all of the necessary fields for handling authentication.</p>
+
+<pre><code>rails generate devise user
+</code></pre>
+
+<p>To persist our changes to the database, run the database migration</p>
+
+<pre><code>rails db:migrate
+</code></pre>
+
+<h2 id="step-3-configure-associations">Step 3. Configure Associations</h2>
+
+<p>For active record to know about the association between our user and their corresponding messages,
+we need to add the association to our models:</p>
+
+<p>A message belongs_to a user:</p>
+
+<pre><code># /app/models/message.rb
+class Message &lt; ApplicationRecord
+  belongs_to :user
+end
+</code></pre>
+
+<p>A user has many message.  If a user is deleted, all dependent messages are also removed:</p>
+
+<pre><code># app/models/user.rb
+class User &lt; ApplicationRecord
+  has_many :messages, dependent: :destroy
+  ...
+end
+</code></pre>
+
+<p>To associate a message with a particular user, we need to add the user as a foreign key
+to the message model:</p>
+
+<pre><code>rails generate migration add_user_to_message user:references
+rails db:migrate
+</code></pre>
+
+<h2 id="step-4-wiring-everything-together">Step 4. Wiring Everything Together</h2>
+
+<p>So far, we’ve added our message scaffold, created an authenticated user model, and hooked up the
+associations for our active directory to work as intended.  This was all done with the help
+of Rails generators, and the Devise authentication gem.  Now, we need to tie all these parts
+together for a working application.</p>
+
+<p>When a user visits the site, the home page should show a list of posted messages, which
+requires us to set the root route:</p>
+
+<pre><code># config/routes.rb
+...
+root 'messages#index'
+</code></pre>
+
+<p>Next, we need to modify our app to accomodate the security measures created by adding our Devise user
+model.  First, let’s restrict the ability to create, update, or delete messages unless a user is
+signed in:</p>
+
+<pre><code># /app/controllers/messages_controller.rb
+before_action :authenticate_user!, except: [:index, :show]
+</code></pre>
+
+<p>This limits any unauthenticated user to only access the index and show actions of the messages
+controller.  Next, we need to modify some of the actions to associate the messages with the current
+user.  Modify the actions in the messages controller:</p>
+
+<pre><code># /app/controllers/messages_controller.rb
+def new
+  @message = current_user.messages.build
+end
+def create
+  @message = current_user.messages.build(message_params)
+end
+</code></pre>
+
+<p>Lastly, we need to add some navigation links to our main application template for signing in and
+signing out <code>app/layouts/application.html.erb</code>:</p>
+
+<pre><code>&lt;body&gt;
+  &lt;% if user_signed_in? %&gt;
+    &lt;%= link_to "Sign Out", destroy_user_session_path, method: :delete %&gt;
+  &lt;% else %&gt;
+    &lt;%= link_to "Sign In", new_user_session_path %&gt;
+    &lt;%= link_to "Sign Up", new_user_registration_path %&gt;
+  &lt;% end %&gt;
+  &lt;%= yield %&gt;
+&lt;/body&gt;
+</code></pre>
+
+<p>Now we have a working application that has built in authentication.  Give it a try by running
+<code>rails s</code> and testing your app.</p>
+
+<h2 id="step-5-sign-in-with-arcgis">Step 5. Sign in With ArcGIS</h2>
+
+<p>When we’re signing in now, were doing so by creating a new account.  What we want to do, is avoid this by
+allowing users to sign in with their existing ArcGIS Online accounts.  Devise supports this by adding
+OmniAuth.  The first step is to add the ArcGIS OmniAuth and support for OAuth2 gem to our Gemfile:</p>
+
+<pre><code>gem 'omniauth-oauth2', '~&gt; 1.3.1'
+gem 'omniauth-arcgis', '~&gt; 0.1.1'
+</code></pre>
+
+<p>Install gems:</p>
+
+<pre><code>bundle install
+</code></pre>
+
+<p>We need to update the user model to accomodate the ArcGIS Provider and user id:</p>
+
+<pre><code>rails generate migration add_omniauth_to_users provider:string uid:string
+rails db:migrate
+</code></pre>
+
+<p>In order to enable OAuth with ArcGIS Online, you need to register the application
+on <a href="http://developers.arcgis.com">http://developers.arcgis.com</a>.  After you have registered
+the application, add your development URL (http://localhost:3000) to the Redirect URI form
+under the authentication tab.  Notice the Client and Client Secret listed on the page?  We will
+use these to setup our OmniAuth.</p>
+
+<p>While you could hard code the Cleint ID an Secret into your initializer, I like to use
+<a href="https://github.com/laserlemon/figaro">Figaro</a> to manage the setting of my environment variables.</p>
+
+<pre><code>gem 'figaro', '~&gt; 1.1', '&gt;= 1.1.1'
+</code></pre>
+
+<pre><code>bundle install
+bundle exec figaro install
+</code></pre>
+
+<p>This adds a new file <code>config/application.yml</code> and adds it to our <code>.gitignore</code> file.  Add your Client ID
+and Secret here:</p>
+
+<pre><code>arcgis_client_id: 'xxxxx'
+arcgis_client_secret: 'xxxxx'
+</code></pre>
+
+<p>This will allow us to access ENV[‘arcgis_client_id’] from anywhere in our application.</p>
+
+<p>Next, declare the ArcGIS provider in <code>config/initializers/devise.rb</code></p>
+
+<pre><code>config.omniauth :arcgis, ENV['arcgis_client_id'], ENV['arcgis_client_secret']
+</code></pre>
+
+<p>Make our user model omniauthable:</p>
+
+<pre><code># /app/models/user.rb
+devise :omniauthable, :omniauth_providers =&gt; [:arcgis]
+</code></pre>
+
+<p>Setup our omniauth callback URL in our routes <code>config/routes.rb</code></p>
+
+<pre><code>devise_for :users, :controllers =&gt; { :omniauth_callbacks =&gt; "omniauth_callbacks" }
+</code></pre>
+
+<p>Add the file for our OmniAUth callbacks that inherits from Devise <code>app/controllers/omniauth_callbacks_controller</code></p>
+
+<pre><code>class OmniauthCallbacksController &lt; Devise::OmniauthCallbacksController
+  def arcgis
+    @user = User.from_omniauth(request.env["omniauth.auth"])
+
+    # sign_in_and_redirect @user
+    if @user.persisted?
+      sign_in_and_redirect @user, :event =&gt; :authentication
+      set_flash_message(:notice, :success, :kind =&gt; "arcgis") if is_navigational_format?
+    else
+      session["devise.arcgis_data"] = request.env["omniauth.auth"]
+      redirect_to new_user_registration_url
+    end
+  end
+
+  def failure
+    redirect_to root_path
+  end
+end
+</code></pre>
+
+<p>Lastly, we need to add the above <code>from_omniauth</code> method to our user model</p>
+
+<pre><code>def self.from_omniauth(auth)
+  where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+    user.email = auth.info.email
+    user.password = Devise.friendly_token[0,20]
+  end
+end
+</code></pre>
+
+<p>And that’s it! This is a very simple applcation, but it shows how we can use the OAuth2 capabilities of ArcGIS Online to sign into our app.</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<!-- Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58675189-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+
+</html>

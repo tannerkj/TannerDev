@@ -6,9 +6,173 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 05 Jan 2017 21:32:31 -0800</pubDate>
-    <lastBuildDate>Thu, 05 Jan 2017 21:32:31 -0800</lastBuildDate>
-    <generator>Jekyll v3.3.1</generator>
+    <pubDate>Fri, 20 Oct 2017 17:28:41 -0500</pubDate>
+    <lastBuildDate>Fri, 20 Oct 2017 17:28:41 -0500</lastBuildDate>
+    <generator>Jekyll v3.6.0</generator>
+    
+      <item>
+        <title>ArcGIS API for Python on Mac</title>
+        <description>&lt;p&gt;Mac’s currently ship with Python 2.7 as the default install.  The &lt;a href=&quot;https://developers.arcgis.com/python/guide/system-requirements/&quot;&gt;ArcGIS API for Python&lt;/a&gt; requires at least Python 3.5.  However, I don’t want to remove 2.7, but rather have the ability to switch between multiple versions of Python.&lt;/p&gt;
+
+&lt;p&gt;This is the main goal of &lt;a href=&quot;https://github.com/pyenv/pyenv&quot;&gt;pyenv&lt;/a&gt;.  It is much like ruby’s environment manager (&lt;em&gt;rbenv&lt;/em&gt;).  You can change the version of python on a&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;per user basis&lt;/li&gt;
+  &lt;li&gt;per project basis&lt;/li&gt;
+  &lt;li&gt;with an environment variable&lt;/li&gt;
+  &lt;li&gt;globally&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pyenv, however, is not like virtualenv, so we will want to still manage our own virtual environments with &lt;a href=&quot;https://github.com/pyenv/pyenv-virtualenv&quot;&gt;pyenv-virtualenv&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;install&quot;&gt;Install&lt;/h2&gt;
+
+&lt;p&gt;I am using homebrew, a package manager for Mac. (&lt;a href=&quot;https://github.com/pyenv/pyenv#homebrew-on-mac-os-x&quot;&gt;see docs&lt;/a&gt;)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ brew update
+$ brew install pyenv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can view a full list of Python versions available to install through pyenv &lt;a href=&quot;https://github.com/pyenv/pyenv/blob/master/COMMANDS.md&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also, to configure pyenv peroperly, add this to your &lt;em&gt;.bash_profile&lt;/em&gt; and restart your terminal.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;if which pyenv &amp;gt; /dev/null; then eval &quot;$(pyenv init -)&quot;; fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s go ahead and install python 3.5.0.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv install 3.5.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we wanted to uninstall, we could do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv uninstall 3.5.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;set-default-version-of-python&quot;&gt;Set Default Version of Python&lt;/h2&gt;
+
+&lt;h3 id=&quot;golbal&quot;&gt;Golbal&lt;/h3&gt;
+
+&lt;p&gt;Used in all shells&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv global 3.5.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;local&quot;&gt;Local&lt;/h3&gt;
+
+&lt;p&gt;For specific application, writes to file called &lt;em&gt;.python-version&lt;/em&gt;.  This overrides the global version for current directory and all sub-directories.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv local 3.5.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;shell&quot;&gt;Shell&lt;/h3&gt;
+
+&lt;p&gt;Current shell session&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv shell 3.5.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;anaconda&quot;&gt;Anaconda&lt;/h3&gt;
+
+&lt;p&gt;Anaconda is a package manager, environment manager, and Python distribution.&lt;/p&gt;
+
+&lt;p&gt;I’m going to install minconda, which is a slimmed down version of anaconda.  Lets get the latest version.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv install miniconda3-latest
+$ pyenv local miniconda3-latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;work-within-a-virtual-environment&quot;&gt;Work within a virtual environment&lt;/h3&gt;
+
+&lt;p&gt;To keep things clean and orderly, let’s work within a Python virtural environment by installing &lt;a href=&quot;https://github.com/pyenv/pyenv-virtualenv&quot;&gt;pyenv-virtualenv&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ brew install pyenv-virtualenv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and add the following to our &lt;em&gt;.bash_profile&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ eval &quot;$(pyenv init -)&quot;
+$ eval &quot;$(pyenv virtualenv-init -)&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should automatically activate out configured python environment when we navigate to the project directory.  This is not required, but really useful.&lt;/p&gt;
+
+&lt;p&gt;Now, we can create a virtualenv for a specific python version.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv virtualenv miniconda3-latest my-conda-venv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will create a new virtual environment based on the miniconda3-latest Python install in pyenv.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-arcgis-package&quot;&gt;Install &lt;strong&gt;arcgis&lt;/strong&gt; package&lt;/h3&gt;
+
+&lt;p&gt;First, lets activate our newly created virtual environement based on miniconda.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pyenv activate my-conda-venv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s download and install the ArcGIS API in our conda environment.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ conda install -c esri arcgis
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can test the installation but trying to import the GIS package.  You can run an interactive shell by typing &lt;strong&gt;python&lt;/strong&gt; into your termnial.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;import arcgis.gis from GIS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When we want to deactivate our Python virtual environment, we can simply type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ python deactivate
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;jupyter-notebook&quot;&gt;Jupyter Notebook&lt;/h3&gt;
+
+&lt;p&gt;Jupyter Notebooks are a popular way to visualize and share your code in a readable informative manner.  Let’s also install jupyter with our miniconda environment.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ conda install jupyter
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, we can run our Jupyter notebook in the browser.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ jupyter notebook
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create a new file and test your setup with the following example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;from arcgis.gis import GIS
+gis = GIS()
+gis.map()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;If everythign worked properly, you should have now done some really cool things:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Used pyenv to manage different installations of Python&lt;/li&gt;
+  &lt;li&gt;Managed virtual environments with pyenv-virtualenv&lt;/li&gt;
+  &lt;li&gt;Installed miniconda, the lightweight version of anaconda&lt;/li&gt;
+  &lt;li&gt;Used the conda package manager to install the Python for ArcGIS library&lt;/li&gt;
+  &lt;li&gt;Installed and ran a local Jupyter notebook server&lt;/li&gt;
+  &lt;li&gt;Built a small example notebook showcasing the power of Jupyter notebook and ArcGIS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now, we can confidently play around with new packages and versions of Python without breaking any of the global settings on your mac.&lt;/p&gt;
+
+&lt;p&gt;Awesome!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Oct 2017 00:00:00 -0500</pubDate>
+        <link>http://tannergeo.com/blog/site//arcgis/python/2017/10/18/ArcGIS-API-for-Python-on-Mac.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//arcgis/python/2017/10/18/ArcGIS-API-for-Python-on-Mac.html</guid>
+        
+        
+        <category>arcgis</category>
+        
+        <category>python</category>
+        
+      </item>
     
       <item>
         <title>Adding ArcGIS Sign In Using Omniauth and Rails</title>
@@ -254,7 +418,7 @@ end
 
 &lt;p&gt;And that’s it! This is a very simple applcation, but it shows how we can use the OAuth2 capabilities of ArcGIS Online to sign into our app.&lt;/p&gt;
 </description>
-        <pubDate>Thu, 05 Jan 2017 00:00:00 -0800</pubDate>
+        <pubDate>Thu, 05 Jan 2017 00:00:00 -0600</pubDate>
         <link>http://tannergeo.com/blog/site//rails/omniauth/arcgis/2017/01/05/Adding-ArcGIS-Sign-In-Using-Omniauth-and-Rails.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//rails/omniauth/arcgis/2017/01/05/Adding-ArcGIS-Sign-In-Using-Omniauth-and-Rails.html</guid>
         
@@ -295,7 +459,7 @@ http-server -o
 
 &lt;p&gt;I’ve spent the better part the last day building some sample apps with Aurelia… and I have to say I’m impressed.  This should be my primary framework for the coming year.&lt;/p&gt;
 </description>
-        <pubDate>Sat, 23 Jan 2016 00:00:00 -0800</pubDate>
+        <pubDate>Sat, 23 Jan 2016 00:00:00 -0600</pubDate>
         <link>http://tannergeo.com/blog/site//aurelia/javascript/2016/01/23/A-Quick-Look-At-Aurelia.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//aurelia/javascript/2016/01/23/A-Quick-Look-At-Aurelia.html</guid>
         
@@ -449,7 +613,7 @@ I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot
 &lt;p&gt;Other Links:
 &lt;a href=&quot;http://www.spatiallyadjusted.com/gis-version-control/&quot;&gt;James Fee Article on GIS Version Control&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Fri, 04 Sep 2015 00:00:00 -0700</pubDate>
+        <pubDate>Fri, 04 Sep 2015 00:00:00 -0500</pubDate>
         <link>http://tannergeo.com/blog/site//geogig/git/versioning/gis/data/2015/09/04/Spatial-Version-Control-with-GeoGig.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//geogig/git/versioning/gis/data/2015/09/04/Spatial-Version-Control-with-GeoGig.html</guid>
         
@@ -792,7 +956,7 @@ I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot
 
 &lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/natl-park-gallery-5.png&quot; alt=&quot;National Park Gallery Image 5&quot; /&gt;&lt;/p&gt;
 </description>
-        <pubDate>Thu, 23 Apr 2015 00:00:00 -0700</pubDate>
+        <pubDate>Thu, 23 Apr 2015 00:00:00 -0500</pubDate>
         <link>http://tannergeo.com/blog/site//leaflet/qgis/turfjs/lightbox/flickr_api/data.gov/2015/04/23/National-Parks-Map-and-Image-Gallery.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//leaflet/qgis/turfjs/lightbox/flickr_api/data.gov/2015/04/23/National-Parks-Map-and-Image-Gallery.html</guid>
         
@@ -851,7 +1015,7 @@ I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot
 &lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 09 Apr 2015 00:00:00 -0700</pubDate>
+        <pubDate>Thu, 09 Apr 2015 00:00:00 -0500</pubDate>
         <link>http://tannergeo.com/blog/site//leaflet/github/bower/development/beginner/2015/04/09/Introduction-To-Interactive-Web-Maps-Using-JavaScript-and-LeafletJS.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//leaflet/github/bower/development/beginner/2015/04/09/Introduction-To-Interactive-Web-Maps-Using-JavaScript-and-LeafletJS.html</guid>
         
@@ -1018,7 +1182,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 &lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 19 Mar 2015 00:00:00 -0700</pubDate>
+        <pubDate>Thu, 19 Mar 2015 00:00:00 -0500</pubDate>
         <link>http://tannergeo.com/blog/site//postgis/leaflet/noaa/postgresql/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//postgis/leaflet/noaa/postgresql/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</guid>
         
@@ -1048,7 +1212,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 &lt;p&gt;If you haven’t heard of vector tiles before, I hope this post has been useful!&lt;/p&gt;
 
 </description>
-        <pubDate>Sun, 15 Mar 2015 00:00:00 -0700</pubDate>
+        <pubDate>Sun, 15 Mar 2015 00:00:00 -0500</pubDate>
         <link>http://tannergeo.com/blog/site//vector_tiles/formats/2015/03/15/A-Brief-Look-At-Vector-Tiles.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//vector_tiles/formats/2015/03/15/A-Brief-Look-At-Vector-Tiles.html</guid>
         
@@ -1238,7 +1402,7 @@ geojson.addTo(map);
 
 &lt;p&gt;I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!&lt;/p&gt;
 </description>
-        <pubDate>Sun, 01 Mar 2015 00:00:00 -0800</pubDate>
+        <pubDate>Sun, 01 Mar 2015 00:00:00 -0600</pubDate>
         <link>http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</guid>
         

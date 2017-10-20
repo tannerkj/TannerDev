@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>ArcGIS API for Python on Mac</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//arcgis/python/2017/10/18/ArcGIS-API-for-Python-on-Mac.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">ArcGIS API for Python on Mac</h1>
+    <p class="post-meta">Oct 18, 2017 • Joshua Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <p>Mac’s currently ship with Python 2.7 as the default install.  The <a href="https://developers.arcgis.com/python/guide/system-requirements/">ArcGIS API for Python</a> requires at least Python 3.5.  However, I don’t want to remove 2.7, but rather have the ability to switch between multiple versions of Python.</p>
+
+<p>This is the main goal of <a href="https://github.com/pyenv/pyenv">pyenv</a>.  It is much like ruby’s environment manager (<em>rbenv</em>).  You can change the version of python on a</p>
+
+<ul>
+  <li>per user basis</li>
+  <li>per project basis</li>
+  <li>with an environment variable</li>
+  <li>globally</li>
+</ul>
+
+<p>Pyenv, however, is not like virtualenv, so we will want to still manage our own virtual environments with <a href="https://github.com/pyenv/pyenv-virtualenv">pyenv-virtualenv</a>.</p>
+
+<h2 id="install">Install</h2>
+
+<p>I am using homebrew, a package manager for Mac. (<a href="https://github.com/pyenv/pyenv#homebrew-on-mac-os-x">see docs</a>)</p>
+
+<pre><code class="language-bash">$ brew update
+$ brew install pyenv
+</code></pre>
+
+<p>You can view a full list of Python versions available to install through pyenv <a href="https://github.com/pyenv/pyenv/blob/master/COMMANDS.md">here</a>.</p>
+
+<p>Also, to configure pyenv peroperly, add this to your <em>.bash_profile</em> and restart your terminal.</p>
+
+<pre><code class="language-bash">if which pyenv &gt; /dev/null; then eval "$(pyenv init -)"; fi
+</code></pre>
+
+<p>Let’s go ahead and install python 3.5.0.</p>
+
+<pre><code class="language-bash">$ pyenv install 3.5.0
+</code></pre>
+
+<p>If we wanted to uninstall, we could do:</p>
+
+<pre><code class="language-bash">$ pyenv uninstall 3.5.0
+</code></pre>
+
+<h2 id="set-default-version-of-python">Set Default Version of Python</h2>
+
+<h3 id="golbal">Golbal</h3>
+
+<p>Used in all shells</p>
+
+<pre><code class="language-bash">$ pyenv global 3.5.0
+</code></pre>
+
+<h3 id="local">Local</h3>
+
+<p>For specific application, writes to file called <em>.python-version</em>.  This overrides the global version for current directory and all sub-directories.</p>
+
+<pre><code class="language-bash">$ pyenv local 3.5.0
+</code></pre>
+
+<h3 id="shell">Shell</h3>
+
+<p>Current shell session</p>
+
+<pre><code class="language-bash">$ pyenv shell 3.5.0
+</code></pre>
+
+<h3 id="anaconda">Anaconda</h3>
+
+<p>Anaconda is a package manager, environment manager, and Python distribution.</p>
+
+<p>I’m going to install minconda, which is a slimmed down version of anaconda.  Lets get the latest version.</p>
+
+<pre><code class="language-bash">$ pyenv install miniconda3-latest
+$ pyenv local miniconda3-latest
+</code></pre>
+
+<h3 id="work-within-a-virtual-environment">Work within a virtual environment</h3>
+
+<p>To keep things clean and orderly, let’s work within a Python virtural environment by installing <a href="https://github.com/pyenv/pyenv-virtualenv">pyenv-virtualenv</a></p>
+
+<pre><code class="language-bash">$ brew install pyenv-virtualenv
+</code></pre>
+
+<p>and add the following to our <em>.bash_profile</em></p>
+
+<pre><code class="language-bash">$ eval "$(pyenv init -)"
+$ eval "$(pyenv virtualenv-init -)"
+</code></pre>
+
+<p>This should automatically activate out configured python environment when we navigate to the project directory.  This is not required, but really useful.</p>
+
+<p>Now, we can create a virtualenv for a specific python version.</p>
+
+<pre><code class="language-bash">$ pyenv virtualenv miniconda3-latest my-conda-venv
+</code></pre>
+
+<p>This will create a new virtual environment based on the miniconda3-latest Python install in pyenv.</p>
+
+<h3 id="install-arcgis-package">Install <strong>arcgis</strong> package</h3>
+
+<p>First, lets activate our newly created virtual environement based on miniconda.</p>
+
+<pre><code class="language-bash">$ pyenv activate my-conda-venv
+</code></pre>
+
+<p>Let’s download and install the ArcGIS API in our conda environment.</p>
+
+<pre><code class="language-bash">$ conda install -c esri arcgis
+</code></pre>
+
+<p>You can test the installation but trying to import the GIS package.  You can run an interactive shell by typing <strong>python</strong> into your termnial.</p>
+
+<pre><code class="language-python">import arcgis.gis from GIS
+</code></pre>
+
+<p>When we want to deactivate our Python virtual environment, we can simply type:</p>
+
+<pre><code class="language-bash">$ python deactivate
+</code></pre>
+
+<h3 id="jupyter-notebook">Jupyter Notebook</h3>
+
+<p>Jupyter Notebooks are a popular way to visualize and share your code in a readable informative manner.  Let’s also install jupyter with our miniconda environment.</p>
+
+<pre><code class="language-bash">$ conda install jupyter
+</code></pre>
+
+<p>Now, we can run our Jupyter notebook in the browser.</p>
+
+<pre><code class="language-bash">$ jupyter notebook
+</code></pre>
+
+<p>Create a new file and test your setup with the following example:</p>
+
+<pre><code class="language-python">from arcgis.gis import GIS
+gis = GIS()
+gis.map()
+</code></pre>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>If everythign worked properly, you should have now done some really cool things:</p>
+
+<ul>
+  <li>Used pyenv to manage different installations of Python</li>
+  <li>Managed virtual environments with pyenv-virtualenv</li>
+  <li>Installed miniconda, the lightweight version of anaconda</li>
+  <li>Used the conda package manager to install the Python for ArcGIS library</li>
+  <li>Installed and ran a local Jupyter notebook server</li>
+  <li>Built a small example notebook showcasing the power of Jupyter notebook and ArcGIS</li>
+</ul>
+
+<p>Now, we can confidently play around with new packages and versions of Python without breaking any of the global settings on your mac.</p>
+
+<p>Awesome!</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<!-- Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58675189-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+
+</html>

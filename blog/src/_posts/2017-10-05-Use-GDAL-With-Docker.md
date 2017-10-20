@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Use-GDAL-With-Docker"
+title:  "Use GDAL With Docker"
 date:   2017-10-05
 categories: docker gdal
 author: Joshua Tanner

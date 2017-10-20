@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>Use-GDAL-With-Docker</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//docker/gdal/2017/10/05/Use-GDAL-With-Docker.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Use-GDAL-With-Docker</h1>
+    <p class="post-meta">Oct 5, 2017 • Joshua Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <p>In this post, we’re going to convert a geojson file to a shapefile using a prebuilt Docker image that already has GDAL installed.</p>
+
+<p><a href="http://www.gdal.org/">GDAL</a> is the library that most geospatial professionals use for working with geospatial data outside of traditional GUI desktop applications.  One of the most used features (at least for me) is the ability to convert spatial file types with <a href="http://www.gdal.org/ogr2ogr.html">ogr2ogr</a>.</p>
+
+<p>Now, you could install GDAL on your own machine and configure everything to work via command line, but latelty I’ve been seeing the benifits of using isolated environments for specific workflows.</p>
+
+<p>One way to have a isolated environment for working with GDAL is to use <a href="https://www.docker.com/">Docker</a>.</p>
+
+<p><a href="https://www.docker.com/">Docker</a> is like having a virtual machine that has all of its resource isolated from its’ surroundings.  However, unlike a virtual machine, Docker containers virtualize the host’s operating system and not the hardware.  A <a href="https://www.docker.com/what-container">container image</a> is a lightweight, stand-alone, executable package of a piece of software that includes everything needed to run it: code, runtime, system tools, system libraries, settings.</p>
+
+<p>So, why mess with the setup of our own pristine machine when we can tinker and break an ephemeral enviroment without a care in the world?  Docker is like having an unlimited supply of new computers with different operating systems and setups.  You can pull from predefined images, or make your own from scratch that can inherit from existing images.</p>
+
+<p>Enough with trying to explain Docker.  It’s awesome.  It works.  It will make you a better programmer.  It will save you the headache of breaking your local computer when installing and trying new things.</p>
+
+<h2 id="step-1-install-docker">Step 1: Install Docker</h2>
+
+<p>Assuming you don’t already have it installed, you can get it work <a href="https://www.docker.com/docker-mac">Mac</a>, or <a href="https://www.docker.com/docker-windows">Windows 10</a> on their official website.  The install should be seamless if you have an updated mac or windows machine.  Older windows machines (&lt;Windows 10) will need to go the <a href="https://www.docker.com/products/docker-toolbox">Docker Toolbox</a> route, which requires more initial setup.</p>
+
+<h2 id="step-2--pull-the-gdal-image">Step 2:  Pull the GDAL Image</h2>
+
+<p>I’m using this <a href="https://hub.docker.com/r/geodata/gdal/">this image</a> from <a href="https://github.com/geo-data">geodata</a>, which is an Ubuntu (trusty) OS that already has GDAL installed and configured.</p>
+
+<p>From the command line, type:</p>
+
+<pre><code class="language-bash">$ docker pull geodata/gdal
+</code></pre>
+
+<p>This will download the image and allow us to build a container from this image.  Once complete (may take a couple minutes), you can verify it is available by listing your docker images:</p>
+
+<pre><code class="language-bash">$ docker image ls
+</code></pre>
+
+<h3 id="step-3--prepare-data-volume">Step 3:  Prepare Data Volume</h3>
+
+<p><a href="https://docs.docker.com/engine/admin/volumes/volumes/">Volumes</a> in Docker are a way to share and persist data from your containers.  Containers are inherently ephemeral, and data goes <em>poof</em> once you remove a container if you are not storing data to a volume.  Volumes also allow you to share data between containers and between your local machine and a running container.</p>
+
+<p>Create a new directory:</p>
+
+<pre><code class="language-bash">$ cd ~/documents/
+$ mkdir mydata &amp;&amp; cd $_
+</code></pre>
+<p>Put some geojson into it.  You can copy this single point geojson if you want:</p>
+
+<pre><code class="language-json">{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-123.19158554077147,44.851122784247245]}}]}
+</code></pre>
+
+<p>If using the <em>geojson</em> from above, echo the entire contents into a new file named <strong>point.geojson</strong></p>
+
+<pre><code class="language-bash"># ~/documents/mydata/
+$ echo '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-123.19158554077147,44.851122784247245]}}]}' &gt; point.geojson
+</code></pre>
+
+<p>We will need the path to this directory, so lets print the current working directory and copy it to the clipboard:</p>
+
+<pre><code class="language-bash">$ pwd
+# /Users/tannergeo/Documents/mydata
+</code></pre>
+
+<h2 id="run-the-container-with-gdal-in-interactive-mode">Run the Container with GDAL in Interactive Mode</h2>
+
+<p>We are going to do a lot in one command, so let me explain after:</p>
+
+<pre><code class="language-bash">$ docker run -it --rm -v /Users/tannergeo/Documents/mydata:/root/mydata/ geodata/gdal /bin/bash
+</code></pre>
+
+<p>Here is what is going on.  We’re building a container from the image and interacting with it directly.  We’re also mounting our <em>mydata</em> folder into the container so that the files are shared between them.  For reference:</p>
+
+<ul>
+  <li><code>-it</code> - interactive ttyl</li>
+  <li><code>--rm</code> - remove the container after we exit it</li>
+  <li><code>-v</code> - the volume to mount <em>/from/host/</em> : <em>/on/container</em></li>
+</ul>
+
+<h2 id="run-ogr2ogr-on-container">Run ogr2ogr on Container</h2>
+
+<p>Now that we’re on the Unbuntu machine that has GDAL already setup, we can run our ogr2ogr command.  First, lets verify volume did indeed mount:</p>
+
+<pre><code class="language-bash"># on container
+# should looke like
+# root@someid93889s: ~/
+$ cd /root/
+$ ls
+mydata
+$ cd mydata &amp;&amp; ls
+point.geojson
+</code></pre>
+
+<p>Awesome, now anything in this folder will be available both by the container and your local machine.  Let’s convert this file to a shiny new shapefile!</p>
+
+<pre><code class="language-bash">#/root/mydata/
+$ ogr2ogr -f "ESRI Shapefile" point_shp.shp "point.geojson"
+$ ls
+point.geojson point_shp.dbf point_shp.prj point_shp.prj point_shp.shx
+</code></pre>
+
+<h2 id="exit-container-and-see-shapefile-on-local-machine">Exit Container and See Shapefile on Local Machine</h2>
+
+<p>Let’s now exit the contianer and see how the output was shared on our local machine.  Since we flagged <code>--rm</code>, the container will be removed, but the data will persist.</p>
+
+<p><em>type <strong>exit</strong> to go back to your terminal</em></p>
+
+<pre><code class="language-bash">#~/documents/mydata/
+$ root@someid93889s:exit
+$ ls
+point.geojson point_shp.dbf point_shp.prj point_shp.prj point_shp.shx
+</code></pre>
+
+<p>Without messing with our own machine, we were able to convert a geospatial geojson file to a shapefile on an already configured Ubuntu machine with GDAL.  These isolated environments are really a great utility, especially if you’re prone to breaking your computer when messing with your own configurations (like I do often).  I might never install new libraries locally again!</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p><a href="https://www.docker.com/">Docker</a> has a variety of different uses, not just running commands in an isolated environment.  It can be used to replicate development environments across an entire team.  Docker also helps to automatically scale apps in cloud environments.</p>
+
+<p>There are many other great tutorials on Docker if you want to continue learning, since this was a short and sweet tutorial lacking many of the great features that Docker has to offer.  Here are a few:</p>
+
+<ol>
+  <li><a href="https://docs.docker.com/get-started/">Dockers Official Getting Started Tutorial</a></li>
+  <li><a href="https://github.com/docker/labs">Docker Lab Tutorials</a></li>
+</ol>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<!-- Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58675189-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+
+</html>

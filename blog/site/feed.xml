@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 20 Oct 2017 17:28:41 -0500</pubDate>
-    <lastBuildDate>Fri, 20 Oct 2017 17:28:41 -0500</lastBuildDate>
+    <pubDate>Fri, 20 Oct 2017 17:34:44 -0500</pubDate>
+    <lastBuildDate>Fri, 20 Oct 2017 17:34:44 -0500</lastBuildDate>
     <generator>Jekyll v3.6.0</generator>
     
       <item>
@@ -171,6 +171,139 @@ gis.map()
         <category>arcgis</category>
         
         <category>python</category>
+        
+      </item>
+    
+      <item>
+        <title>Use-GDAL-With-Docker</title>
+        <description>&lt;p&gt;In this post, we’re going to convert a geojson file to a shapefile using a prebuilt Docker image that already has GDAL installed.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.gdal.org/&quot;&gt;GDAL&lt;/a&gt; is the library that most geospatial professionals use for working with geospatial data outside of traditional GUI desktop applications.  One of the most used features (at least for me) is the ability to convert spatial file types with &lt;a href=&quot;http://www.gdal.org/ogr2ogr.html&quot;&gt;ogr2ogr&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now, you could install GDAL on your own machine and configure everything to work via command line, but latelty I’ve been seeing the benifits of using isolated environments for specific workflows.&lt;/p&gt;
+
+&lt;p&gt;One way to have a isolated environment for working with GDAL is to use &lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt; is like having a virtual machine that has all of its resource isolated from its’ surroundings.  However, unlike a virtual machine, Docker containers virtualize the host’s operating system and not the hardware.  A &lt;a href=&quot;https://www.docker.com/what-container&quot;&gt;container image&lt;/a&gt; is a lightweight, stand-alone, executable package of a piece of software that includes everything needed to run it: code, runtime, system tools, system libraries, settings.&lt;/p&gt;
+
+&lt;p&gt;So, why mess with the setup of our own pristine machine when we can tinker and break an ephemeral enviroment without a care in the world?  Docker is like having an unlimited supply of new computers with different operating systems and setups.  You can pull from predefined images, or make your own from scratch that can inherit from existing images.&lt;/p&gt;
+
+&lt;p&gt;Enough with trying to explain Docker.  It’s awesome.  It works.  It will make you a better programmer.  It will save you the headache of breaking your local computer when installing and trying new things.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-1-install-docker&quot;&gt;Step 1: Install Docker&lt;/h2&gt;
+
+&lt;p&gt;Assuming you don’t already have it installed, you can get it work &lt;a href=&quot;https://www.docker.com/docker-mac&quot;&gt;Mac&lt;/a&gt;, or &lt;a href=&quot;https://www.docker.com/docker-windows&quot;&gt;Windows 10&lt;/a&gt; on their official website.  The install should be seamless if you have an updated mac or windows machine.  Older windows machines (&amp;lt;Windows 10) will need to go the &lt;a href=&quot;https://www.docker.com/products/docker-toolbox&quot;&gt;Docker Toolbox&lt;/a&gt; route, which requires more initial setup.&lt;/p&gt;
+
+&lt;h2 id=&quot;step-2--pull-the-gdal-image&quot;&gt;Step 2:  Pull the GDAL Image&lt;/h2&gt;
+
+&lt;p&gt;I’m using this &lt;a href=&quot;https://hub.docker.com/r/geodata/gdal/&quot;&gt;this image&lt;/a&gt; from &lt;a href=&quot;https://github.com/geo-data&quot;&gt;geodata&lt;/a&gt;, which is an Ubuntu (trusty) OS that already has GDAL installed and configured.&lt;/p&gt;
+
+&lt;p&gt;From the command line, type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ docker pull geodata/gdal
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will download the image and allow us to build a container from this image.  Once complete (may take a couple minutes), you can verify it is available by listing your docker images:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ docker image ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;step-3--prepare-data-volume&quot;&gt;Step 3:  Prepare Data Volume&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/admin/volumes/volumes/&quot;&gt;Volumes&lt;/a&gt; in Docker are a way to share and persist data from your containers.  Containers are inherently ephemeral, and data goes &lt;em&gt;poof&lt;/em&gt; once you remove a container if you are not storing data to a volume.  Volumes also allow you to share data between containers and between your local machine and a running container.&lt;/p&gt;
+
+&lt;p&gt;Create a new directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ cd ~/documents/
+$ mkdir mydata &amp;amp;&amp;amp; cd $_
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Put some geojson into it.  You can copy this single point geojson if you want:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-json&quot;&gt;{&quot;type&quot;:&quot;FeatureCollection&quot;,&quot;features&quot;:[{&quot;type&quot;:&quot;Feature&quot;,&quot;properties&quot;:{},&quot;geometry&quot;:{&quot;type&quot;:&quot;Point&quot;,&quot;coordinates&quot;:[-123.19158554077147,44.851122784247245]}}]}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If using the &lt;em&gt;geojson&lt;/em&gt; from above, echo the entire contents into a new file named &lt;strong&gt;point.geojson&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;# ~/documents/mydata/
+$ echo '{&quot;type&quot;:&quot;FeatureCollection&quot;,&quot;features&quot;:[{&quot;type&quot;:&quot;Feature&quot;,&quot;properties&quot;:{},&quot;geometry&quot;:{&quot;type&quot;:&quot;Point&quot;,&quot;coordinates&quot;:[-123.19158554077147,44.851122784247245]}}]}' &amp;gt; point.geojson
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We will need the path to this directory, so lets print the current working directory and copy it to the clipboard:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ pwd
+# /Users/tannergeo/Documents/mydata
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;run-the-container-with-gdal-in-interactive-mode&quot;&gt;Run the Container with GDAL in Interactive Mode&lt;/h2&gt;
+
+&lt;p&gt;We are going to do a lot in one command, so let me explain after:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ docker run -it --rm -v /Users/tannergeo/Documents/mydata:/root/mydata/ geodata/gdal /bin/bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is what is going on.  We’re building a container from the image and interacting with it directly.  We’re also mounting our &lt;em&gt;mydata&lt;/em&gt; folder into the container so that the files are shared between them.  For reference:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;-it&lt;/code&gt; - interactive ttyl&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;--rm&lt;/code&gt; - remove the container after we exit it&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;-v&lt;/code&gt; - the volume to mount &lt;em&gt;/from/host/&lt;/em&gt; : &lt;em&gt;/on/container&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;run-ogr2ogr-on-container&quot;&gt;Run ogr2ogr on Container&lt;/h2&gt;
+
+&lt;p&gt;Now that we’re on the Unbuntu machine that has GDAL already setup, we can run our ogr2ogr command.  First, lets verify volume did indeed mount:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;# on container
+# should looke like
+# root@someid93889s: ~/
+$ cd /root/
+$ ls
+mydata
+$ cd mydata &amp;amp;&amp;amp; ls
+point.geojson
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Awesome, now anything in this folder will be available both by the container and your local machine.  Let’s convert this file to a shiny new shapefile!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;#/root/mydata/
+$ ogr2ogr -f &quot;ESRI Shapefile&quot; point_shp.shp &quot;point.geojson&quot;
+$ ls
+point.geojson point_shp.dbf point_shp.prj point_shp.prj point_shp.shx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;exit-container-and-see-shapefile-on-local-machine&quot;&gt;Exit Container and See Shapefile on Local Machine&lt;/h2&gt;
+
+&lt;p&gt;Let’s now exit the contianer and see how the output was shared on our local machine.  Since we flagged &lt;code&gt;--rm&lt;/code&gt;, the container will be removed, but the data will persist.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;type &lt;strong&gt;exit&lt;/strong&gt; to go back to your terminal&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;#~/documents/mydata/
+$ root@someid93889s:exit
+$ ls
+point.geojson point_shp.dbf point_shp.prj point_shp.prj point_shp.shx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Without messing with our own machine, we were able to convert a geospatial geojson file to a shapefile on an already configured Ubuntu machine with GDAL.  These isolated environments are really a great utility, especially if you’re prone to breaking your computer when messing with your own configurations (like I do often).  I might never install new libraries locally again!&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt; has a variety of different uses, not just running commands in an isolated environment.  It can be used to replicate development environments across an entire team.  Docker also helps to automatically scale apps in cloud environments.&lt;/p&gt;
+
+&lt;p&gt;There are many other great tutorials on Docker if you want to continue learning, since this was a short and sweet tutorial lacking many of the great features that Docker has to offer.  Here are a few:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.docker.com/get-started/&quot;&gt;Dockers Official Getting Started Tutorial&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/docker/labs&quot;&gt;Docker Lab Tutorials&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        <pubDate>Thu, 05 Oct 2017 00:00:00 -0500</pubDate>
+        <link>http://tannergeo.com/blog/site//docker/gdal/2017/10/05/Use-GDAL-With-Docker.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//docker/gdal/2017/10/05/Use-GDAL-With-Docker.html</guid>
+        
+        
+        <category>docker</category>
+        
+        <category>gdal</category>
         
       </item>
     

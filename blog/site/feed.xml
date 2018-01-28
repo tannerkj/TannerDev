@@ -6,9 +6,9 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 20 Oct 2017 17:35:59 -0500</pubDate>
-    <lastBuildDate>Fri, 20 Oct 2017 17:35:59 -0500</lastBuildDate>
-    <generator>Jekyll v3.6.0</generator>
+    <pubDate>Sun, 28 Jan 2018 14:20:15 -0800</pubDate>
+    <lastBuildDate>Sun, 28 Jan 2018 14:20:15 -0800</lastBuildDate>
+    <generator>Jekyll v3.7.2</generator>
     
       <item>
         <title>ArcGIS API for Python on Mac</title>
@@ -163,7 +163,7 @@ gis.map()
 
 &lt;p&gt;Awesome!&lt;/p&gt;
 </description>
-        <pubDate>Wed, 18 Oct 2017 00:00:00 -0500</pubDate>
+        <pubDate>Wed, 18 Oct 2017 00:00:00 -0700</pubDate>
         <link>http://tannergeo.com/blog/site//arcgis/python/2017/10/18/ArcGIS-API-for-Python-on-Mac.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//arcgis/python/2017/10/18/ArcGIS-API-for-Python-on-Mac.html</guid>
         
@@ -296,7 +296,7 @@ point.geojson point_shp.dbf point_shp.prj point_shp.prj point_shp.shx
   &lt;li&gt;&lt;a href=&quot;https://github.com/docker/labs&quot;&gt;Docker Lab Tutorials&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 </description>
-        <pubDate>Thu, 05 Oct 2017 00:00:00 -0500</pubDate>
+        <pubDate>Thu, 05 Oct 2017 00:00:00 -0700</pubDate>
         <link>http://tannergeo.com/blog/site//docker/gdal/2017/10/05/Use-GDAL-With-Docker.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//docker/gdal/2017/10/05/Use-GDAL-With-Docker.html</guid>
         
@@ -551,7 +551,7 @@ end
 
 &lt;p&gt;And that’s it! This is a very simple applcation, but it shows how we can use the OAuth2 capabilities of ArcGIS Online to sign into our app.&lt;/p&gt;
 </description>
-        <pubDate>Thu, 05 Jan 2017 00:00:00 -0600</pubDate>
+        <pubDate>Thu, 05 Jan 2017 00:00:00 -0800</pubDate>
         <link>http://tannergeo.com/blog/site//rails/omniauth/arcgis/2017/01/05/Adding-ArcGIS-Sign-In-Using-Omniauth-and-Rails.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//rails/omniauth/arcgis/2017/01/05/Adding-ArcGIS-Sign-In-Using-Omniauth-and-Rails.html</guid>
         
@@ -592,7 +592,7 @@ http-server -o
 
 &lt;p&gt;I’ve spent the better part the last day building some sample apps with Aurelia… and I have to say I’m impressed.  This should be my primary framework for the coming year.&lt;/p&gt;
 </description>
-        <pubDate>Sat, 23 Jan 2016 00:00:00 -0600</pubDate>
+        <pubDate>Sat, 23 Jan 2016 00:00:00 -0800</pubDate>
         <link>http://tannergeo.com/blog/site//aurelia/javascript/2016/01/23/A-Quick-Look-At-Aurelia.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//aurelia/javascript/2016/01/23/A-Quick-Look-At-Aurelia.html</guid>
         
@@ -746,7 +746,7 @@ I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot
 &lt;p&gt;Other Links:
 &lt;a href=&quot;http://www.spatiallyadjusted.com/gis-version-control/&quot;&gt;James Fee Article on GIS Version Control&lt;/a&gt;&lt;/p&gt;
 </description>
-        <pubDate>Fri, 04 Sep 2015 00:00:00 -0500</pubDate>
+        <pubDate>Fri, 04 Sep 2015 00:00:00 -0700</pubDate>
         <link>http://tannergeo.com/blog/site//geogig/git/versioning/gis/data/2015/09/04/Spatial-Version-Control-with-GeoGig.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//geogig/git/versioning/gis/data/2015/09/04/Spatial-Version-Control-with-GeoGig.html</guid>
         
@@ -1089,7 +1089,7 @@ I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot
 
 &lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/natl-park-gallery-5.png&quot; alt=&quot;National Park Gallery Image 5&quot; /&gt;&lt;/p&gt;
 </description>
-        <pubDate>Thu, 23 Apr 2015 00:00:00 -0500</pubDate>
+        <pubDate>Thu, 23 Apr 2015 00:00:00 -0700</pubDate>
         <link>http://tannergeo.com/blog/site//leaflet/qgis/turfjs/lightbox/flickr_api/data.gov/2015/04/23/National-Parks-Map-and-Image-Gallery.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//leaflet/qgis/turfjs/lightbox/flickr_api/data.gov/2015/04/23/National-Parks-Map-and-Image-Gallery.html</guid>
         
@@ -1148,7 +1148,7 @@ I would recommend following the &lt;a href=&quot;http://geogig.org/#install&quot
 &lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/MIT_campus_coffee.png&quot; alt=&quot;MIT-campus-coffee&quot; /&gt;&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 09 Apr 2015 00:00:00 -0500</pubDate>
+        <pubDate>Thu, 09 Apr 2015 00:00:00 -0700</pubDate>
         <link>http://tannergeo.com/blog/site//leaflet/github/bower/development/beginner/2015/04/09/Introduction-To-Interactive-Web-Maps-Using-JavaScript-and-LeafletJS.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//leaflet/github/bower/development/beginner/2015/04/09/Introduction-To-Interactive-Web-Maps-Using-JavaScript-and-LeafletJS.html</guid>
         
@@ -1315,7 +1315,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 &lt;p&gt;View application &lt;a href=&quot;http://tannerkj.github.io/NOAA_Storm_Events/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-        <pubDate>Thu, 19 Mar 2015 00:00:00 -0500</pubDate>
+        <pubDate>Thu, 19 Mar 2015 00:00:00 -0700</pubDate>
         <link>http://tannergeo.com/blog/site//postgis/leaflet/noaa/postgresql/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//postgis/leaflet/noaa/postgresql/2015/03/19/Visualizing-Percentage-of-Storms-Resulting-in-Injury-or-Death-by-State.html</guid>
         
@@ -1345,7 +1345,7 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
 &lt;p&gt;If you haven’t heard of vector tiles before, I hope this post has been useful!&lt;/p&gt;
 
 </description>
-        <pubDate>Sun, 15 Mar 2015 00:00:00 -0500</pubDate>
+        <pubDate>Sun, 15 Mar 2015 00:00:00 -0700</pubDate>
         <link>http://tannergeo.com/blog/site//vector_tiles/formats/2015/03/15/A-Brief-Look-At-Vector-Tiles.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//vector_tiles/formats/2015/03/15/A-Brief-Look-At-Vector-Tiles.html</guid>
         
@@ -1535,7 +1535,7 @@ geojson.addTo(map);
 
 &lt;p&gt;I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!&lt;/p&gt;
 </description>
-        <pubDate>Sun, 01 Mar 2015 00:00:00 -0600</pubDate>
+        <pubDate>Sun, 01 Mar 2015 00:00:00 -0800</pubDate>
         <link>http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</link>
         <guid isPermaLink="true">http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</guid>
         

@@ -6,8 +6,8 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 28 Jan 2018 14:20:15 -0800</pubDate>
-    <lastBuildDate>Sun, 28 Jan 2018 14:20:15 -0800</lastBuildDate>
+    <pubDate>Sun, 28 Jan 2018 14:55:53 -0800</pubDate>
+    <lastBuildDate>Sun, 28 Jan 2018 14:55:53 -0800</lastBuildDate>
     <generator>Jekyll v3.7.2</generator>
     
       <item>
@@ -92,8 +92,7 @@ $ pyenv local miniconda3-latest
 
 &lt;p&gt;and add the following to our &lt;em&gt;.bash_profile&lt;/em&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;$ eval &quot;$(pyenv init -)&quot;
-$ eval &quot;$(pyenv virtualenv-init -)&quot;
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;eval &quot;$(pyenv virtualenv-init -)&quot;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This should automatically activate out configured python environment when we navigate to the project directory.  This is not required, but really useful.&lt;/p&gt;
@@ -148,7 +147,7 @@ gis.map()
 
 &lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
 
-&lt;p&gt;If everythign worked properly, you should have now done some really cool things:&lt;/p&gt;
+&lt;p&gt;If everything worked properly, you should have now done some really cool things:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Used pyenv to manage different installations of Python&lt;/li&gt;
@@ -196,7 +195,7 @@ gis.map()
 
 &lt;h2 id=&quot;step-2--pull-the-gdal-image&quot;&gt;Step 2:  Pull the GDAL Image&lt;/h2&gt;
 
-&lt;p&gt;I’m using this &lt;a href=&quot;https://hub.docker.com/r/geodata/gdal/&quot;&gt;this image&lt;/a&gt; from &lt;a href=&quot;https://github.com/geo-data&quot;&gt;geodata&lt;/a&gt;, which is an Ubuntu (trusty) OS that already has GDAL installed and configured.&lt;/p&gt;
+&lt;p&gt;I’m using this &lt;a href=&quot;https://hub.docker.com/r/geodata/gdal/&quot;&gt;image&lt;/a&gt; from &lt;a href=&quot;https://github.com/geo-data&quot;&gt;geodata&lt;/a&gt;, which is an Ubuntu (trusty) OS that already has GDAL installed and configured.&lt;/p&gt;
 
 &lt;p&gt;From the command line, type:&lt;/p&gt;
 

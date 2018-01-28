@@ -94,8 +94,7 @@ $ brew install pyenv-virtualenv
 and add the following to our *.bash_profile*
 
 ```bash
-$ eval "$(pyenv init -)"
-$ eval "$(pyenv virtualenv-init -)"
+eval "$(pyenv virtualenv-init -)"
 ```
 
 This should automatically activate out configured python environment when we navigate to the project directory.  This is not required, but really useful.
@@ -158,7 +157,7 @@ gis.map()
 
 ### Conclusion
 
-If everythign worked properly, you should have now done some really cool things:
+If everything worked properly, you should have now done some really cool things:
 
 + Used pyenv to manage different installations of Python
 + Managed virtual environments with pyenv-virtualenv

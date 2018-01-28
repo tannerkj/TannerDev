@@ -26,7 +26,7 @@ Assuming you don't already have it installed, you can get it work [Mac](https://
 
 ## Step 2:  Pull the GDAL Image
 
-I'm using this [this image](https://hub.docker.com/r/geodata/gdal/) from [geodata](https://github.com/geo-data), which is an Ubuntu (trusty) OS that already has GDAL installed and configured.
+I'm using this [image](https://hub.docker.com/r/geodata/gdal/) from [geodata](https://github.com/geo-data), which is an Ubuntu (trusty) OS that already has GDAL installed and configured.
 
 From the command line, type:
 

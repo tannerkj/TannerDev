@@ -6,9 +6,411 @@
 </description>
     <link>http://tannergeo.com/blog/site//</link>
     <atom:link href="http://tannergeo.com/blog/site//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 28 Jan 2018 14:55:53 -0800</pubDate>
-    <lastBuildDate>Sun, 28 Jan 2018 14:55:53 -0800</lastBuildDate>
+    <pubDate>Thu, 08 Feb 2018 15:13:40 -0800</pubDate>
+    <lastBuildDate>Thu, 08 Feb 2018 15:13:40 -0800</lastBuildDate>
     <generator>Jekyll v3.7.2</generator>
+    
+      <item>
+        <title>TypeScript - An Overview</title>
+        <description>&lt;h1 id=&quot;typescript---an-overview&quot;&gt;Typescript - An Overview&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/Esri/arcgis-rest-js/&quot;&gt;ArcGIS-REST-JS&lt;/a&gt; is an open source library that Esri developers are actively working on that provdes an javascript abstraction interface to ArcGIS REST.  I’m interested in both using the library and contributing to it.  One initial hurdle… it’s writtin in TypeScript, which I know very little about.  Time to roll up my sleeves and start learning.  Come join me along the way.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-typescript&quot;&gt;What is TypeScript&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.typescriptlang.org/&quot;&gt;TypeScript&lt;/a&gt; defines itself as being JavaScript that scales.  Unlike the regular interpreted language of JavaScript we are all used to, TypedScript is a compiled language.  Once compiled, the output is regular JavaScript.  TypeScript introduces concepts that aren’t inherit to regular JavaScript programmers, like strict data types, interfaces, classes, and namespaces.  Although these can be implemented by design in JavaScript, they are not an inherit part of most traditional coding concepts for JavaScript developers.  However, modern JavaScript (ES2015, ES6) does have support for classes.&lt;/p&gt;
+
+&lt;p&gt;Next, let’s go through the &lt;a href=&quot;https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html&quot;&gt;tutorial here&lt;/a&gt; for a quick introduction to TypeScript.  I’m also documenting the steps below.&lt;/p&gt;
+
+&lt;h2 id=&quot;installing-typescript&quot;&gt;Installing TypeScript&lt;/h2&gt;
+
+&lt;p&gt;Since TypeScript code will need to be compiled to JavaScript, we need to download the TypeScript compiler.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ npm install -g typescript
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;-g&lt;/code&gt; flag installs the nodejs package globally.&lt;/p&gt;
+
+&lt;h2 id=&quot;writing&quot;&gt;Writing&lt;/h2&gt;
+
+&lt;p&gt;Create a file called &lt;code&gt;greeter.ts&lt;/code&gt; and write the following lines of code&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript&quot;&gt;function greeter(person) {
+  return &quot;Hello, &quot; + person;
+}
+
+let user = &quot;Joshua Tanner&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So far, this looks like regular JavaScript.  We are however, using the &lt;code&gt;let&lt;/code&gt; block level variable declaration.  This is available to modern JS engines, but not older browswers.  Let’s see what happens if we compile this code.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ tsc greeter.ts
+$ cat greeter.js
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;TypeScript compiles greeter.ts into a new file, &lt;code&gt;greeter.js&lt;/code&gt;.  Cat’ing it out to the console produces the following output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript&quot;&gt;function greeter(person) {
+    return &quot;Hello, &quot; + person;
+}
+var user = &quot;Joshua Tanner&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice how the compiler converted the block level &lt;code&gt;let&lt;/code&gt; variable to &lt;code&gt;var&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;typed-annotations&quot;&gt;Typed Annotations&lt;/h2&gt;
+
+&lt;p&gt;Using TypeScript we can start to have some better checking of our code.  Placing checks makes building software more robust, and the compiler can tell us ahead of time of there are issues with our code.  One thing we can check for is what kind of data type we expect go be passed as a parameter to a function.&lt;/p&gt;
+
+&lt;p&gt;In our previous example, we could pass any data type (string, boolean, array, object, etc) as a parameter to our &lt;code&gt;greeter&lt;/code&gt; function.  Let’s tighten this up by requiring that the parameter of of type &lt;code&gt;string&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript&quot;&gt;function greeter(person: string) {
+    return &quot;Hello, &quot; + person;
+}
+
+let user = [0, 1, 2];
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;person:string&lt;/code&gt; defines that the person parameter must be of type &lt;code&gt;string&lt;/code&gt;.  Let’s see what happens if we try and compile this.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ tsc greeter.ts
+greeter.ts(7,35): error TS2345: Argument of type 'number[]' is not assignable to parameter of type 'string'.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Oops, tryint to pass the array &lt;code&gt;let user = [0, 1, 2];&lt;/code&gt; threw an error.  The compiler still builds our greeter.js file, but warns us that there are problems.&lt;/p&gt;
+
+&lt;h2 id=&quot;interfaces&quot;&gt;Interfaces&lt;/h2&gt;
+
+&lt;p&gt;Interfaces are probably something you haven’t worked with languages like Java or C#.  Essentially, an interface is a contract or definition about what something should look like that we can implement over and over again.&lt;/p&gt;
+
+&lt;p&gt;For example, a we might establish a person as an interface:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-typescript&quot;&gt;interface Person {
+  firstName: string,
+  lastName: string
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s build a simple program that has a function that implements this interface as a parameter:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript&quot;&gt;interface Person {
+  firstName: string;
+  lastName: string;
+}
+
+function greeter(person: Person) {
+  return &quot;Hello, &quot; + person.firstName + &quot; &quot; + person.lastName;
+}
+
+let user = { firstName: &quot;Joshua&quot;, lastname: &quot;Tanner&quot;};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we added &lt;code&gt;age&lt;/code&gt; to our user object, the compiler would&lt;/p&gt;
+
+&lt;h2 id=&quot;classes&quot;&gt;Classes&lt;/h2&gt;
+
+&lt;p&gt;TypeScript supports class-based object-oriented programming with support for common patterns like inheritance.&lt;/p&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-javascript&quot;&gt;//classes.ts
+class FourLeggedAnimal {
+  legs: number;
+  constructor() {
+    this.legs = 4;
+  }
+}
+
+class Cat extends FourLeggedAnimal {
+  speak() {
+    console.log('Meow! Meow!');
+  }
+}
+
+class Dog extends FourLeggedAnimal {
+  speak() {
+    console.log('Ruff!  Ruff!');
+  }
+}
+
+const cat = new Cat();
+const dog = new Dog();
+
+cat.speak();
+dog.speak();
+
+console.log(cat.legs == dog.legs);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can run this directly in command line with nodejs:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ tsc classes.ts
+$ node classes.js
+Meow! Meow!
+Ruff!  Ruff!
+true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;modules&quot;&gt;Modules&lt;/h2&gt;
+
+&lt;p&gt;Another important feature of TypeScript is the use of modules.  If you have been working with modern JavaScript or nodejs, you should be familiar with the concept.  Modules allow us to export and import blocks of code between different javascript files.&lt;/p&gt;
+
+&lt;p&gt;You can read more about modules on &lt;a href=&quot;https://www.typescriptlang.org/docs/handbook/modules.html&quot;&gt;the TypeScript documentation guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;When you are jumping into a project that uses TypeScript, don’t be overwhelmed.  Most of your JavaScript knowldege will carry over just fine.  The essentials of TypeScript are easy to learn and their &lt;a href=&quot;https://www.typescriptlang.org/docs/handbook&quot;&gt;documentation&lt;/a&gt; is simple to follow for understanding more advanced features of the language.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 08 Feb 2018 00:00:00 -0800</pubDate>
+        <link>http://tannergeo.com/blog/site//javascript/typescript/2018/02/08/TypeScript-An-Overview.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//javascript/typescript/2018/02/08/TypeScript-An-Overview.html</guid>
+        
+        
+        <category>javascript</category>
+        
+        <category>typescript</category>
+        
+      </item>
+    
+      <item>
+        <title>Geospatial Data Signatures</title>
+        <description>&lt;h1 id=&quot;geospatial-data-signatures&quot;&gt;Geospatial Data Signatures&lt;/h1&gt;
+
+&lt;p&gt;When an authority creates geospatial data, it often finds itself mashed up with other data at some point.  For example, take a series of address point screated by a local government.  A developer or analyst may query a subset of those addresses, and then merge them with other points of interest, like retail store locations that were digitized manually by using aerial imagery.  Now, we have a dataset that contains both new data, and a subset of data that came from an authoritative source.  The problem is; how can we verify which points are authoritative, and which are not?&lt;/p&gt;
+
+&lt;p&gt;In order to do this, we need each feature to a signature that is unique.  To do this, we can use a hash function.&lt;/p&gt;
+
+&lt;h2 id=&quot;hash-function&quot;&gt;Hash Function&lt;/h2&gt;
+
+&lt;p&gt;A hash function takes an input of arbitrary size, and returns a value that is fixed in size that is entirely unique.  By unique, I mean that no other combination of input (very high collision resistance) would create the same output value.  For example, let’s take the string ‘John Smith’.  Running this through a hash function might produce the hash of 001234.  With a hash function, is is very unlikely that any other combination of letters would produce the output 001234.&lt;/p&gt;
+
+&lt;p&gt;Let’s use node.js to illustrate using a hash function:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-js&quot;&gt;const crypto = require('crypto');
+const hash = crypto.createHash('sha256');
+
+hash.update('John Smith');
+console.log(hash.digest('hex'));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ef61a579c907bbed674c0dbcbcf7f7af8f851538eef7b8e58c5bee0b8cfdac4a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice we used sha256, a cryptographic hash algorithm (2^256 possible combinations).  Hash algorithms produce irreversible and unique hashes.  The argument for the digest method represents that output format, and can be “binary”, “hex” or “base64”.&lt;/p&gt;
+
+&lt;h2 id=&quot;comparing-hashes&quot;&gt;Comparing Hashes&lt;/h2&gt;
+
+&lt;p&gt;Hashes are deterministic, meaning that given the same input, they will always calculate the exact same hash.  Knowing this, we can create a new hashed value, and compare it against known hashes to see if there are any mathces.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-js&quot;&gt;// Master List
+let master_hashes = [];
+let name = &quot;Noah&quot;;
+var hash = crypto.createHash('sha256');
+hash.update(name);
+master_hashes.push(hash.digest('hex'));
+
+// Check new values against known values
+let name1 = &quot;Noah&quot;;
+var hash = crypto.createHash('sha256');
+hash.update(name1);
+let name1Hash = hash.digest('hex');
+
+let name2 = &quot;Josh&quot;;
+var hash = crypto.createHash('sha256');
+hash.update(name2);
+let name2Hash = hash.digest('hex');
+
+// Is name1 in master list
+if(master_hashes.indexOf(name1Hash) !== -1) {
+  console.log(name1 + &quot; is in master list&quot;);
+} else {
+  console.log(name1 + &quot; is not in master list&quot;);
+}
+
+// Is name2 in master list
+if(master_hashes.indexOf(name2Hash) !== -1) {
+  console.log(name2 + &quot; is in master list&quot;);
+} else {
+  console.log(name2 + &quot; is not in master list&quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Noah is in master list
+Josh is not in master list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;why-not-just-compare-original-complete-values&quot;&gt;Why Not Just Compare Original Complete Values?&lt;/h2&gt;
+
+&lt;p&gt;Looking at the example above, you may be wondering why we are hashing anything in the first place.  Can’t we just compare the two original strings to see if they are they same?  The answer is yes, but hashes are fixed in length and can represent very large inputs.  For example, a geometry representing a simple curved line could be easily made up of thousands of coordinate pairs.  By hashing the input, we can have a fixed 256 bit output to use in comparison.&lt;/p&gt;
+
+&lt;p&gt;The other reason to use hashes is to provide fast lookups.  We can use hash tables to provide constant time O(N ) lookup of hashes.  Even if we store the hashes in a database, we can still achive O(logN) lookup time if we index our hashes.  We can even hash an entire file and see if a while file can be considered autoritative (think checksums).&lt;/p&gt;
+
+&lt;h2 id=&quot;spatial-data-formats-and-hashing&quot;&gt;Spatial Data Formats and Hashing&lt;/h2&gt;
+
+&lt;p&gt;There are many different formats for storing geospatial data.  Shapefile, file geodatabase, kml, geopackage, spatialite, and geojson are examples of methods for storing and accessing this data.  Generally speaking, we could hash the entire file and check it against a known authoritative hash.  However, to solve the problem of verifying feature level data against known authoritative features, we are primarily interest in two things:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;A features geometry&lt;/li&gt;
+  &lt;li&gt;Properties associated with a feature&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;By creating a hash of both, we will be able to check if a features geometry, properties, or both match any known autoritative features.&lt;/p&gt;
+
+&lt;h2 id=&quot;hashing-geometry-and-properties&quot;&gt;Hashing Geometry and Properties&lt;/h2&gt;
+
+&lt;p&gt;Let’s assume that we want we want to validate against the same precision and scale of coordinate pairs as they were collected.  Secondly, let’s assume we that our hash only contains coordinates registered as geographic latitude and logitude pairs.&lt;/p&gt;
+
+&lt;p&gt;So, let’s assume the GeoJSON representation of a building point geometry for the Oregon Department of Agriculture in Salem, Oregon:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-json&quot;&gt;{
+  &quot;type&quot;: &quot;FeatureCollection&quot;,
+  &quot;features&quot;: [
+    {
+      &quot;type&quot;: &quot;Feature&quot;,
+      &quot;properties&quot;: {
+        &quot;name&quot;: &quot;Oregon Department of Agriculture&quot;
+      },
+      &quot;geometry&quot;: {
+        &quot;type&quot;: &quot;Point&quot;,
+        &quot;coordinates&quot;: [
+          -123.02664,
+          44.94365
+        ]
+      }
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, if we assume that this point was created by an authoritative entity, we will need to register both the geometry and properties by their unique hash.  Let’s create a module that will register hashes into a JSON object, using simple in memory storage for now:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-js&quot;&gt;// geoAuthStore.js
+const crypto = require('crypto');
+
+function geoStore() {
+  // In memory object store
+  this.db = {};
+
+  this.registerLocation = function (lat, lng) {
+    let hash = crypto.createHash('sha256')
+                .update(','.concat(+lat, +lng))
+                .digest('hex');
+    this.db[hash] = 1;
+    return hash;
+  }
+
+  this.registerProperties = function (propertiesObj) {
+    let hash = crypto.createHash('sha256')
+                .update(JSON.stringify(propertiesObj))
+                .digest('hex');
+    this.db[hash] = 1;
+    return hash;
+  }
+
+  this.lookup = function (hash) {
+    return this.db[hash] ? true : false;
+  }
+}
+
+module.exports = geoStore;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The simple module above allows us to register authoritative geometry and properties as unique hashes in a javascript object.  We can also lookup to see if a given hash already exists.  Let’s use this in a simple example to register some authoritative features and check them against a sample mashup of both authoritative and non-authoritative locations:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-js&quot;&gt;const crypto = require('crypto');
+const Store = require('./3store.js');
+
+let store = new Store();
+
+store.registerLocation(44.94365, -123.02664);
+store.registerProperties({&quot;name&quot;: &quot;Oregon Department of Agriculture&quot;});
+
+console.log(store.db);
+//{ bf370cd7725d9f6459e258821fe9b94ed88f66d76e473275d011c7de40b14697: 1,
+//  b2919b1be41b302f8c25602e83077c41a6f4892ffc2256e7bdf7d68644dc5d7a: 1 }
+
+let geojson = {
+  &quot;type&quot;: &quot;FeatureCollection&quot;,
+  &quot;features&quot;: [
+    // Authoritative Feature
+    {
+      &quot;type&quot;: &quot;Feature&quot;,
+      &quot;properties&quot;: {
+        &quot;name&quot;: &quot;Oregon Department of Agriculture&quot;
+      },
+      &quot;geometry&quot;: {
+        &quot;type&quot;: &quot;Point&quot;,
+        &quot;coordinates&quot;: [
+          -123.02664,
+          44.94365
+        ]
+      }
+    },
+    // Non-Authoritative Location
+    {
+      &quot;type&quot;: &quot;Feature&quot;,
+      &quot;properties&quot;: {
+        &quot;name&quot;: &quot;Waldo Park&quot;,
+      },
+      &quot;geometry&quot;: {
+        &quot;type&quot;: &quot;Point&quot;,
+        &quot;coordinates&quot;: [
+          -123.02611,
+          44.94515
+        ]
+      }
+    }
+  ]
+}
+
+// Validate features against authoritative locations
+for(var i = 0; i &amp;lt; geojson.features.length; i++) {
+  // check geometry and properties for match
+  let feature= geojson.features[i];
+  let geomMatch = store.lookup(crypto.createHash('sha256')
+                .update(','.concat(feature.geometry.coordinates[1],
+                                    feature.geometry.coordinates[0]))
+                .digest('hex')
+              );
+  let propertiesMatch = store.lookup(crypto.createHash('sha256')
+              .update(JSON.stringify(feature.properties))
+              .digest('hex'));
+  if(geomMatch &amp;amp;&amp;amp; propertiesMatch) {
+    // Authoritative
+    feature.properties['marker-color'] = '#00ff00';
+  } else {
+    // Not Authoritative
+    feature.properties['marker-color'] = '#ff0000';
+  }
+}
+
+console.log(JSON.stringify(geojson));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can see the output GeoJSON &lt;a href=&quot;https://gist.github.com/anonymous/fbe2e86b30bee0777de97130d1426946&quot;&gt;map here&lt;/a&gt;, where red shows the non-authoritative location, and green shows the authoritative location.&lt;/p&gt;
+
+&lt;h3 id=&quot;links&quot;&gt;Links&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.nodejitsu.com/articles/cryptography/how-to-use-crypto-module/&quot;&gt;Using Crypto Module&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude&quot;&gt;Measuring Accuracy of Lat and Lng&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 01 Feb 2018 00:00:00 -0800</pubDate>
+        <link>http://tannergeo.com/blog/site//cryptography/gis/algorithms/2018/02/01/Gespatial-Data-Signatures.html</link>
+        <guid isPermaLink="true">http://tannergeo.com/blog/site//cryptography/gis/algorithms/2018/02/01/Gespatial-Data-Signatures.html</guid>
+        
+        
+        <category>cryptography</category>
+        
+        <category>gis</category>
+        
+        <category>algorithms</category>
+        
+      </item>
     
       <item>
         <title>ArcGIS API for Python on Mac</title>
@@ -1326,228 +1728,6 @@ ogr2ogr -f GeoJSON storm_events.geojson storm_events.shp
         <category>noaa</category>
         
         <category>postgresql</category>
-        
-      </item>
-    
-      <item>
-        <title>A Brief Look At Vector Tiles</title>
-        <description>&lt;p&gt;This post is a very ‘basic’ look into vector tiles.  Feel free to make improvements to this post through &lt;a href=&quot;https://github.com/tannerjt/blog_posts/blob/master/vector_tiles.md&quot;&gt;github&lt;/a&gt;.  Also, please use the links throughout this document to understand more about vector tiles.&lt;/p&gt;
-
-&lt;p&gt;At ESRI’s 2015 Developer Conference, the plan to &lt;a href=&quot;http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles&quot;&gt;implement vector tiles&lt;/a&gt; into their mapping platform was announced.  Most traditional GIS analysts and developers have created &lt;a href=&quot;http://resources.arcgis.com/en/help/main/10.2/index.html#//001700000189000000&quot;&gt;tile caches&lt;/a&gt; or &lt;a href=&quot;https://developers.arcgis.com/javascript/jsapi/arcgistiledmapservicelayer-amd.html&quot;&gt;consumed tiled map service layers&lt;/a&gt; to implement complex geometries with &lt;a href=&quot;http://www.usgs.gov/faq/categories/9860/3604&quot;&gt;more efficiency&lt;/a&gt; as part of their business processes.  To most of the industry (I’m assuming), &lt;a href=&quot;http://wiki.openstreetmap.org/wiki/Vector_tiles&quot;&gt;vector tiles&lt;/a&gt; is a new concept that offers many advantages over traditional formats.  Although the concept is similar to raster tiles, vector tiles return the actual features which creates the ability to manipulate the style and symbology of features dynamically.  This can be done, all while benefiting from the efficiency of only needing to load tiles within the current extent and not the entirety of a features geometry and attributes.  Also, vector tiles also benefit over feature services because the geometry is essentially cached and not needed to be dynamically created on the server in most cases.&lt;/p&gt;
-
-&lt;p&gt;It is important to know that although vector tiles are new to Esri’s platform, they are already present in the geospatial community elsewhere.  &lt;a href=&quot;https://www.mapbox.com/&quot;&gt;Mapbox&lt;/a&gt;  has &lt;a href=&quot;https://www.mapbox.com/blog/vector-tiles/&quot;&gt;developed a standard for an open source vector tile format&lt;/a&gt; and uses it at the core of &lt;a href=&quot;https://www.mapbox.com/tilemill/&quot;&gt;tilemill&lt;/a&gt;.  In fact, &lt;a href=&quot;https://www.mapbox.com/blog/vector-tile-adoption/&quot;&gt;Esri has adopted&lt;/a&gt; this specification in it’s implementation of vector tiles.  If you look at the vector tile spec defined by mapbox, you will also see various &lt;a href=&quot;https://github.com/mapbox/vector-tile-spec/wiki/Implementations&quot;&gt;applications and tools that implement it&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Within &lt;a href=&quot;https://developers.arcgis.com/javascript/jsapi/&quot;&gt;Esri’s current JavaScript API&lt;/a&gt;, I don’t see support for vector tiles but I’m sure the next release will include it.  OpenLayers  does support &lt;a href=&quot;http://openlayers.org/en/v3.3.0/apidoc/ol.source.TileVector.html&quot;&gt;a TileVector&lt;/a&gt; format, as illustrated in &lt;a href=&quot;http://openlayers.org/en/v3.3.0/examples/tile-vector.html&quot;&gt;this example&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;There are various tile-generation libraries available for creating vector tiles, and according to Esri’s announcement, a toolbox will be available directly though their Desktop (or Pro) software.  One nice example I found was created by &lt;a href=&quot;https://github.com/glob3mobile&quot;&gt;Glob3 Mobile&lt;/a&gt; called &lt;a href=&quot;https://github.com/glob3mobile/mmt-vector-tiles&quot;&gt;mmt-vector-tiles&lt;/a&gt; which can generate vector tiles directly from a PostGIS database.  They also have a &lt;a href=&quot;http://wb.glob3mobile.com/vl/index_lux.html&quot;&gt;good example&lt;/a&gt; posted of this in action with OpenLayers 3.  If you look at the &lt;a href=&quot;http://igosoftware.dyndns.org:8000/vectorial/lux_buildings_LEVELS_12-18_MERCATOR/GEOJSON/&quot;&gt;file stucture&lt;/a&gt; of their tiles, it looks similar to what is shown in &lt;a href=&quot;http://video.esri.com/watch/4215/smart-mapping-with-vector-map-tiles&quot;&gt;Esri’s presentation&lt;/a&gt; although I’m not certain it adheres to the same specification.&lt;/p&gt;
-
-&lt;p&gt;If you haven’t heard of vector tiles before, I hope this post has been useful!&lt;/p&gt;
-
-</description>
-        <pubDate>Sun, 15 Mar 2015 00:00:00 -0700</pubDate>
-        <link>http://tannergeo.com/blog/site//vector_tiles/formats/2015/03/15/A-Brief-Look-At-Vector-Tiles.html</link>
-        <guid isPermaLink="true">http://tannergeo.com/blog/site//vector_tiles/formats/2015/03/15/A-Brief-Look-At-Vector-Tiles.html</guid>
-        
-        
-        <category>vector_tiles</category>
-        
-        <category>formats</category>
-        
-      </item>
-    
-      <item>
-        <title>Visualizing February 2015 Weather Data with Turf.js</title>
-        <description>&lt;p&gt;February was a particularly cold month across most of the United States.  For us here in Oregon, we’ve been enjoying warm weather… but most further east have had record lows and heavy snow.  I’ve been interested in finding new ways to visualize this data.  I’ll be using &lt;a href=&quot;http://cdo.ncdc.noaa.gov/qclcd/QCLCD?prior=N&quot;&gt;NOAA’s quality controlled logical climatological data&lt;/a&gt; to load weather station data across the US into a Postgres database.  From there I hope to generate TIN’s using &lt;a href=&quot;http://turfjs.org/&quot;&gt;turf.js&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The initial hurdle is getting the stations and readings into our database.  Our file from NOAA has the following pipe delineated headers:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;WBAN|WMO|CallSign|ClimateDivisionCode|ClimateDivisionStateCode|ClimateDivisionStationCode|Name|State|Location|Latitude|Longitude|GroundHeight|StationHeight|Barometer|TimeZone
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I don’t need all of these, just the WBAN (unique id of station), State, Location, Latitude and Longitude.  Let’s create the initial table:&lt;/p&gt;
-
-&lt;p&gt;Enable postgis on database:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE EXTENSION postgis;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Create table for stations:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE TABLE weather_stations (
-    WBAN integer,
-    State char(2),
-    Location varchar(150),
-    Latitude decimal(9,6) NOT NULL,
-    Longitude decimal(9,6) NOT NULL
-);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I deleted the erroneous columns from the original file for easy import.  From psql command line, I ran the &lt;a href=&quot;http://stackoverflow.com/questions/2987433/how-to-import-csv-file-data-into-a-postgres-table&quot;&gt;following command&lt;/a&gt; to bring the stations into postgres:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;\copy weather_stations FROM 'csv location' DELIMITER '|' CSV HEADER;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Add an auto incremented primary key:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ALTER TABLE weather_stations ADD COLUMN id SERIAL PRIMARY KEY;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://postgis.net/docs/AddGeometryColumn.html&quot;&gt;Add geometry column&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;SELECT AddGeometryColumn ('public', 'weather_stations', 'geom', 4326, 'POINT', 2);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Lastly, let’s create actual points from our Latitude and Longitude fields:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;UPDATE weather_stations SET
-geom = ST_SetSRID(ST_MakePoint(Longitude, Latitude),4326)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If we look at our data in QGIS, we see this now!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/points_qgis.png&quot; alt=&quot;qgis screenshpt&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Now that the stations are in our database, we need to import our weather station readings.  The process will be similar to what we accomplished getting the stations in.  The readings are comma delineated and contain information or daily recordings.  The initial format looks like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;WBAN,YearMonthDay,Tmax,TmaxFlag,Tmin,TminFlag,Tavg,TavgFlag,Depart,DepartFlag,DewPoint,DewPointFlag,WetBulb,WetBulbFlag,Heat,HeatFlag,Cool,CoolFlag,Sunrise,SunriseFlag,Sunset,SunsetFlag,CodeSum,CodeSumFlag,Depth,DepthFlag,Water1,Water1Flag,SnowFall,SnowFallFlag,PrecipTotal,PrecipTotalFlag,StnPressure,StnPressureFlag,SeaLevel,SeaLevelFlag,ResultSpeed,ResultSpeedFlag,ResultDir,ResultDirFlag,AvgSpeed,AvgSpeedFlag,Max5Speed,Max5SpeedFlag,Max5Dir,Max5DirFlag,Max2Speed,Max2SpeedFlag,Max2Dir,Max2DirFlag
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Obviously, we are only interested in the WBAN (station id), YearMonthDay, Tmax, Tmin and Tavg.  These will give us the ability to map low, high and average daily temperatures.  I went ahead and removed the other columns from the initial dataset.  Let’s create the table in postgres.  I used varchar for the temperatures because of some string M values which equal missing… we can filter these out later.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE TABLE readings_feb (
-    WBAN integer,
-    YearMonthDay integer NOT NULL,
-    Tmax varchar(5),
-    Tmin varchar(5),
-    Tavg varchar(5)
-);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Import csv file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;\copy readings_feb FROM 'D:\TannerGeo\WeatherTinTurf\data_raw\QCLCD201502\201502daily.csv' DELIMITER ',' CSV HEADER;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Finally, add a primary key:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ALTER TABLE readings_feb ADD COLUMN id SERIAL PRIMARY KEY;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;To visualize the data in QGIS, I created a special view with just the low temp.  Notice we’ve casted the &lt;a href=&quot;http://dba.stackexchange.com/questions/3429/how-can-i-convert-from-double-precision-to-bigint-with-postgresql&quot;&gt;tmin to int&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CREATE VIEW feb_weather AS
-SELECT a.id, a.wban, a.yearmonthday, a.tmin::int, b.state, b.location, b.geom
-FROM readings_feb a
-LEFT JOIN weather_stations b
-ON a.wban = b.wban
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;By adding a filter for just February 1st in QGIS and symbolizing by temperature, the cold weather trends become apparent.  The mid-west and northeast have bone chilling lows while the west coast and southern US had relatively high temperatures.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/temp_feb01.png&quot; alt=&quot;February Map&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;To incorporate the data into our mapping application, it’s preferable that we work with a data format suited to our needs.  I’ll be using &lt;a href=&quot;http://geojson.org/&quot;&gt;geojson&lt;/a&gt;, mostly because this format will work best with &lt;a href=&quot;http://turfjs.org/static/docs/global.html#GeoJSON&quot;&gt;turf.js&lt;/a&gt;.  We could &lt;a href=&quot;http://www.postgresonline.com/journal/archives/267-Creating-GeoJSON-Feature-Collections-with-JSON-and-PostGIS-functions.html&quot;&gt;build a query&lt;/a&gt; to generate this straight from postgres, but I’d prefer to just use &lt;a href=&quot;http://www.bostongis.com/pgsql2shp_shp2pgsql_quickguide.bqg&quot;&gt;pgsql2shp&lt;/a&gt; and then &lt;a href=&quot;http://www.gdal.org/ogr2ogr.html&quot;&gt;GDAL’s ogr2ogr&lt;/a&gt; to convert to geojson.&lt;/p&gt;
-
-&lt;p&gt;Create shapefile using pgsql command line tools:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;pgsql2shp -f weather_02012015 -h localhost -p 5432 -u username -P password geodata &quot;SELECT * FROM feb_weather WHERE yearmonthday = 20150201&quot;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Convert to GeoJSON using &lt;a href=&quot;http://www.gisinternals.com/query.html?content=filelist&amp;amp;file=release-1800-x64-gdal-1-11-1-mapserver-6-4-1.zip&quot;&gt;GDAL&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ogr2ogr -f GeoJSON ../geojson/02012015.geojson 02012015.shp
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Our output file is 287KB could probably be smaller since we don’t necessarily need all of the fields to make the TIN map.&lt;/p&gt;
-
-&lt;p&gt;The only dependencies I know of that we need to create the map are turf.js and leaflet.  I chose to use bower to install these dependencies:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;bower install turf
-bower install leaflet
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For bringing in the geojson, I’m just going to assign the object to a variable and place it in a seperate .js file.   For future reference though, &lt;a href=&quot;https://github.com/calvinmetcalf&quot;&gt;calvinmetcalf&lt;/a&gt; has created a great helper for leaflet called the &lt;a href=&quot;https://github.com/calvinmetcalf/leaflet-ajax&quot;&gt;leaflet-ajax&lt;/a&gt; library for working with geojson files.&lt;/p&gt;
-
-&lt;p&gt;We now have a .js file called 02012015.js with the geojson assigned to the variable feb01.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var feb01 = {
-    type&quot;: &quot;FeatureCollection&quot;,
-	&quot;crs&quot;: { &quot;type&quot;: &quot;name&quot;, &quot;properties&quot;: { &quot;name&quot;: &quot;urn:ogc:def:crs:OGC:1.3:CRS84&quot; } },
-	...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I want to first make sure I can create the TIN’s.  To test, I use turf.js to build and add them to the map with no fill.  By passing in TMIN, turf generates Z values that we can then use to generate our fill colors.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, 'TMIN');
-var geojson = L.geoJson(tin, {
-	style : {
-		weight : 1
-	}
-});
-geojson.addTo(map);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Our result is a visually interesting graphic:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/tin_nofill.png&quot; alt=&quot;tin image&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;For our fill colors, I’m going to use a library I built called &lt;a href=&quot;https://github.com/tannerjt/classybrew&quot;&gt;classybrew&lt;/a&gt;.  It uses the natural breaks (Jenks) method of statistical classification and applies colors based on Cynthia Brewers color palettes.  I added a new diverging color palette for red-yellow-blue.  This should give us a good thematic perspective of color.&lt;/p&gt;
-
-&lt;p&gt;To stylize the map, we first need to initialize and setup or statistical breaks and color palette based on our minimum temperature values.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// create classification for colors
-var brew = new classyBrew();
-var values = []; // tmin values
-for( var i = 0; i &amp;lt; feb01.features.length; i++) {
-	values.push(feb01.features[i].properties['TMIN']);
-}
-brew.setSeries(values);
-brew.setNumClasses(6);
-brew.classify();
-brew.setColorCode(&quot;BuYlRd&quot;);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now that we have the classybrew object setup, we can request a color code based on a provided value with &lt;code&gt;getColorInRange(value)&lt;/code&gt;.  We’ll use this function to return a color based on the average of minimum temperature from each station that makes up our triangles.  This can be done during instantiation of our geojson layer.  First, however we need to create our TIN from our points using &lt;code&gt;turf.tin(geojson, z value)&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var tin = turf.tin(feb01, 'TMIN');
-var geojson = L.geoJson(tin, {
-	style : function (f) {
-		return {
-			weight : 1,
-			fillColor : (function () {
-				return brew.getColorInRange((f.properties.a + f.properties.b + f.properties.c) / 3.0, true);
-			}()),
-			fillOpacity : 0.85
-		}
-	}
-});
-geojson.addTo(map);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Our result is rather captivating:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/tin_fill.png&quot; alt=&quot;Weather TIN Map&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;If we look at a map from the NOAA National Climatic Data Center, we can see our map aligns with their model:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://tannergeo.com/images/blog/screenshots/noaa_temp.png&quot; alt=&quot;NOAA NCDC Map&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I think this is all I was looking to do for now.  The output is visually interesting and shows how powerful turf.js is with very little code.  I’d like to take this further and make a more in depth application with the data and turf.js.  Look for more to come in the future, and thanks for following along!&lt;/p&gt;
-</description>
-        <pubDate>Sun, 01 Mar 2015 00:00:00 -0800</pubDate>
-        <link>http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</link>
-        <guid isPermaLink="true">http://tannergeo.com/blog/site//turfjs/leaflet/postgresql/postgis/noaa/2015/03/01/Visualizing-February-2015-Weather-Date-with-Turf.js.html</guid>
-        
-        
-        <category>turfjs</category>
-        
-        <category>leaflet</category>
-        
-        <category>postgresql</category>
-        
-        <category>postgis</category>
-        
-        <category>noaa</category>
         
       </item>
     

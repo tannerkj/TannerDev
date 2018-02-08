@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="Joshua and Kristin Tanner">
+    <meta name="robots" content="index,follow">
+
+    <title>TypeScript - An Overview</title>
+    <meta name="description" content="TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+">
+
+    <link href="/blog/site/css/main.css" rel="stylesheet">
+
+    <link rel="canonical" href="/blog/site//javascript/typescript/2018/02/08/TypeScript-An-Overview.html">
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/tanner-styles.css" rel="stylesheet">
+</head>
+
+
+  <body>
+
+     <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/index.html">
+                    <h1><span class="tanner">Tanner</span><span class="dev">Geo</span></h1>
+                    <!--<img src="http://placehold.it/150x50&text=Logo" alt=""> -->
+                </a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="/portfolio.html">Portfolio</a>
+                    </li>
+                    <li class="active">
+                        <a href="/blog/site">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+
+    <div class="page-content">
+      <div class="container">
+        <a href="/blog/site">Back to Blog Home</a>
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">TypeScript - An Overview</h1>
+    <p class="post-meta">Feb 8, 2018 • Joshua Tanner</p>
+  </header>
+
+  <article class="post-content">
+    <h1 id="typescript---an-overview">Typescript - An Overview</h1>
+
+<p><a href="https://github.com/Esri/arcgis-rest-js/">ArcGIS-REST-JS</a> is an open source library that Esri developers are actively working on that provdes an javascript abstraction interface to ArcGIS REST.  I’m interested in both using the library and contributing to it.  One initial hurdle… it’s writtin in TypeScript, which I know very little about.  Time to roll up my sleeves and start learning.  Come join me along the way.</p>
+
+<h2 id="what-is-typescript">What is TypeScript</h2>
+
+<p><a href="https://www.typescriptlang.org/">TypeScript</a> defines itself as being JavaScript that scales.  Unlike the regular interpreted language of JavaScript we are all used to, TypedScript is a compiled language.  Once compiled, the output is regular JavaScript.  TypeScript introduces concepts that aren’t inherit to regular JavaScript programmers, like strict data types, interfaces, classes, and namespaces.  Although these can be implemented by design in JavaScript, they are not an inherit part of most traditional coding concepts for JavaScript developers.  However, modern JavaScript (ES2015, ES6) does have support for classes.</p>
+
+<p>Next, let’s go through the <a href="https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html">tutorial here</a> for a quick introduction to TypeScript.  I’m also documenting the steps below.</p>
+
+<h2 id="installing-typescript">Installing TypeScript</h2>
+
+<p>Since TypeScript code will need to be compiled to JavaScript, we need to download the TypeScript compiler.</p>
+
+<pre><code>$ npm install -g typescript
+</code></pre>
+
+<p>The <code>-g</code> flag installs the nodejs package globally.</p>
+
+<h2 id="writing">Writing</h2>
+
+<p>Create a file called <code>greeter.ts</code> and write the following lines of code</p>
+
+<pre><code class="language-javascript">function greeter(person) {
+  return "Hello, " + person;
+}
+
+let user = "Joshua Tanner";
+</code></pre>
+
+<p>So far, this looks like regular JavaScript.  We are however, using the <code>let</code> block level variable declaration.  This is available to modern JS engines, but not older browswers.  Let’s see what happens if we compile this code.</p>
+
+<pre><code>$ tsc greeter.ts
+$ cat greeter.js
+</code></pre>
+
+<p>TypeScript compiles greeter.ts into a new file, <code>greeter.js</code>.  Cat’ing it out to the console produces the following output:</p>
+
+<pre><code class="language-javascript">function greeter(person) {
+    return "Hello, " + person;
+}
+var user = "Joshua Tanner";
+</code></pre>
+
+<p>Notice how the compiler converted the block level <code>let</code> variable to <code>var</code>.</p>
+
+<h2 id="typed-annotations">Typed Annotations</h2>
+
+<p>Using TypeScript we can start to have some better checking of our code.  Placing checks makes building software more robust, and the compiler can tell us ahead of time of there are issues with our code.  One thing we can check for is what kind of data type we expect go be passed as a parameter to a function.</p>
+
+<p>In our previous example, we could pass any data type (string, boolean, array, object, etc) as a parameter to our <code>greeter</code> function.  Let’s tighten this up by requiring that the parameter of of type <code>string</code>.</p>
+
+<pre><code class="language-javascript">function greeter(person: string) {
+    return "Hello, " + person;
+}
+
+let user = [0, 1, 2];
+</code></pre>
+
+<p>The <code>person:string</code> defines that the person parameter must be of type <code>string</code>.  Let’s see what happens if we try and compile this.</p>
+
+<pre><code>$ tsc greeter.ts
+greeter.ts(7,35): error TS2345: Argument of type 'number[]' is not assignable to parameter of type 'string'.
+</code></pre>
+
+<p>Oops, tryint to pass the array <code>let user = [0, 1, 2];</code> threw an error.  The compiler still builds our greeter.js file, but warns us that there are problems.</p>
+
+<h2 id="interfaces">Interfaces</h2>
+
+<p>Interfaces are probably something you haven’t worked with languages like Java or C#.  Essentially, an interface is a contract or definition about what something should look like that we can implement over and over again.</p>
+
+<p>For example, a we might establish a person as an interface:</p>
+
+<pre><code class="language-typescript">interface Person {
+  firstName: string,
+  lastName: string
+}
+</code></pre>
+
+<p>Let’s build a simple program that has a function that implements this interface as a parameter:</p>
+
+<pre><code class="language-javascript">interface Person {
+  firstName: string;
+  lastName: string;
+}
+
+function greeter(person: Person) {
+  return "Hello, " + person.firstName + " " + person.lastName;
+}
+
+let user = { firstName: "Joshua", lastname: "Tanner"};
+</code></pre>
+
+<p>If we added <code>age</code> to our user object, the compiler would</p>
+
+<h2 id="classes">Classes</h2>
+
+<p>TypeScript supports class-based object-oriented programming with support for common patterns like inheritance.</p>
+
+<p>For example:</p>
+
+<pre><code class="language-javascript">//classes.ts
+class FourLeggedAnimal {
+  legs: number;
+  constructor() {
+    this.legs = 4;
+  }
+}
+
+class Cat extends FourLeggedAnimal {
+  speak() {
+    console.log('Meow! Meow!');
+  }
+}
+
+class Dog extends FourLeggedAnimal {
+  speak() {
+    console.log('Ruff!  Ruff!');
+  }
+}
+
+const cat = new Cat();
+const dog = new Dog();
+
+cat.speak();
+dog.speak();
+
+console.log(cat.legs == dog.legs);
+</code></pre>
+
+<p>You can run this directly in command line with nodejs:</p>
+
+<pre><code>$ tsc classes.ts
+$ node classes.js
+Meow! Meow!
+Ruff!  Ruff!
+true
+</code></pre>
+
+<h2 id="modules">Modules</h2>
+
+<p>Another important feature of TypeScript is the use of modules.  If you have been working with modern JavaScript or nodejs, you should be familiar with the concept.  Modules allow us to export and import blocks of code between different javascript files.</p>
+
+<p>You can read more about modules on <a href="https://www.typescriptlang.org/docs/handbook/modules.html">the TypeScript documentation guide</a></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>When you are jumping into a project that uses TypeScript, don’t be overwhelmed.  Most of your JavaScript knowldege will carry over just fine.  The essentials of TypeScript are easy to learn and their <a href="https://www.typescriptlang.org/docs/handbook">documentation</a> is simple to follow for understanding more advanced features of the language.</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">TannerGeo Blog</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li><a href="mailto:support@tannergeo.com">support@tannergeo.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+          <li>
+            <a href="https://twitter.com/Tanner_Geo">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">Tanner_Geo</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">TannerGeo is passionate about computer science, web development and everything geospatial!  We appreciate the helpful tutorials and blog posts others have created.  We would like to give back as well by posting our  experiences and tutorials on new technologies.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+<!-- Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58675189-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+
+</html>
